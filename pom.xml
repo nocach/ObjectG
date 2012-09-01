@@ -18,6 +18,11 @@
             <artifactId>javassist</artifactId>
             <version>3.12.1.GA</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>3.0.7.RELEASE</version>
+        </dependency>
     </dependencies>
 
 

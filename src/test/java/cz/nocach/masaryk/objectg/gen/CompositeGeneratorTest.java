@@ -1,10 +1,8 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertNotSame;
 
@@ -15,7 +13,7 @@ import static junit.framework.Assert.assertNotSame;
 public class CompositeGeneratorTest {
     private static final CompositeGenerator generator = new CompositeGenerator(
             new DummyGenerator(),
-            new PrimitiveUniqueGenerator());
+            new NativeClassUniqueGenerator());
 
     @Test
     public void testConcurrent(){

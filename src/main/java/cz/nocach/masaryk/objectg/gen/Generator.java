@@ -11,7 +11,7 @@ public interface Generator {
      * @param type type of which value to generate
      * @return new value
      */
-    public Object generate(Class type);
+    public <T> T generate(Class<T> type);
 
     /**
      *
