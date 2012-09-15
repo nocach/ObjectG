@@ -1,5 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+
 /**
  * User: __nocach
  * Date: 28.8.12

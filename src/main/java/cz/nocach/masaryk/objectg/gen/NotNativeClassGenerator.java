@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;

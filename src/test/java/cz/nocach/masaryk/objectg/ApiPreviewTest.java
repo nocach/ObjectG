@@ -90,24 +90,6 @@ public class ApiPreviewTest {
         }
     }
 
-
-    private static class Builder<T>{
-        public Builder(Class<T> forClazz){
-        }
-
-        public<U> T set(U anyThing){
-            return null;
-        }
-
-        public <U> boolean test(){
-            return false;
-        }
-        public static <A, B extends Collection<A> & Comparable<B>>
-                boolean foo(B b1, B b2, A a) {
-            return (b1.compareTo(b2) == 0) || b1.contains(a) || b2.contains(a);
-        }
-    }
-
     public static class Person{
         private String name;
         private Address address;

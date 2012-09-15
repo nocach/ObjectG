@@ -1,9 +1,11 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+
 /**
  * <p>
  *      Knows about all generators in the framework. Allows to find suitable Generators by
- *      using {@link #find(GenerationContext, Class)}.
+ *      using {@link #find(cz.nocach.masaryk.objectg.gen.context.GenerationContext, Class)}.
  * </p>
  * <p>
  * User: __nocach
@@ -25,6 +27,12 @@ public class GeneratorRegistry {
             if (nativeClassUniqueGenerator.supportsType(forType)) return nativeClassUniqueGenerator;
             return notNativeClassUniqueGenerator;
         }
+        //TODO: to be written
+//        for (Rule each :context.getRules()){
+//            if (each.matches(forType)){
+//                return ruleBasedGeneratorFactory.from(each);
+//            }
+//        }
         throw new UnsupportedOperationException("can't find generator for context=" +context
             +" for generating type="+forType.getName());
     }
