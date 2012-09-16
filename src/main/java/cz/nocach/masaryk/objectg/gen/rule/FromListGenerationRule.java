@@ -3,6 +3,7 @@ package cz.nocach.masaryk.objectg.gen.rule;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorForSingleClass;
 import cz.nocach.masaryk.objectg.gen.Generator;
+import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -38,7 +39,7 @@ public class FromListGenerationRule extends GenerationRule {
     }
 
     @Override
-    protected Generator getGenerator() {
+    protected Generator getGenerator(GenerationConfiguration currentConfiguration) {
         return new FromListGenerator(classOfTheFirstValue, values);
     }
 

@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
  * User: __nocach
  * Date: 30.8.12
  */
-class NotNativeClassGenerator implements Generator {
+public class NotNativeClassGenerator implements Generator {
     private GenerationConfiguration generationConfiguration;
 
     public NotNativeClassGenerator(GenerationConfiguration generationConfiguration){

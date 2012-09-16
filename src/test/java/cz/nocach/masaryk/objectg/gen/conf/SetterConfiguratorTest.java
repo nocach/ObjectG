@@ -43,6 +43,11 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
 
 
     @Override
+    public void onInit(Object objectUnderConfiguration) {
+        //TODO: test?
+    }
+
+    @Override
     public void onSetter(Object objectUnderConfiguration, String propertyName) {
         onSetterObjectUnderConfiguration = objectUnderConfiguration;
         onSetterPropertyName = propertyName;

@@ -5,6 +5,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -30,6 +31,7 @@ public class SetterConfigurator {
             T modifiedInstance = (T) interceptedClass.newInstance();
             Field field = modifiedInstance.getClass().getDeclaredField(FIELD_NAME_OF_CONFIGURATION_HANDLER);
             ReflectionUtils.setField(field, modifiedInstance, configurationHandler);
+            configurationHandler.onInit(modifiedInstance);
             return modifiedInstance;
         } catch (NotFoundException e) {
             //TODO: review exception throw
@@ -84,10 +86,9 @@ public class SetterConfigurator {
         //   configurationHandler.onSetter(this, propertyName);
         //   return;
         // }
-        each.setBody(
+        each.insertBefore(
                 "{" +
-                    FIELD_NAME_OF_CONFIGURATION_HANDLER +".onSetter(this, \""+propertyName+"\");" +
-                    "return " + returnType + " ;" +
+                    FIELD_NAME_OF_CONFIGURATION_HANDLER + ".onSetter(this, \"" + propertyName + "\");" +
                 "}");
     }
 
@@ -110,6 +111,12 @@ public class SetterConfigurator {
         CtClass originalClass = classPool.get(clazz.getName());
         interceptedClass.setSuperclass(originalClass);
 
+        CtClass[] interfaces = new CtClass[interceptedClass.getInterfaces().length + 1];
+        System.arraycopy(interceptedClass.getInterfaces(), 0, interfaces, 0, interceptedClass.getInterfaces().length);
+        int oneNewInterfaceIndex = interceptedClass.getInterfaces().length;
+        interfaces[oneNewInterfaceIndex] = classPool.get(InterceptedBySetterConfigurator.class.getName());
+        interceptedClass.setInterfaces(interfaces);
+
         return interceptedClass;
     }
 
@@ -123,4 +130,5 @@ public class SetterConfigurator {
         ctField.setModifiers(Modifier.PUBLIC);
         interceptedClass.addField(ctField);
     }
+
 }

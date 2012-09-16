@@ -2,6 +2,7 @@ package cz.nocach.masaryk.objectg;
 
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.conf.OngoingConfiguration;
 import cz.nocach.masaryk.objectg.gen.conf.OngoingGenerationContextConfigurationHandler;
 import cz.nocach.masaryk.objectg.gen.conf.SetterConfigurator;
 import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
@@ -34,7 +35,9 @@ public class ObjectG {
     }
 
     public static <T> T config(Class<T> clazz){
-        return setterConfigurator.newConfigurator(clazz);
+        T result = setterConfigurator.newConfigurator(clazz);
+        OngoingConfiguration.plannedConfigurationObject = result;
+        return result;
     }
 
     public static GenerationConfiguration contextFromObjects(Object... objects){
@@ -46,7 +49,7 @@ public class ObjectG {
                     +" was this object created using ObjectG.config(Class)?");
             }
             else {
-                result.addChild(contextForObject);
+                result.putChild(contextForObject);
             }
         }
         return result;

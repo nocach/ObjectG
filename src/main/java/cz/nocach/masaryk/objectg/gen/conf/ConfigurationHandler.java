@@ -11,6 +11,7 @@ package cz.nocach.masaryk.objectg.gen.conf;
  * </p>
  */
 public interface ConfigurationHandler {
+    public void onInit(Object objectUnderConfiguration);
     /**
      * called when setter was called for configuration.
      * @param propertyName property of the setter

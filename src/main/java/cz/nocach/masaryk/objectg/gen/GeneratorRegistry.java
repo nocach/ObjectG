@@ -28,7 +28,7 @@ public class GeneratorRegistry {
 
         GenerationRule rule = generationConfiguration.getRule(context);
         if (rule != null){
-            return rule.getGenerator();
+            return rule.getGenerator(generationConfiguration);
         }
 
         if (generationConfiguration.isUnique()){

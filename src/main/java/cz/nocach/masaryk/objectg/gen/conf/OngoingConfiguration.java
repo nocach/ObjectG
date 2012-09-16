@@ -9,4 +9,10 @@ import cz.nocach.masaryk.objectg.gen.GenerationRule;
 public class OngoingConfiguration {
     //TODO: what about multithread?
     public static volatile GenerationRule plannedRule;
+    public static volatile Object plannedConfigurationObject;
+
+    public static void clear() {
+        plannedRule = null;
+        plannedConfigurationObject = null;
+    }
 }
