@@ -1,6 +1,6 @@
 package cz.nocach.masaryk.objectg.gen.conf;
 
-import cz.nocach.masaryk.objectg.gen.rule.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.GenerationRule;
 
 /**
  * User: __nocach

@@ -12,7 +12,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * Date: 26.8.12
  * </p>
  */
-public class NativeClassUniqueGenerator implements UniqueGenerator {
+class NativeClassUniqueGenerator implements UniqueGenerator {
+    //TODO: allow resetting of this sequences? E.g. this reset can be performed before any new TestCase is about to
+    //be started
     private final AtomicLong longSequence = new AtomicLong();
     private final AtomicInteger charSequence = new AtomicInteger();
     @Override

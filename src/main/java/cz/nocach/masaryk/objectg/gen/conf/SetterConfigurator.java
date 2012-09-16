@@ -81,12 +81,12 @@ public class SetterConfigurator {
         String returnType = isVoidReturn ? "" : "null";
         //basically it looks like this:
         // {
-        //   configurationHandler.onSetter(propertyName);
+        //   configurationHandler.onSetter(this, propertyName);
         //   return;
         // }
         each.setBody(
                 "{" +
-                    FIELD_NAME_OF_CONFIGURATION_HANDLER +".onSetter(\""+propertyName+"\");" +
+                    FIELD_NAME_OF_CONFIGURATION_HANDLER +".onSetter(this, \""+propertyName+"\");" +
                     "return " + returnType + " ;" +
                 "}");
     }

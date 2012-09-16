@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class SetterConfiguratorTest implements ConfigurationHandler{
 
     private String onSetterPropertyName;
+    private Object onSetterObjectUnderConfiguration;
 
     @Test
     public void handlerNotifiedOnSetterCall(){
@@ -20,6 +21,7 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
 
         classWithProperty.setProperty1("any value");
         assertEquals("property1", onSetterPropertyName);
+        assertEquals(classWithProperty, onSetterObjectUnderConfiguration);
 
         classWithProperty.setProperty2("any value");
         assertEquals("property2", onSetterPropertyName);
@@ -41,7 +43,8 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
 
 
     @Override
-    public void onSetter(String propertyName) {
+    public void onSetter(Object objectUnderConfiguration, String propertyName) {
+        onSetterObjectUnderConfiguration = objectUnderConfiguration;
         onSetterPropertyName = propertyName;
     }
 

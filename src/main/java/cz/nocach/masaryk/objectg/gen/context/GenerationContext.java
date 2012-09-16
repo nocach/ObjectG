@@ -1,6 +1,6 @@
 package cz.nocach.masaryk.objectg.gen.context;
 
-import cz.nocach.masaryk.objectg.gen.rule.GenerationRule;
+import java.lang.reflect.Field;
 
 /**
  * <p>
@@ -12,9 +12,23 @@ import cz.nocach.masaryk.objectg.gen.rule.GenerationRule;
  * </p>
  */
 public class GenerationContext {
-    public boolean isUnique;
 
-    public void addRule(GenerationRule rule) {
-        throw new RuntimeException("not implemented yet");
+    private Class classThatIsGenerated;
+    private Field field;
+
+    public GenerationContext(Class classThatIsGenerated) {
+        this.classThatIsGenerated = classThatIsGenerated;
+    }
+
+    public Class getClassThatIsGenerated() {
+        return classThatIsGenerated;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    public Field getField() {
+        return field;
     }
 }

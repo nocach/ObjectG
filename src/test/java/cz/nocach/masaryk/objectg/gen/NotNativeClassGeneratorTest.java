@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -9,13 +10,15 @@ import org.junit.Test;
  * User: __nocach
  * Date: 29.8.12
  */
-public class NotNativeClassUniqueGeneratorTest extends Assert{
+public class NotNativeClassGeneratorTest extends Assert{
 
-    private NotNativeClassUniqueGenerator generator;
+    private NotNativeClassGenerator generator;
 
     @Before
     public void setup(){
-        generator = new NotNativeClassUniqueGenerator();
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        generationConfiguration.setUnique(true);
+        generator = new NotNativeClassGenerator(generationConfiguration);
     }
 
     @Test

@@ -2,6 +2,8 @@ package cz.nocach.masaryk.objectg;
 
 import org.junit.Test;
 
+import static junit.framework.Assert.fail;
+
 /**
  * User: __nocach
  * Date: 26.8.12
@@ -9,7 +11,7 @@ import org.junit.Test;
 public class ApiExamplesTest {
     @Test
     public void classWithInt(){
-
+        fail("fill in test code");
     }
 
     public static class ClassWithInt{

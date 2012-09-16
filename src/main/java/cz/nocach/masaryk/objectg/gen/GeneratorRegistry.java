@@ -1,11 +1,13 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+import org.springframework.util.Assert;
 
 /**
  * <p>
  *      Knows about all generators in the framework. Allows to find suitable Generators by
- *      using {@link #find(cz.nocach.masaryk.objectg.gen.context.GenerationContext, Class)}.
+ *      using {@link #find(GenerationConfiguration, GenerationContext)}.
  * </p>
  * <p>
  * User: __nocach
@@ -14,27 +16,27 @@ import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
  */
 public class GeneratorRegistry {
     private UniqueGenerator nativeClassUniqueGenerator;
-    private UniqueGenerator notNativeClassUniqueGenerator;
     private static final GeneratorRegistry instance = new GeneratorRegistry();
 
     private GeneratorRegistry(){
         this.nativeClassUniqueGenerator = new NativeClassUniqueGenerator();
-        this.notNativeClassUniqueGenerator = new NotNativeClassUniqueGenerator();
     }
 
-    public Generator find(GenerationContext context, Class forType) {
-        if (context.isUnique){
-            if (nativeClassUniqueGenerator.supportsType(forType)) return nativeClassUniqueGenerator;
-            return notNativeClassUniqueGenerator;
+    public Generator find(GenerationConfiguration generationConfiguration, GenerationContext context) {
+        Assert.notNull(generationConfiguration, "generationConfiguration");
+        Assert.notNull(context, "context");
+
+        GenerationRule rule = generationConfiguration.getRule(context);
+        if (rule != null){
+            return rule.getGenerator();
         }
-        //TODO: to be written
-//        for (Rule each :context.getRules()){
-//            if (each.matches(forType)){
-//                return ruleBasedGeneratorFactory.from(each);
-//            }
-//        }
+
+        if (generationConfiguration.isUnique()){
+            if (nativeClassUniqueGenerator.supportsType(context.getClassThatIsGenerated())) return nativeClassUniqueGenerator;
+            return new NotNativeClassGenerator(generationConfiguration);
+        }
         throw new UnsupportedOperationException("can't find generator for context=" +context
-            +" for generating type="+forType.getName());
+            +" for generating type="+context.getClassThatIsGenerated().getName());
     }
 
     public static final GeneratorRegistry getInstance(){
