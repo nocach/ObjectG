@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * <p>
- *     Thread safe
+ *     Thread safe generator of java native types such as String, int, etc.
  * </p>
  * <p>
  * User: __nocach

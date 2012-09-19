@@ -9,8 +9,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * <p>
+ *     Generator supporting generating of not native java types (custom classes). Knows how to construct object
+ *     and how to set each field on it.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 30.8.12
+ * </p>
  */
 public class NotNativeClassGenerator implements Generator {
     private GenerationConfiguration generationConfiguration;
@@ -41,9 +47,6 @@ public class NotNativeClassGenerator implements Generator {
             throw new RuntimeException("can't create new instance of "+type.getName(), e);
         }
     }
-
-
-
 
     private Object[] createUniqueConstructorArgs(Constructor constructor) {
         Object []constructorParams = new Object[constructor.getParameterTypes().length];

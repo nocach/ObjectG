@@ -2,6 +2,8 @@ package cz.nocach.masaryk.objectg.gen.conf;
 
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.util.HashSet;
@@ -11,9 +13,18 @@ import java.util.Set;
 
 /**
  * <p>
- *     Defines how generation must be performed. GenerationConfiguration is either global (for no class)
- *     or class specific. GenerationConfiguration for the same class or both for no classes (both global) are considered
- *     to be the same.
+ *     Defines how generation must be performed.
+ * </p>
+ * <p>GenerationConfiguration is either global (for no class)
+ *     or class specific. Configuration can be extended by child nodes (see {@link #putChild(GenerationConfiguration)}.
+ *     Only one child of GenerationConfiguration for the same class or for no class (global) can exists at the same time
+ *     (so if you call {@link #putChild(GenerationConfiguration)} and there is already child for the same class, then
+ *     old configuration will be override). For side effect free adding of child configuration
+ *     use {@link #newWithOverride(GenerationConfiguration)}.
+ * </p>
+ * <p>
+ *     Control of generation can be performed by using rules {@link GenerationRule} or by setting certain properties
+ *     on configuration instance itself (e.g. unique)
  * </p>
  * <p>
  * User: __nocach
@@ -21,6 +32,7 @@ import java.util.Set;
  * </p>
  */
 public class GenerationConfiguration implements Cloneable{
+    private static final Logger logger = LoggerFactory.getLogger(GenerationConfiguration.class);
     private boolean isUnique;
     private final Class forClass;
     private Set<GenerationConfiguration> children = new HashSet<GenerationConfiguration>();
@@ -71,12 +83,20 @@ public class GenerationConfiguration implements Cloneable{
      */
     public GenerationRule getRule(GenerationContext context) {
         Assert.notNull(context, "context");
+
         if (isConfigurationForThePassedContext(context)){
             for(GenerationRule eachRule : rules){
-                if (eachRule.matches(context)) return eachRule;
+                if (eachRule.matches(context)) {
+                    logger.debug("rule=" +eachRule + " matched for context="+context);
+                    return eachRule;
+                }
+                else {
+                    logger.debug("rule=" +eachRule + " did not match for context="+context);
+                }
             }
         }
 
+        //try to find GenerationRule in children
         for (GenerationConfiguration eachChild : children){
             GenerationRule result = eachChild.getRule(context);
             if (result != null) return result;
@@ -89,7 +109,7 @@ public class GenerationConfiguration implements Cloneable{
                 (context.getField() != null && forClass.isAssignableFrom(context.getField().getDeclaringClass()));
     }
 
-    public GenerationConfiguration clone() throws CloneNotSupportedException {
+    protected GenerationConfiguration clone() throws CloneNotSupportedException {
         GenerationConfiguration result = (GenerationConfiguration) super.clone();
         //create defencive copies for collections
         result.children = new HashSet<GenerationConfiguration>(this.children);
@@ -112,5 +132,30 @@ public class GenerationConfiguration implements Cloneable{
     @Override
     public int hashCode() {
         return forClass != null ? forClass.hashCode() : 0;
+    }
+
+    /**
+     * create copy of current configuration, but additional add or replace configuration of {@code configuration}
+     * @param configuration
+     * @return
+     */
+    public GenerationConfiguration newWithOverride(GenerationConfiguration configuration) {
+        try {
+            GenerationConfiguration overriden = clone();
+            overriden.putChild(configuration);
+            return overriden;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "GenerationConfiguration{" +
+                "isUnique=" + isUnique +
+                ", forClass=" + forClass +
+                ", children.size=" + children.size() +
+                ", rules.size=" + rules.size() +
+                '}';
     }
 }

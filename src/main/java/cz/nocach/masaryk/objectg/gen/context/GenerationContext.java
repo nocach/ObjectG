@@ -31,4 +31,12 @@ public class GenerationContext {
     public Field getField() {
         return field;
     }
+
+    @Override
+    public String toString() {
+        return "GenerationContext{" +
+                "classThatIsGenerated=" + classThatIsGenerated +
+                ", field=" + field +
+                '}';
+    }
 }

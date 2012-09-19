@@ -1,8 +1,10 @@
 package cz.nocach.masaryk.objectg.gen.conf;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * User: __nocach
@@ -12,6 +14,7 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
 
     private String onSetterPropertyName;
     private Object onSetterObjectUnderConfiguration;
+    private Object onInitObjectUnderConfiguration;
 
     @Test
     public void handlerNotifiedOnSetterCall(){
@@ -41,10 +44,23 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
         setterConfigurator.newConfigurator(ClassWithProperties.class);
     }
 
+    @Test
+    public void handlerNotifiedAboutConfigurationStart(){
+        SetterConfigurator setterConfigurator = new SetterConfigurator(this);
+
+        ClassWithProperties classWithProperty = setterConfigurator.newConfigurator(ClassWithProperties.class);
+        assertEquals(onInitObjectUnderConfiguration, classWithProperty);
+    }
+
+    @Test
+    @Ignore
+    public void handlerNotifiedOnSetterCallForInterface(){
+        fail("test showing that SetterConfigurator can be used to configure interface classes (IPerson.class)");
+    }
 
     @Override
     public void onInit(Object objectUnderConfiguration) {
-        //TODO: test?
+        onInitObjectUnderConfiguration = objectUnderConfiguration;
     }
 
     @Override

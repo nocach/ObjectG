@@ -10,8 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>
+ *     User-facing api of the framework.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 26.8.12
+ * </p>
  */
 public class ObjectG {
     private static final Logger logger = LoggerFactory.getLogger(ObjectG.class);
@@ -43,7 +48,7 @@ public class ObjectG {
     public static GenerationConfiguration contextFromObjects(Object... objects){
         GenerationConfiguration result = new GenerationConfiguration();
         for (Object each : objects){
-            GenerationConfiguration contextForObject = configurationHandler.getGenerationContext(each);
+            GenerationConfiguration contextForObject = configurationHandler.getGenerationConfiguration(each);
             if (contextForObject == null){
                 logger.debug("no GenerationContext contained in configurationHanlder for object " + each
                     +" was this object created using ObjectG.config(Class)?");

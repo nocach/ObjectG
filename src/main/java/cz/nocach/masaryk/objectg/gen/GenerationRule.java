@@ -7,8 +7,13 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.hamcrest.Matcher;
 
 /**
+ * <p>
+ *     GenerationRule defines what specific rules and when are used for generating of property value
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 1.9.12
+ * </p>
  */
 public abstract class GenerationRule {
     private String forProperty;
@@ -30,9 +35,21 @@ public abstract class GenerationRule {
         return forProperty;
     }
 
+    /**
+     *
+     * @param context
+     * @return true if this rule must be applied in the passed context
+     */
     public boolean matches(GenerationContext context){
         //TODO: use matchers in future
         if (context.getField() == null) return false;
         return  context.getField().getName().equals(forProperty);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"{" +
+                "forProperty='" + forProperty + '\'' +
+                '}';
     }
 }

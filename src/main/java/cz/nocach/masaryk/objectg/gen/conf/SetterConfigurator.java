@@ -9,8 +9,13 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * <p>
+ *     Component allowing to perform certain configurations by using setters of objects.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 15.9.12
+ * </p>
  */
 public class SetterConfigurator {
 

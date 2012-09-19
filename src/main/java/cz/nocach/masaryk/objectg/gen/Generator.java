@@ -1,8 +1,13 @@
 package cz.nocach.masaryk.objectg.gen;
 
 /**
+ * <p>
+ *     Interface used to generate values for specific types.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 26.8.12
+ * </p>
  */
 public interface Generator {
     /**

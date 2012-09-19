@@ -7,7 +7,9 @@ import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
 
 /**
  * <p>
- *     Rule allowing override GenerationConfiguration (general configuration or class-specific configuration)
+ *     Rule allowing to define new or override existing GenerationConfiguration. This Rule will not completely override
+ *     configuration, but allows to extend configuration for some properties (e.g. when you want to generate two
+ *     fields of the same types but with different rules).
  * </p>
  * <p>
  * User: __nocach
@@ -22,12 +24,6 @@ public class SpecificConfigurationGenerationRule extends GenerationRule {
     }
     @Override
     protected Generator getGenerator(GenerationConfiguration currentConfiguration) {
-        try {
-            GenerationConfiguration extendedConfiguration = currentConfiguration.clone();
-            extendedConfiguration.putChild(configuration);
-            return new NotNativeClassGenerator(extendedConfiguration);
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        return new NotNativeClassGenerator(currentConfiguration.newWithOverride(configuration));
     }
 }

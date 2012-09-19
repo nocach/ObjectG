@@ -10,8 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * <p>
+ *     GenerationRule specifying that values will be generated from pre-defined list of objects.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 1.9.12
+ * </p>
  */
 public class FromListGenerationRule extends GenerationRule {
     private Class classOfTheFirstValue;

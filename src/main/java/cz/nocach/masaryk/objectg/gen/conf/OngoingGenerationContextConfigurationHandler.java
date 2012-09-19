@@ -9,8 +9,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * <p>
+ *     ConfigurationHandler that populates map of contexts for each individual configuration
+ *     object created by {@link SetterConfigurator}. After object is considered to be configured you can call
+ *     {@link #getGenerationConfiguration} to get corresponding configuration.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 16.9.12
+ * </p>
  */
 public class OngoingGenerationContextConfigurationHandler implements ConfigurationHandler {
     private Map<Integer, GenerationConfiguration> contextForObjects = new ConcurrentHashMap<Integer, GenerationConfiguration>();
@@ -62,7 +69,12 @@ public class OngoingGenerationContextConfigurationHandler implements Configurati
         generationContext.addRule(plannedRule);
     }
 
-    public GenerationConfiguration getGenerationContext(Object forObject){
+    /**
+     *
+     * @param forObject not null object for which to return GenerationConfiguration
+     * @return GenerationConfiguration for the object or null if no such object was configured by this handler.
+     */
+    public GenerationConfiguration getGenerationConfiguration(Object forObject){
         Assert.notNull(forObject);
         return contextForObjects.get(System.identityHashCode(forObject));
     }
