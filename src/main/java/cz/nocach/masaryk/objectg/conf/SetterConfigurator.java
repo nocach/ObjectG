@@ -1,11 +1,10 @@
-package cz.nocach.masaryk.objectg.gen.conf;
+package cz.nocach.masaryk.objectg.conf;
 
 import javassist.*;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**

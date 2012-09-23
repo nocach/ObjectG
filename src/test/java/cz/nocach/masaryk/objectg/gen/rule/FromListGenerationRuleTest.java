@@ -1,14 +1,13 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
-import cz.nocach.masaryk.objectg.gen.Generator;
-import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.any;
 
 /**
  * User: __nocach
@@ -20,13 +19,7 @@ public class FromListGenerationRuleTest {
     public void canGenerateByRule(){
         FromListGenerationRule listGenerationRule = new FromListGenerationRule("one", "two", "three");
 
-        Generator generator = listGenerationRule.getGenerator(new GenerationConfiguration());
-
-        assertTrue("returned generator should support String", generator.supportsType(String.class));
-        assertFalse("returned generator should not support other classes then String",
-                generator.supportsType(Integer.class));
-
-        String generatedString = generator.generate(String.class);
+        String generatedString = listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(String.class));
         assertTrue("returned generator should generate from rule values",
                 asList("one", "two", "three").contains(generatedString));
     }
@@ -34,11 +27,10 @@ public class FromListGenerationRuleTest {
     @Test
     public void valuesGeneratedAreCyclic(){
         FromListGenerationRule listGenerationRule = new FromListGenerationRule(1,2);
-        Generator generator = listGenerationRule.getGenerator(new GenerationConfiguration());
 
-        assertEquals((Integer)1, generator.generate(Integer.class));
-        assertEquals((Integer)2, generator.generate(Integer.class));
-        assertEquals((Integer)1, generator.generate(Integer.class));
+        assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(Integer.class)));
+        assertEquals(2, listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(Integer.class)));
+        assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(Integer.class)));
     }
 
     @Test(expected = IllegalArgumentException.class)

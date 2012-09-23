@@ -1,13 +1,17 @@
 package cz.nocach.masaryk.objectg;
 
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
-import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.conf.OngoingConfiguration;
-import cz.nocach.masaryk.objectg.gen.conf.OngoingGenerationContextConfigurationHandler;
-import cz.nocach.masaryk.objectg.gen.conf.SetterConfigurator;
-import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.conf.OngoingConfiguration;
+import cz.nocach.masaryk.objectg.conf.OngoingGenerationContextConfigurationHandler;
+import cz.nocach.masaryk.objectg.conf.SetterConfigurator;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -29,7 +33,11 @@ public class ObjectG {
 
     public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration){
         configuration.setUnique(true);
-        return GeneratorRegistry.getInstance().find(configuration, new GenerationContext(clazz)).generate(clazz);
+        return generate(clazz, configuration);
+    }
+
+    public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
+        return (T) GeneratorRegistry.getInstance().generate(configuration, new GenerationContext(clazz));
     }
 
     /**
@@ -56,6 +64,19 @@ public class ObjectG {
             else {
                 result.putChild(contextForObject);
             }
+        }
+        return result;
+    }
+
+    public static <T> List<T> generateList(Class<T> clazz) {
+        return generateList(clazz, 1);
+    }
+
+    public static <T> List<T> generateList(Class<T> clazz, int size) {
+        Assert.isTrue(size >= 0, "size must be >= 0");
+        List<T> result = new ArrayList<T>(size);
+        for (int i = 0; i < size; i++){
+            result.add(i, unique(clazz));
         }
         return result;
     }

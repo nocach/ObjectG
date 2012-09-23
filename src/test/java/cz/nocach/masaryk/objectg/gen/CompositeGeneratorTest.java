@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;
 import org.junit.runner.JUnitCore;
@@ -13,7 +14,7 @@ import static junit.framework.Assert.assertNotSame;
 public class CompositeGeneratorTest {
     private static final CompositeGenerator generator = new CompositeGenerator(
             new DummyGenerator(),
-            new NativeClassUniqueGenerator());
+            new NativeClassGenerator());
 
     @Test
     public void testConcurrent(){
@@ -28,14 +29,16 @@ public class CompositeGeneratorTest {
         @Test
         public void test(){
             System.out.println("test of "+this);
-            assertNotSame(generator.generate(Integer.class), generator.generate(Integer.class));
+            Object firstValue = generator.generate(new GenerationConfiguration(), new GenerationContext<Integer>(Integer.class));
+            Object secondValue = generator.generate(new GenerationConfiguration(), new GenerationContext<Integer>(Integer.class));
+            assertNotSame(firstValue, secondValue);
         }
     }
 
-    private static class DummyGenerator implements Generator{
+    private static class DummyGenerator extends Generator{
 
         @Override
-        public Object generate(Class type) {
+        public Object generateValue(GenerationConfiguration configuration, GenerationContext type) {
             return null;
         }
 

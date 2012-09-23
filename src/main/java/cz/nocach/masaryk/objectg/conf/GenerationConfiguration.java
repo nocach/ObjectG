@@ -1,7 +1,7 @@
-package cz.nocach.masaryk.objectg.gen.conf;
+package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
-import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;

@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.gen.conf;
+package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import org.junit.Test;

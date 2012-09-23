@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,16 +15,16 @@ import java.util.Set;
  */
 public class NativeClassUniqueGeneratorTest extends Assert{
 
-    private UniqueGenerator generator;
+    private Generator generator;
 
     @Before
     public void setup(){
-        generator = new NativeClassUniqueGenerator();
+        generator = new NativeClassGenerator();
     }
 
     @Test
     public void primitivesAreUnique(){
-        generator = new NativeClassUniqueGenerator();
+        generator = new NativeClassGenerator();
         assertUnique(Integer.class);
         assertUnique(int.class);
         assertUnique(Double.class);
@@ -42,29 +43,31 @@ public class NativeClassUniqueGeneratorTest extends Assert{
 
     @Test
     public void generatedPrimitivesCanBeAssigned(){
-        int intValue = generator.generate(int.class);
-        Integer intValueRef = generator.generate(Integer.class);
-        long longValue = generator.generate(long.class);
-        Long longValueRef = generator.generate(Long.class);
-        double doubleValue = generator.generate(double.class);
-        Double doubleValueRef = generator.generate(Double.class);
-        float floatValue = generator.generate(float.class);
-        Float floatValueRef = generator.generate(Float.class);
-        byte byteValue = generator.generate(byte.class);
-        Byte byteValueRef = generator.generate(Byte.class);
-        char charValue = generator.generate(char.class);
-        Character charValueRef = generator.generate(Character.class);
-        String stringValue = generator.generate(String.class);
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        int intValue = generator.generate(generationConfiguration, new GenerationContext<Integer>(int.class));
+        Integer intValueRef = generator.generate(generationConfiguration, new GenerationContext<Integer>(Integer.class));
+        long longValue = generator.generate(generationConfiguration, new GenerationContext<Long>(long.class));
+        Long longValueRef = generator.generate(generationConfiguration, new GenerationContext<Long>(Long.class));
+        double doubleValue = generator.generate(generationConfiguration, new GenerationContext<Double>(double.class));
+        Double doubleValueRef = generator.generate(generationConfiguration, new GenerationContext<Double>(Double.class));
+        float floatValue = generator.generate(generationConfiguration, new GenerationContext<Float>(float.class));
+        Float floatValueRef = generator.generate(generationConfiguration, new GenerationContext<Float>(Float.class));
+        byte byteValue = generator.generate(generationConfiguration, new GenerationContext<Byte>(byte.class));
+        Byte byteValueRef = generator.generate(generationConfiguration, new GenerationContext<Byte>(Byte.class));
+        char charValue = generator.generate(generationConfiguration, new GenerationContext<Character>(char.class));
+        Character charValueRef = generator.generate(generationConfiguration, new GenerationContext<Character>(Character.class));
+        String stringValue = generator.generate(generationConfiguration, new GenerationContext<String>(String.class));
     }
 
     @Test
     public void canGenerateManyUniqueCharacters(){
-        NativeClassUniqueGenerator nativeClassUniqueGenerator = new NativeClassUniqueGenerator();
+        NativeClassGenerator nativeClassUniqueGenerator = new NativeClassGenerator();
         int expectToGenerateUniqueChars = 100000;
         Set<Character> chars = new HashSet<Character>(expectToGenerateUniqueChars);
         for (int i = 0; i < expectToGenerateUniqueChars; i++){
             int beforeInsert = chars.size();
-            Character generated = (Character) nativeClassUniqueGenerator.generate(Character.class);
+            Character generated = (Character) nativeClassUniqueGenerator
+                    .generate(new GenerationConfiguration(), new GenerationContext(Character.class));
             chars.add(generated);
             assertNotSame("failed on i="+i, beforeInsert, chars.size());
         }
@@ -79,7 +82,8 @@ public class NativeClassUniqueGeneratorTest extends Assert{
 
     private void assertUnique(Class type) {
         assertTrue("expect to support type "+ type.getName(), generator.supportsType(type));
-        assertNotSame("expect to generate unique values for type "+type.getName(),
-                generator.generate(type), generator.generate(type));
+        Object firstValue = generator.generate(new GenerationConfiguration(), new GenerationContext(type));
+        Object secondValue = generator.generate(new GenerationConfiguration(), new GenerationContext(type));
+        assertNotSame("expect to generate unique values for type "+type.getName(), firstValue, secondValue);
     }
 }

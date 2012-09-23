@@ -1,9 +1,9 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
-import cz.nocach.masaryk.objectg.gen.Generator;
-import cz.nocach.masaryk.objectg.gen.NotNativeClassGenerator;
-import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 
 /**
  * <p>
@@ -16,14 +16,17 @@ import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
  * Date: 16.9.12
  * </p>
  */
-public class SpecificConfigurationGenerationRule extends GenerationRule {
+class SpecificConfigurationGenerationRule extends GenerationRule {
     private GenerationConfiguration configuration;
 
     public SpecificConfigurationGenerationRule(GenerationConfiguration configuration){
         this.configuration = configuration;
     }
+
     @Override
-    protected Generator getGenerator(GenerationConfiguration currentConfiguration) {
-        return new NotNativeClassGenerator(currentConfiguration.newWithOverride(configuration));
+    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+        GenerationConfiguration overridenConfiguration = currentConfiguration.newWithOverride(configuration);
+        return (T) GeneratorRegistry.getInstance().generate(overridenConfiguration
+                    , new GenerationContext(context.getClassThatIsGenerated()));
     }
 }

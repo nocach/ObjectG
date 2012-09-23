@@ -1,7 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
@@ -18,21 +17,17 @@ import java.lang.reflect.InvocationTargetException;
  * Date: 30.8.12
  * </p>
  */
-public class NotNativeClassGenerator implements Generator {
-    private GenerationConfiguration generationConfiguration;
+class NotNativeClassGenerator extends Generator {
 
-    public NotNativeClassGenerator(GenerationConfiguration generationConfiguration){
-        this.generationConfiguration = generationConfiguration;
-    }
     @Override
-    public Object generate(Class type) {
+    public Object generateValue(final GenerationConfiguration configuration, GenerationContext context) {
         try {
-            Constructor constructor = getConstructorWithMostArgs(type);
-            final Object resultObj = constructor.newInstance(createUniqueConstructorArgs(constructor));
-            ReflectionUtils.doWithFields(type, new ReflectionUtils.FieldCallback() {
+            Constructor constructor = getConstructorWithMostArgs(context.getClassThatIsGenerated());
+            final Object resultObj = constructor.newInstance(createUniqueConstructorArgs(configuration, constructor));
+            ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), new ReflectionUtils.FieldCallback() {
                 @Override
                 public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                    Object generatedValueForField = findAndGenerate(field);
+                    Object generatedValueForField = findAndGenerate(configuration, field);
                     field.setAccessible(true);
                     field.set(resultObj, generatedValueForField);
                 }
@@ -40,31 +35,31 @@ public class NotNativeClassGenerator implements Generator {
             });
             return resultObj;
         } catch (InstantiationException e) {
-            throw new RuntimeException("can't create new instance of "+type.getName(), e);
+            throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("can't create new instance of "+type.getName(), e);
+            throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException("can't create new instance of "+type.getName(), e);
+            throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
         }
     }
 
-    private Object[] createUniqueConstructorArgs(Constructor constructor) {
+    private Object[] createUniqueConstructorArgs(GenerationConfiguration configuration, Constructor constructor) {
         Object []constructorParams = new Object[constructor.getParameterTypes().length];
         for (int i = 0; i < constructor.getParameterTypes().length; i++){
             Class paramType = constructor.getParameterTypes()[i];
-            constructorParams[i] = findAndGenerate(paramType);
+            constructorParams[i] = findAndGenerate(configuration, paramType);
         }
         return constructorParams;
     }
 
-    private Object findAndGenerate(Class paramType) {
-        return GeneratorRegistry.getInstance().find(generationConfiguration, new GenerationContext(paramType)).generate(paramType);
+    private Object findAndGenerate(GenerationConfiguration configuration, Class paramType) {
+        return GeneratorRegistry.getInstance().generate(configuration, new GenerationContext(paramType));
     }
 
-    private Object findAndGenerate(Field field) {
+    private Object findAndGenerate(GenerationConfiguration configuration, Field field) {
         GenerationContext generationContext = new GenerationContext(field.getType());
         generationContext.setField(field);
-        return GeneratorRegistry.getInstance().find(generationConfiguration, generationContext).generate(field.getType());
+        return GeneratorRegistry.getInstance().generate(configuration, generationContext);
     }
 
 
@@ -86,6 +81,6 @@ public class NotNativeClassGenerator implements Generator {
     @Override
     public boolean supportsType(Class type) {
         //TODO: return !Types.isJavaType(type)
-        return false;
+        return true;
     }
 }

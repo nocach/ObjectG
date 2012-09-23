@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.gen.context;
+package cz.nocach.masaryk.objectg.gen;
 
 import java.lang.reflect.Field;
 
@@ -11,12 +11,12 @@ import java.lang.reflect.Field;
  * Date: 28.8.12
  * </p>
  */
-public class GenerationContext {
+public class GenerationContext<T> {
 
     private Class classThatIsGenerated;
     private Field field;
 
-    public GenerationContext(Class classThatIsGenerated) {
+    public GenerationContext(Class<T> classThatIsGenerated) {
         this.classThatIsGenerated = classThatIsGenerated;
     }
 
@@ -31,7 +31,6 @@ public class GenerationContext {
     public Field getField() {
         return field;
     }
-
     @Override
     public String toString() {
         return "GenerationContext{" +

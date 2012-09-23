@@ -1,9 +1,8 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
-import cz.nocach.masaryk.objectg.gen.GeneratorForSingleClass;
-import cz.nocach.masaryk.objectg.gen.Generator;
-import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -18,18 +17,21 @@ import java.util.List;
  * Date: 1.9.12
  * </p>
  */
-public class FromListGenerationRule extends GenerationRule {
+class FromListGenerationRule extends GenerationRule {
     private Class classOfTheFirstValue;
     private List values;
+    private FromListGenerator fromListGenerator;
 
     public <T> FromListGenerationRule(T... values){
         this(Arrays.asList(values));
+
     }
     public <T> FromListGenerationRule(List<T> values){
         Assert.notNull(values, "at least one value must be provided, values are null");
         Assert.isTrue(!values.isEmpty(), "at least one value must be provided, values are empty");
         assignClassOfNotNullValue(values);
         this.values = values;
+        fromListGenerator = new FromListGenerator(values);
     }
 
     private <T> void assignClassOfNotNullValue(List<T> values) {
@@ -44,22 +46,20 @@ public class FromListGenerationRule extends GenerationRule {
     }
 
     @Override
-    protected Generator getGenerator(GenerationConfiguration currentConfiguration) {
-        return new FromListGenerator(classOfTheFirstValue, values);
+    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+        return (T)fromListGenerator.generateValue();
     }
 
-    private static class FromListGenerator extends GeneratorForSingleClass {
+    private static class FromListGenerator {
         private List values;
         private int currentIndex = 0;
 
-        private FromListGenerator(Class targetClass, List values) {
-            super(targetClass);
+        private FromListGenerator(List values) {
             Assert.isTrue(!values.isEmpty());
             this.values = values;
         }
 
-        @Override
-        public <T> T generate(Class<T> type) {
+        public <T> T generateValue() {
             T result = (T)values.get(currentIndex);
             currentIndex++;
             if (currentIndex > values.size() - 1){

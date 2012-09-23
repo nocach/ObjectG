@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
  * Date: 15.9.12
  * </p>
  */
-public abstract class GeneratorForSingleClass implements Generator{
+public abstract class GeneratorForSingleClass extends Generator{
     private Class targetClass;
 
     public GeneratorForSingleClass(Class targetClass){

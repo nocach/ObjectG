@@ -1,9 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import cz.nocach.masaryk.objectg.gen.Generator;
-import cz.nocach.masaryk.objectg.gen.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.context.GenerationContext;
-import org.apache.commons.beanutils.BeanUtils;
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.hamcrest.Matcher;
 
 /**
@@ -22,7 +19,7 @@ public abstract class GenerationRule {
         throw new RuntimeException("not implemented yet");
     }
 
-    protected abstract Generator getGenerator(GenerationConfiguration currentConfiguration);
+    protected abstract <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context);
 
     /**
      * @param forProperty for which property this rule must be applied
@@ -52,4 +49,5 @@ public abstract class GenerationRule {
                 "forProperty='" + forProperty + '\'' +
                 '}';
     }
+
 }

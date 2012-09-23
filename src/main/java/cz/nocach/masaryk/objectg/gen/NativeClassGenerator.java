@@ -1,5 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,21 +14,22 @@ import java.util.concurrent.atomic.AtomicLong;
  * Date: 26.8.12
  * </p>
  */
-class NativeClassUniqueGenerator implements UniqueGenerator {
+class NativeClassGenerator extends Generator {
     //TODO: allow resetting of this sequences? E.g. this reset can be performed before any new TestCase is about to
     //be started
     private final AtomicLong longSequence = new AtomicLong();
     private final AtomicInteger charSequence = new AtomicInteger();
+
     @Override
-    public Object generate(Class type) {
-        if (String.class.equals(type)) return Long.toString(longSequence.incrementAndGet());
-        if (isLong(type)) return longSequence.incrementAndGet();
-        if (isInteger(type)) return (int)longSequence.incrementAndGet();
-        if (isDouble(type)) return (double)longSequence.incrementAndGet();
-        if (isFloat(type)) return (float)longSequence.incrementAndGet();
-        if (isByte(type)) return (byte)longSequence.incrementAndGet();
-        if (isChar(type)) return returnNextCharOrThrow();
-        throw new IllegalArgumentException("can't generate value of type " + type);
+    protected Object generateValue(GenerationConfiguration configuration, GenerationContext context) {
+        if (String.class.equals(context.getClassThatIsGenerated())) return Long.toString(longSequence.incrementAndGet());
+        if (isLong(context.getClassThatIsGenerated())) return longSequence.incrementAndGet();
+        if (isInteger(context.getClassThatIsGenerated())) return (int)longSequence.incrementAndGet();
+        if (isDouble(context.getClassThatIsGenerated())) return (double)longSequence.incrementAndGet();
+        if (isFloat(context.getClassThatIsGenerated())) return (float)longSequence.incrementAndGet();
+        if (isByte(context.getClassThatIsGenerated())) return (byte)longSequence.incrementAndGet();
+        if (isChar(context.getClassThatIsGenerated())) return returnNextCharOrThrow();
+        throw new IllegalArgumentException("can't generate value of type " + context);
     }
 
     private Object returnNextCharOrThrow() {

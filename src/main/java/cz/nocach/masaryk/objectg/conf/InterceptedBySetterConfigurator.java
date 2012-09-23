@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.gen.conf;
+package cz.nocach.masaryk.objectg.conf;
 
 /**
  * <p>
@@ -9,5 +9,5 @@ package cz.nocach.masaryk.objectg.gen.conf;
  * Date: 16.9.12
  * </p>
  */
-interface InterceptedBySetterConfigurator {
+public interface InterceptedBySetterConfigurator {
 }

@@ -1,8 +1,8 @@
-package cz.nocach.masaryk.objectg.gen.conf;
+package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
-import cz.nocach.masaryk.objectg.gen.rule.SpecificConfigurationGenerationRule;
+import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import org.springframework.util.Assert;
 
 import java.util.Map;
@@ -47,7 +47,7 @@ public class OngoingGenerationContextConfigurationHandler implements Configurati
     private void addRuleFromConfigurationObject(String propertyName, GenerationConfiguration generationContext) {
         GenerationConfiguration specificConfiguration =
                 ObjectG.contextFromObjects(OngoingConfiguration.plannedConfigurationObject);
-        GenerationRule specificConfigurationRule = new SpecificConfigurationGenerationRule(specificConfiguration);
+        GenerationRule specificConfigurationRule = Rules.specificConfiguration(specificConfiguration);
         specificConfigurationRule.setForProperty(propertyName);
         generationContext.addRule(specificConfigurationRule);
     }
