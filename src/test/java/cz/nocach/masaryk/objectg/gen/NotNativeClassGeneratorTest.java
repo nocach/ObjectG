@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,22 +17,19 @@ public class NotNativeClassGeneratorTest extends Assert{
 
     @Before
     public void setup(){
-        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
-        generationConfiguration.setUnique(true);
         generator = new NotNativeClassGenerator();
     }
 
     @Test
     public void noArgConstructor(){
-        Object generated = generator.generate(new GenerationConfiguration(), new GenerationContext(NoArgConstructor.class));
+        Object generated = ObjectG.unique(NoArgConstructor.class);
 
         assertNotNull(generated);
     }
 
     @Test
     public void oneArgConstructor(){
-        OneArgConstructor generated = (OneArgConstructor) generator.generate(new GenerationConfiguration(),
-                new GenerationContext(OneArgConstructor.class));
+        OneArgConstructor generated = ObjectG.unique(OneArgConstructor.class);
 
         assertNotNull(generated);
         assertNotNull(generated.arg);
@@ -39,8 +37,7 @@ public class NotNativeClassGeneratorTest extends Assert{
 
     @Test
     public void betweenMultipleConstructorsWithMostArgsIsUsed(){
-        MultipleConstructors generated = (MultipleConstructors) generator.generate(new GenerationConfiguration(),
-                new GenerationContext(MultipleConstructors.class));
+        MultipleConstructors generated = ObjectG.unique(MultipleConstructors.class);
 
         assertNotNull(generated);
         assertNotNull(generated.field1);
@@ -50,8 +47,7 @@ public class NotNativeClassGeneratorTest extends Assert{
 
     @Test
     public void fieldsInClassAreSetWithUniqueValues(){
-        ClassWithMultipleField generated = (ClassWithMultipleField) generator.generate(new GenerationConfiguration(),
-                new GenerationContext(ClassWithMultipleField.class));
+        ClassWithMultipleField generated =  ObjectG.unique(ClassWithMultipleField.class);
 
         assertClassWithMultipleFieldsIsFilled(generated);
     }
@@ -66,8 +62,7 @@ public class NotNativeClassGeneratorTest extends Assert{
 
     @Test
     public void fieldsOfObjectAreGenerated(){
-        ClassReferencingOtherClass generated = (ClassReferencingOtherClass) generator.generate(new GenerationConfiguration(),
-                new GenerationContext(ClassReferencingOtherClass.class));
+        ClassReferencingOtherClass generated =  ObjectG.unique(ClassReferencingOtherClass.class);
 
         assertNotNull(generated);
         assertClassWithMultipleFieldsIsFilled(generated.classWithMultipleField1);

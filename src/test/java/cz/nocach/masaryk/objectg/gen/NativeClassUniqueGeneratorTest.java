@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -82,8 +83,8 @@ public class NativeClassUniqueGeneratorTest extends Assert{
 
     private void assertUnique(Class type) {
         assertTrue("expect to support type "+ type.getName(), generator.supportsType(type));
-        Object firstValue = generator.generate(new GenerationConfiguration(), new GenerationContext(type));
-        Object secondValue = generator.generate(new GenerationConfiguration(), new GenerationContext(type));
+        Object firstValue = ObjectG.unique(type);
+        Object secondValue = ObjectG.unique(type);
         assertNotSame("expect to generate unique values for type "+type.getName(), firstValue, secondValue);
     }
 }
