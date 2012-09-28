@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -68,15 +70,47 @@ public class ObjectG {
         return result;
     }
 
+    /**
+     *
+     * @param clazz type of the objects for list
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> generateList(Class<T> clazz) {
         return generateList(clazz, 1);
     }
 
+    /**
+     *
+     * @param clazz type of the objects for list
+     * @param size how many objects to generate
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> generateList(Class<T> clazz, int size) {
         Assert.isTrue(size >= 0, "size must be >= 0");
         List<T> result = new ArrayList<T>(size);
         for (int i = 0; i < size; i++){
             result.add(i, unique(clazz));
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param clazz type of the objects for set
+     * @param <T>
+     * @return
+     */
+    public static <T> Set<T> generateSet(Class<T> clazz) {
+        return generateSet(clazz, 1);
+    }
+
+    public static <T> Set<T> generateSet(Class<T> clazz, int size){
+        Assert.isTrue(size >= 0, "size must be >= 0");
+        Set<T> result = new HashSet<T>(size);
+        for (int i = 0; i < size; i++){
+            result.add(unique(clazz));
         }
         return result;
     }

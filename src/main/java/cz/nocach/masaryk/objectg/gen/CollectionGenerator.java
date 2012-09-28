@@ -5,48 +5,55 @@ import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * User: __nocach
- * Date: 22.9.12
+ * Date: 28.9.12
  */
-class CollectionGenerator extends Generator{
+abstract class CollectionGenerator<CollectionT> extends Generator{
     @Override
-    public <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> context) {
-        if (context.getField() == null){
-            throw new IllegalArgumentException("can't generate collection for context without field"
+    public final <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> context) {
+        if (context.getField() == null
+                && configuration.getObjectsInCollections() > 0){
+            throw new IllegalArgumentException("can't generate collection with objects for context without field"
                     +", context="+context);
         }
-        Collection collection = createCollectionInstance(context);
-        // TypeVariableImpl, WildcardTypeImple
-        if (!(context.getField().getGenericType() instanceof ParameterizedType)){
-            throw new GenerationException("no generic information for field, context="+context);
+        CollectionT collection = createCollectionInstance(context);
+
+        for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+            addNewObject(collection, configuration, context);
         }
-        GenerationContext contextForListObjects = getContextForGeneratingObjectsOfCollection(context);
-        Object generatedValue = GeneratorRegistry.getInstance().generate(configuration, contextForListObjects);
-        collection.add(generatedValue);
         return (T)collection;
     }
 
-    private <T> GenerationContext getContextForGeneratingObjectsOfCollection(GenerationContext<T> context) {
+    protected abstract void addNewObject(CollectionT collection,
+                                         GenerationConfiguration configuration, GenerationContext contextOfCollection);
+
+    protected <T> GenerationContext getContextForGenericType(GenerationContext<T> context, int typeVarIndex) {
+        if (!(context.getField().getGenericType() instanceof ParameterizedType)){
+            throw new GenerationException("no generic information for field, context="+context);
+        }
         Type[] actualTypeArguments = ((ParameterizedType) context.getField().getGenericType()).getActualTypeArguments();
         //TODO: process all implementations of Type: GenericArrayTypeImpl, ParametrizedTypeImpl,
-        Type firstType = actualTypeArguments[0];
+        // TypeVariableImpl, WildcardTypeImple
+        Type firstType = actualTypeArguments[typeVarIndex];
         return new GenerationContext((Class) firstType);
     }
 
-    private <T> Collection createCollectionInstance(GenerationContext<T> context) {
+    private <T> CollectionT createCollectionInstance(GenerationContext<T> context) {
         if (Modifier.isAbstract(context.getClassThatIsGenerated().getModifiers())){
-            return new ArrayList();
+            return createInstanceForAbstractType();
         }
-        return new ArrayList<T>();
+        try {
+            return (CollectionT)context.getClassThatIsGenerated().newInstance();
+        } catch (InstantiationException e) {
+            throw new GenerationException("could not generated instance of collection.type="
+                    +context.getClassThatIsGenerated(), e);
+        } catch (IllegalAccessException e) {
+            throw new GenerationException("could not generated instance of collection.type="
+                    +context.getClassThatIsGenerated(), e);
+        }
     }
 
-    @Override
-    public boolean supportsType(Class type) {
-        return List.class.isAssignableFrom(type);
-    }
+    protected abstract CollectionT createInstanceForAbstractType();
 }

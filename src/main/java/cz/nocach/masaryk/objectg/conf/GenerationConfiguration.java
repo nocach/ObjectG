@@ -37,6 +37,10 @@ public class GenerationConfiguration implements Cloneable{
     private final Class forClass;
     private Set<GenerationConfiguration> children = new HashSet<GenerationConfiguration>();
     private List<GenerationRule> rules = new LinkedList<GenerationRule>();
+    /**
+     * how many objects to generate into collections
+     */
+    private int objectsInCollections = 1;
 
     public GenerationConfiguration(){
         this(null);
@@ -117,6 +121,30 @@ public class GenerationConfiguration implements Cloneable{
         return result;
     }
 
+    /**
+     * create copy of current configuration, but additional add or replace configuration of {@code configuration}
+     * @param configuration
+     * @return
+     */
+    public GenerationConfiguration newWithOverride(GenerationConfiguration configuration) {
+        try {
+            GenerationConfiguration overriden = clone();
+            overriden.putChild(configuration);
+            return overriden;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getObjectsInCollections() {
+        return objectsInCollections;
+    }
+
+    public void setObjectsInCollections(int objectsInCollections) {
+        Assert.isTrue(objectsInCollections >= 0, "objectsInCollections must be >= 0");
+        this.objectsInCollections = objectsInCollections;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,21 +160,6 @@ public class GenerationConfiguration implements Cloneable{
     @Override
     public int hashCode() {
         return forClass != null ? forClass.hashCode() : 0;
-    }
-
-    /**
-     * create copy of current configuration, but additional add or replace configuration of {@code configuration}
-     * @param configuration
-     * @return
-     */
-    public GenerationConfiguration newWithOverride(GenerationConfiguration configuration) {
-        try {
-            GenerationConfiguration overriden = clone();
-            overriden.putChild(configuration);
-            return overriden;
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

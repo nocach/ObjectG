@@ -7,8 +7,8 @@ import org.springframework.util.Assert;
 
 /**
  * <p>
- *      Knows about all generators in the framework. Allows to find suitable Generators for the context by
- *      using {@link #find(GenerationContext)}.
+ *      Knows about all generators in the framework. Allows to generate value for any type by using
+ *      {@link #generate(cz.nocach.masaryk.objectg.conf.GenerationConfiguration, GenerationContext)}
  * </p>
  * <p>
  * User: __nocach
@@ -20,7 +20,9 @@ public class GeneratorRegistry {
 
     private final CompositeGenerator generatorChain = new CompositeGenerator(
             new NativeClassGenerator(),
-            new CollectionGenerator(),
+            new ListGenerator(),
+            new MapGenerator(),
+            new SetGenerator(),
             new NotNativeClassGenerator());
     private static final GeneratorRegistry instance = new GeneratorRegistry();
 
