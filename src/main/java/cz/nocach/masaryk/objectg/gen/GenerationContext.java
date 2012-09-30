@@ -20,9 +20,11 @@ public class GenerationContext<T> {
 
     private Class classThatIsGenerated;
     private Field field;
+    private Hierarchy hierarchy = new Hierarchy();
 
     public GenerationContext(Class<T> classThatIsGenerated) {
         this.classThatIsGenerated = classThatIsGenerated;
+        hierarchy.push(classThatIsGenerated);
     }
 
     public Class getClassThatIsGenerated() {
@@ -45,12 +47,35 @@ public class GenerationContext<T> {
         this.parentObject = parentObject;
     }
 
+    public boolean isCycle(){
+        if (hierarchy == null) return false;
+        return hierarchy.isCycle();
+    }
+
+    /**
+     *
+     * @param clazz
+     * @return new GenerationContext after pushing clazz
+     */
+    public GenerationContext push(Class clazz){
+        GenerationContext newContext = new GenerationContext(clazz);
+        newContext.hierarchy = hierarchy;
+        newContext.hierarchy.push(clazz);
+        return newContext;
+    }
+
+    public void pop(){
+        hierarchy.pop();
+    }
+
     @Override
     public String toString() {
         return "GenerationContext{" +
                 "parentObject=" + parentObject +
                 ", classThatIsGenerated=" + classThatIsGenerated +
                 ", field=" + field +
+                ", hierarchy.size=" + (hierarchy == null ? null : hierarchy.size()) +
                 '}';
     }
+
 }

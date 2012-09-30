@@ -20,14 +20,14 @@ import java.lang.reflect.InvocationTargetException;
 class NotNativeClassGenerator extends Generator {
 
     @Override
-    public Object generateValue(final GenerationConfiguration configuration, GenerationContext context) {
+    public Object generateValue(final GenerationConfiguration configuration, final GenerationContext context) {
         try {
             Constructor constructor = getConstructorWithMostArgs(context.getClassThatIsGenerated());
-            final Object resultObj = constructor.newInstance(createUniqueConstructorArgs(configuration, constructor));
+            final Object resultObj = constructor.newInstance(createUniqueConstructorArgs(configuration, context, constructor));
             ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), new ReflectionUtils.FieldCallback() {
                 @Override
                 public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                    Object generatedValueForField = findAndGenerate(configuration, resultObj, field);
+                    Object generatedValueForField = findAndGenerate(configuration, context, resultObj, field);
                     field.setAccessible(true);
                     field.set(resultObj, generatedValueForField);
                 }
@@ -43,24 +43,36 @@ class NotNativeClassGenerator extends Generator {
         }
     }
 
-    private Object[] createUniqueConstructorArgs(GenerationConfiguration configuration, Constructor constructor) {
+    private Object[] createUniqueConstructorArgs(GenerationConfiguration configuration, GenerationContext context, Constructor constructor) {
         Object []constructorParams = new Object[constructor.getParameterTypes().length];
         for (int i = 0; i < constructor.getParameterTypes().length; i++){
             Class paramType = constructor.getParameterTypes()[i];
-            constructorParams[i] = findAndGenerate(configuration, paramType);
+            constructorParams[i] = findAndGenerate(configuration, context, paramType);
         }
         return constructorParams;
     }
 
-    private Object findAndGenerate(GenerationConfiguration configuration, Class paramType) {
-        return GeneratorRegistry.getInstance().generate(configuration, new GenerationContext(paramType));
+    private Object findAndGenerate(GenerationConfiguration configuration, GenerationContext context, Class paramType) {
+        GenerationContext pushedContext = context.push(paramType);
+        return generateForHierarchy(configuration, context, pushedContext);
     }
 
-    private Object findAndGenerate(GenerationConfiguration configuration, Object parentObject, Field field) {
-        GenerationContext generationContext = new GenerationContext(field.getType());
+    private Object generateForHierarchy(GenerationConfiguration configuration, GenerationContext context, GenerationContext pushedContext) {
+        if (context.isCycle()) {
+            Object valueForCycle = configuration.getCycleStrategy().generateForCycle(configuration, context);
+            context.pop();
+            return valueForCycle;
+        }
+        Object result = GeneratorRegistry.getInstance().generate(configuration, pushedContext);
+        context.pop();
+        return result;
+    }
+
+    private Object findAndGenerate(GenerationConfiguration configuration, GenerationContext context, Object parentObject, Field field) {
+        GenerationContext generationContext = context.push(field.getType());
         generationContext.setField(field);
         generationContext.setParentObject(parentObject);
-        return GeneratorRegistry.getInstance().generate(configuration, generationContext);
+        return generateForHierarchy(configuration, context, generationContext);
     }
 
 

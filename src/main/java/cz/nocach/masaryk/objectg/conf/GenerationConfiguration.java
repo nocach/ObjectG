@@ -1,7 +1,9 @@
 package cz.nocach.masaryk.objectg.conf;
 
+import cz.nocach.masaryk.objectg.gen.CycleStrategy;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.NullValueCycleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -23,6 +25,7 @@ import java.util.*;
  */
 public class GenerationConfiguration implements Cloneable{
     private static final Logger logger = LoggerFactory.getLogger(GenerationConfiguration.class);
+    private CycleStrategy cycleStrategy = new NullValueCycleStrategy();
     private boolean isUnique;
     private Set<GenerationRule> rules = newSetForRules();
 
@@ -123,5 +126,14 @@ public class GenerationConfiguration implements Cloneable{
 
     public void addAllRules(List<GenerationRule> newRules) {
         this.rules.addAll(newRules);
+    }
+
+    public CycleStrategy getCycleStrategy() {
+        return cycleStrategy;
+    }
+
+    public void setCycleStrategy(CycleStrategy cycleStrategy) {
+        Assert.notNull(cycleStrategy, "cycleStrategy");
+        this.cycleStrategy = cycleStrategy;
     }
 }

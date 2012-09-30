@@ -71,9 +71,13 @@ public class NotNativeClassGeneratorTest extends Assert{
     }
 
     @Test
-    @Ignore
+    public void canConstructObjectWithCyclicDependency(){
+        ObjectG.unique(CyclicClassA.class);
+    }
+
+    @Test
     public void cyclicConstructorTest(){
-        fail("test for cyclic constructor (new Person(new Person())");
+        ObjectG.unique(CyclicConstructor.class);
     }
 
     @Test
@@ -88,10 +92,9 @@ public class NotNativeClassGeneratorTest extends Assert{
         fail("field AbstractPerson");
     }
 
-    @Test
-    public void canConstructObjectWithCyclicDependency(){
-        CyclicClassA unique = ObjectG.unique(CyclicClassA.class);
-
+    public static class CyclicConstructor{
+        public CyclicConstructor(CyclicConstructor arg){
+        }
     }
 
     public static class CyclicClassA{
