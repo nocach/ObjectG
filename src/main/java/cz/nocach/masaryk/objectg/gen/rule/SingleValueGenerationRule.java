@@ -9,7 +9,7 @@ import cz.nocach.masaryk.objectg.gen.GenerationRule;
  * Date: 23.9.12
  */
 
-public class SingleValueGenerationRule<T> extends GenerationRule{
+class SingleValueGenerationRule<T> extends GenerationRule{
     private T value;
 
     public SingleValueGenerationRule(T value){

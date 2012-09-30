@@ -13,6 +13,11 @@ import java.lang.reflect.Field;
  */
 public class GenerationContext<T> {
 
+    /**
+     * optionall parentObject for which generation is performed
+     */
+    private Object parentObject;
+
     private Class classThatIsGenerated;
     private Field field;
 
@@ -31,10 +36,20 @@ public class GenerationContext<T> {
     public Field getField() {
         return field;
     }
+
+    public Object getParentObject() {
+        return parentObject;
+    }
+
+    public void setParentObject(Object parentObject) {
+        this.parentObject = parentObject;
+    }
+
     @Override
     public String toString() {
         return "GenerationContext{" +
-                "classThatIsGenerated=" + classThatIsGenerated +
+                "parentObject=" + parentObject +
+                ", classThatIsGenerated=" + classThatIsGenerated +
                 ", field=" + field +
                 '}';
     }

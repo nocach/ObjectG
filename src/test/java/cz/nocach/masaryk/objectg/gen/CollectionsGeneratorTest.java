@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.gen.rule.Rules;
+import cz.nocach.masaryk.objectg.conf.OngoingRules;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -93,7 +93,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void canConfigurateClassForGenericListField(){
         ClassWithGenericList building = ObjectG.config(ClassWithGenericList.class);
-        building.setGenericList(Rules.listDefinition(String.class));
+        building.setGenericList(OngoingRules.listDefinition(String.class));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, building);
 
@@ -105,7 +105,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void canConfigurateClassForGenericSetField(){
         ClassWithGenericSet building = ObjectG.config(ClassWithGenericSet.class);
-        building.setGenericSet(Rules.setDefinition(String.class));
+        building.setGenericSet(OngoingRules.setDefinition(String.class));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, building);
 
@@ -118,7 +118,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void configurateClassForGenericListFieldCanDefineSize(){
         ClassWithGenericList building = ObjectG.config(ClassWithGenericList.class);
-        building.setGenericList(Rules.listDefinition(String.class, 0));
+        building.setGenericList(OngoingRules.listDefinition(String.class, 0));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, building);
 
@@ -128,7 +128,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void configurateClassForGenericSetFieldCanDefineSize(){
         ClassWithGenericSet building = ObjectG.config(ClassWithGenericSet.class);
-        building.setGenericSet(Rules.setDefinition(String.class, 0));
+        building.setGenericSet(OngoingRules.setDefinition(String.class, 0));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, building);
 
@@ -138,7 +138,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void configurateClassForGenericListFieldCanDefineValues(){
         ClassWithGenericList building = ObjectG.config(ClassWithGenericList.class);
-        building.setGenericList(Rules.listDefinition(String.class, "one", "two"));
+        building.setGenericList(OngoingRules.listDefinition(String.class, "one", "two"));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, building);
 
@@ -150,7 +150,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void configurateClassForGenericSetFieldCanDefineValues(){
         ClassWithGenericSet building = ObjectG.config(ClassWithGenericSet.class);
-        building.setGenericSet(Rules.setDefinition(String.class, "one", "two"));
+        building.setGenericSet(OngoingRules.setDefinition(String.class, "one", "two"));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, building);
 
@@ -182,14 +182,26 @@ public class CollectionsGeneratorTest {
     }
 
     @Test
-    public void canConfigurateListOfConcreteType(){
+    public void canConfigurateCollectionOfConcreteType(){
         ClassWithCollections building = ObjectG.config(ClassWithCollections.class);
-        building.setArrayListString(Rules.collectionDefinition(ArrayList.class, String.class));
+        building.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class));
 
         ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, building);
 
         assertEquals(1, generated.getArrayListString().size());
         assertNotNull(generated.getArrayListString().get(0));
+    }
+
+    @Test
+    @Ignore
+    public void canConfigurateCollectionOfConcreteTypeAndCanDefineSize(){
+        fail("not implemented");
+    }
+
+    @Test
+    @Ignore
+    public void canConfigurateCollectionOfConcreteTypeAndCanValues(){
+        fail("not implemented");
     }
 
     public static class ClassWithCollections{

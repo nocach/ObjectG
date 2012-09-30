@@ -27,7 +27,7 @@ class NotNativeClassGenerator extends Generator {
             ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), new ReflectionUtils.FieldCallback() {
                 @Override
                 public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                    Object generatedValueForField = findAndGenerate(configuration, field);
+                    Object generatedValueForField = findAndGenerate(configuration, resultObj, field);
                     field.setAccessible(true);
                     field.set(resultObj, generatedValueForField);
                 }
@@ -56,9 +56,10 @@ class NotNativeClassGenerator extends Generator {
         return GeneratorRegistry.getInstance().generate(configuration, new GenerationContext(paramType));
     }
 
-    private Object findAndGenerate(GenerationConfiguration configuration, Field field) {
+    private Object findAndGenerate(GenerationConfiguration configuration, Object parentObject, Field field) {
         GenerationContext generationContext = new GenerationContext(field.getType());
         generationContext.setField(field);
+        generationContext.setParentObject(parentObject);
         return GeneratorRegistry.getInstance().generate(configuration, generationContext);
     }
 

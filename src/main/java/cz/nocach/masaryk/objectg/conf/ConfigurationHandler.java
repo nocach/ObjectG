@@ -18,7 +18,9 @@ public interface ConfigurationHandler {
     public void onInit(Object objectUnderConfiguration);
     /**
      * called when setter was called for configuration.
+     * @param objectUnderConfiguration
+     * @param value value with which setter was called
      * @param propertyName property of the setter
      */
-    public void onSetter(Object objectUnderConfiguration, String propertyName);
+    public void onSetter(Object objectUnderConfiguration, Object value, String propertyName);
 }

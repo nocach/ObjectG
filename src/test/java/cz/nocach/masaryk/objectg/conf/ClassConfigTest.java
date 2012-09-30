@@ -1,9 +1,13 @@
 package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.ObjectG;
+import org.junit.Ignore;
 import org.junit.Test;
+import sun.java2d.pipe.RegionSpanIterator;
 
-import static cz.nocach.masaryk.objectg.gen.rule.Rules.fromList;
+import java.util.List;
+
+import static cz.nocach.masaryk.objectg.conf.OngoingRules.fromList;
 import static junit.framework.Assert.*;
 
 /**
@@ -47,6 +51,37 @@ public class ClassConfigTest {
         assertEquals("streetConfiguredValue", person.getWorkAddress().getStreet());
     }
 
+    @Test
+    public void nestedClassCanBeConfiguredMoreThanOnce(){
+        Person confPerson = ObjectG.config(Person.class);
+
+        confPerson.setHomeAddress(ObjectG.config(Address.class));
+        confPerson.getHomeAddress().setStreet("homeConf");
+
+        confPerson.setWorkAddress(ObjectG.config(Address.class));
+        confPerson.getWorkAddress().setStreet("workConf");
+
+        Person generated = ObjectG.unique(Person.class, confPerson);
+
+        assertEquals("homeAddress must be configured", "homeConf", generated.getHomeAddress().getStreet());
+        assertEquals("workAddress must be configured", "workConf", generated.getWorkAddress().getStreet());
+    }
+
+    @Test
+    public void canCombineExplicitAndImplicitObjectConfiguraiton(){
+        Person confPerson = ObjectG.config(Person.class);
+
+        confPerson.setHomeAddress(ObjectG.config(Address.class));
+        confPerson.getHomeAddress().setStreet("homeConf");
+
+        Address implicitAddressConf = ObjectG.config(Address.class);
+        implicitAddressConf.setStreet("workConf");
+
+        Person generated = ObjectG.unique(Person.class, confPerson, implicitAddressConf);
+
+        assertEquals("homeConf", generated.getHomeAddress().getStreet());
+        assertEquals("workConf", generated.getWorkAddress().getStreet());
+    }
 
     @Test
     public void samePropertyIsConfiguredOnlyOnRightClass(){
@@ -58,6 +93,100 @@ public class ClassConfigTest {
         assertEquals("configuredValue", instance.getProperty());
         assertNotSame("same property but on the other class should not be touched by configuration",
                 "configuredValue", instance.getClassWithSameProperty2().getProperty());
+    }
+
+    @Test
+    @Ignore
+    public void globalConfigurationIsAppliedToInnerConfiguredClassesImplicitConfiguration(){
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        generationConfiguration.setUnique(true);
+        generationConfiguration.setObjectsInCollections(2);
+
+        ClassWithCollectionA configA = ObjectG.config(ClassWithCollectionA.class);
+        configA.setForConfiguration(fromList("confValueA"));
+        configA.setClassB(ObjectG.config(ClassWithCollectionB.class));
+        configA.getClassB().setForConfiguration(fromList("confValueB"));
+
+        ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
+                generationConfiguration, configA);
+
+        assertEquals("confValueA", generated.getForConfiguration());
+        assertEquals(2, generated.getStringList().size());
+        assertEquals("confValueB", generated.getClassB().getForConfiguration());
+        assertEquals(2, generated.getClassB().getStringList().size());
+    }
+
+    @Test
+    @Ignore
+    public void globalConfigurationIsAppliedToInnerConfiguredClassesExplicitConfiguration(){
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        generationConfiguration.setUnique(true);
+        generationConfiguration.setObjectsInCollections(2);
+
+        ClassWithCollectionA configA = ObjectG.config(ClassWithCollectionA.class);
+        configA.setForConfiguration(fromList("confValueA"));
+
+        ClassWithCollectionB configB = ObjectG.config(ClassWithCollectionB.class);
+        configB.setForConfiguration(fromList("confValueB"));
+
+        ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
+                generationConfiguration, configA, configB);
+
+        assertEquals("confValueA", generated.getForConfiguration());
+        assertEquals(2, generated.getStringList().size());
+        assertEquals("confValueB", generated.getClassB().getForConfiguration());
+        assertEquals(2, generated.getClassB().getStringList().size());
+    }
+
+    public static class ClassWithCollectionA{
+        private ClassWithCollectionB classB;
+        private List<String> stringList;
+        private String forConfiguration;
+
+        public ClassWithCollectionB getClassB() {
+            return classB;
+        }
+
+        public void setClassB(ClassWithCollectionB classB) {
+            this.classB = classB;
+        }
+
+        public List<String> getStringList() {
+            return stringList;
+        }
+
+        public void setStringList(List<String> stringList) {
+            this.stringList = stringList;
+        }
+
+        public String getForConfiguration() {
+            return forConfiguration;
+        }
+
+        public void setForConfiguration(String forConfiguration) {
+            this.forConfiguration = forConfiguration;
+        }
+    }
+
+    public static class ClassWithCollectionB{
+        private List<String> stringList;
+        private String forConfiguration;
+
+        public List<String> getStringList() {
+            return stringList;
+        }
+
+        public void setStringList(List<String> stringList) {
+            this.stringList = stringList;
+        }
+
+        public String getForConfiguration() {
+            return forConfiguration;
+        }
+
+        public void setForConfiguration(String forConfiguration) {
+            this.forConfiguration = forConfiguration;
+        }
     }
 
     public static class Person{

@@ -30,11 +30,11 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
         assertEquals("property2", onSetterPropertyName);
 
         classWithProperty.setA();
-        assertEquals("a", onSetterPropertyName);
+        assertEquals("setA() is not a setter", "property2", onSetterPropertyName);
 
         classWithProperty.set();
         //property was not altered because set() is not setter
-        assertEquals("a", onSetterPropertyName);
+        assertEquals("set() is not a setter", "property2", onSetterPropertyName);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class SetterConfiguratorTest implements ConfigurationHandler{
     }
 
     @Override
-    public void onSetter(Object objectUnderConfiguration, String propertyName) {
+    public void onSetter(Object objectUnderConfiguration, Object value, String propertyName) {
         onSetterObjectUnderConfiguration = objectUnderConfiguration;
         onSetterPropertyName = propertyName;
     }

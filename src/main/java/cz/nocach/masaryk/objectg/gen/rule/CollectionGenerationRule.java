@@ -11,7 +11,7 @@ import java.util.Collection;
  * User: __nocach
  * Date: 28.9.12
  */
-public class CollectionGenerationRule extends GenerationRule{
+class CollectionGenerationRule extends GenerationRule{
     private final Class<? extends Collection> collectionClass;
     private final Class classOfObjects;
 
@@ -22,7 +22,7 @@ public class CollectionGenerationRule extends GenerationRule{
 
     @Override
     protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        GenerationConfiguration configurationOfCollection = currentConfiguration.newWithOverride(currentConfiguration);
+        GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         Collection collection = ObjectG.generate(collectionClass, configurationOfCollection);
         collection.add(ObjectG.unique(classOfObjects));

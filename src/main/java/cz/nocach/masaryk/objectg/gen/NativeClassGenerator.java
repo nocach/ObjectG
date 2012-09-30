@@ -2,6 +2,8 @@ package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 
+import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,6 +21,7 @@ class NativeClassGenerator extends Generator {
     //be started
     private final AtomicLong longSequence = new AtomicLong();
     private final AtomicInteger charSequence = new AtomicInteger();
+    private final AtomicBoolean booleanSequence = new AtomicBoolean();
 
     @Override
     protected Object generateValue(GenerationConfiguration configuration, GenerationContext context) {
@@ -29,7 +32,13 @@ class NativeClassGenerator extends Generator {
         if (isFloat(context.getClassThatIsGenerated())) return (float)longSequence.incrementAndGet();
         if (isByte(context.getClassThatIsGenerated())) return (byte)longSequence.incrementAndGet();
         if (isChar(context.getClassThatIsGenerated())) return returnNextCharOrThrow();
+        if (BigDecimal.class.isAssignableFrom(context.getClassThatIsGenerated())) return returnNextBigDecimal();
+        if (isBoolean(context.getClassThatIsGenerated())) return booleanSequence.getAndSet(!booleanSequence.get());
         throw new IllegalArgumentException("can't generate value of type " + context);
+    }
+
+    private BigDecimal returnNextBigDecimal() {
+        return BigDecimal.valueOf(longSequence.incrementAndGet());
     }
 
     private Object returnNextCharOrThrow() {
@@ -49,10 +58,16 @@ class NativeClassGenerator extends Generator {
                 || isFloat(type)
                 || isByte(type)
                 || isChar(type)
-                || String.class.equals(type)){
+                || String.class.isAssignableFrom(type)
+                || isBoolean(type)
+                || BigDecimal.class.isAssignableFrom(type)){
             return true;
         }
         return false;
+    }
+
+    private boolean isBoolean(Class type) {
+        return boolean.class.equals(type) || Boolean.class.equals(type);
     }
 
     private boolean isChar(Class type) {

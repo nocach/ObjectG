@@ -1,66 +1,57 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
-import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.conf.OngoingConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import org.springframework.util.Assert;
 
 import java.util.*;
 
 /**
- * <p>
- *     Factory for rules used in configuration through {@link cz.nocach.masaryk.objectg.conf.SetterConfigurator}
- * </p>
- * <p>
  * User: __nocach
- * Date: 15.9.12
- * </p>
+ * Date: 29.9.12
  */
 public class Rules {
-    public static  <T> T fromList(T... values){
-        OngoingConfiguration.plannedRule = new FromListGenerationRule(values);
-        return null;
+    public static GenerationRule fromList(Object... values){
+        return new FromListGenerationRule(values);
     }
 
-    public static GenerationRule specificConfiguration(GenerationConfiguration specificConfiguration) {
-        return new SpecificConfigurationGenerationRule(specificConfiguration);
+    public static GenerationRule specificRules(List<GenerationRule> specificRules) {
+        return new RulesOverrideGenerationRule(specificRules);
     }
 
-    public static <T> List<T> listDefinition(Class clazzOfObjects) {
+    public static GenerationRule listDefinition(Class clazzOfObjects) {
         return listDefinition(clazzOfObjects, 1);
     }
-    public static <T> List<T> listDefinition(Class clazzOfObjects, int size) {
+    public static GenerationRule listDefinition(Class clazzOfObjects, int size) {
         Assert.isTrue(size >= 0, "size must be >= 0");
-        OngoingConfiguration.plannedRule = new GenericListGenerationRule(clazzOfObjects, size);
-        return null;
+        return new GenericListGenerationRule(clazzOfObjects, size);
     }
 
-    public static <T> List<T> listDefinition(Class clazzOfObjects, Object... values) {
-        OngoingConfiguration.plannedRule = new SingleValueGenerationRule(Arrays.asList(values));
-        return null;
+    public static GenerationRule listDefinition(Class clazzOfObjects, Object... values) {
+        return new SingleValueGenerationRule(Arrays.asList(values));
     }
 
-    public static <ListT extends Collection<?>> ListT collectionDefinition(Class<ListT> collectionType, Class clazzOfObjects){
-        OngoingConfiguration.plannedRule = new CollectionGenerationRule(collectionType, clazzOfObjects);
-        return null;
+    public static GenerationRule collectionDefinition(Class collectionType, Class clazzOfObjects){
+        return new CollectionGenerationRule(collectionType, clazzOfObjects);
     }
 
-    public static Set setDefinition(Class clazzOfObjects) {
+    public static GenerationRule setDefinition(Class clazzOfObjects) {
         return setDefinition(clazzOfObjects, 1);
     }
 
-    public static Set setDefinition(Class<String> clazzOfObjects, int size) {
+    public static GenerationRule setDefinition(Class<String> clazzOfObjects, int size) {
         Assert.isTrue(size >= 0, "size must be >= 0");
-        OngoingConfiguration.plannedRule = new GenericSetGenerationRule(clazzOfObjects, size);
-        return null;
+        return new GenericSetGenerationRule(clazzOfObjects, size);
     }
 
-    public static Set setDefinition(Class<String> clazzOfObjects, Object... values) {
+    public static GenerationRule setDefinition(Class<String> clazzOfObjects, Object... values) {
         HashSet setWithValues = new HashSet();
         for (Object each: values){
             setWithValues.add(each);
         }
-        OngoingConfiguration.plannedRule = new SingleValueGenerationRule(setWithValues);
-        return null;
+        return new SingleValueGenerationRule(setWithValues);
+    }
+
+    public static GenerationRule onlyNull(){
+        return new NullValueGenerationRule();
     }
 }

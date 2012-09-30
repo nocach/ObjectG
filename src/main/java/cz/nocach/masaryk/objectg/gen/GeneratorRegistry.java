@@ -36,7 +36,9 @@ public class GeneratorRegistry {
     public <T> T generate(GenerationConfiguration configuration,  GenerationContext context) {
         Assert.notNull(context, "context");
 
-        return (T)generatorChain.generate(configuration, context);
+        T result = (T) generatorChain.generate(configuration, context);
+        logger.info("generated value=" + result);
+        return result;
     }
 
     public static final GeneratorRegistry getInstance(){

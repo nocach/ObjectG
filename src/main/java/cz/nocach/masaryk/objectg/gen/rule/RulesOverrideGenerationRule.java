@@ -5,6 +5,8 @@ import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 
+import java.util.List;
+
 /**
  * <p>
  *     Rule allowing to define new or override existing GenerationConfiguration. This Rule will not completely override
@@ -16,16 +18,17 @@ import cz.nocach.masaryk.objectg.gen.GenerationContext;
  * Date: 16.9.12
  * </p>
  */
-class SpecificConfigurationGenerationRule extends GenerationRule {
-    private GenerationConfiguration configuration;
+class RulesOverrideGenerationRule extends GenerationRule {
+    private List<GenerationRule> rulesToOverride;
 
-    public SpecificConfigurationGenerationRule(GenerationConfiguration configuration){
-        this.configuration = configuration;
+    public RulesOverrideGenerationRule(List<GenerationRule> rulesToOverride){
+        this.rulesToOverride = rulesToOverride;
     }
 
     @Override
     protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        GenerationConfiguration overridenConfiguration = currentConfiguration.newWithOverride(configuration);
+        for (GenerationRule each : rulesToOverride) each.setScope(getScope());
+        GenerationConfiguration overridenConfiguration = currentConfiguration.newWithMoreRules(rulesToOverride);
         return (T) GeneratorRegistry.getInstance().generate(overridenConfiguration
                     , new GenerationContext(context.getClassThatIsGenerated()));
     }

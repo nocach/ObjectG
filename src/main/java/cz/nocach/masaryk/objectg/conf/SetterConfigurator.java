@@ -74,11 +74,17 @@ public class SetterConfigurator {
         CtClass vVoidClass = classPool.get(Void.class.getName());
         CtClass vvoidClass = classPool.get(void.class.getName());
         for (CtMethod each : interceptedClass.getDeclaredMethods()){
-            if (each.getName().startsWith("set") && each.getName().length() > SETTER_PREFIX_LENGTH){
+            if (isSetterMethod(each)){
                 setBodyToInvokeConfigurationHandler(vVoidClass, vvoidClass, each);
             }
         }
 
+    }
+
+    private boolean isSetterMethod(CtMethod each) throws NotFoundException {
+        return each.getName().startsWith("set")
+                && each.getName().length() > SETTER_PREFIX_LENGTH
+                && each.getParameterTypes().length == 1;
     }
 
     private void setBodyToInvokeConfigurationHandler(CtClass vVoidClass, CtClass vvoidClass, CtMethod each) throws NotFoundException, CannotCompileException {
@@ -92,7 +98,7 @@ public class SetterConfigurator {
         // }
         each.insertBefore(
                 "{" +
-                    FIELD_NAME_OF_CONFIGURATION_HANDLER + ".onSetter(this, \"" + propertyName + "\");" +
+                    FIELD_NAME_OF_CONFIGURATION_HANDLER + ".onSetter(this, $1, \"" + propertyName + "\");" +
                 "}");
     }
 

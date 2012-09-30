@@ -1,10 +1,8 @@
 package cz.nocach.masaryk.objectg;
 
+import cz.nocach.masaryk.objectg.conf.*;
+import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
-import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.conf.OngoingConfiguration;
-import cz.nocach.masaryk.objectg.conf.OngoingGenerationContextConfigurationHandler;
-import cz.nocach.masaryk.objectg.conf.SetterConfigurator;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,12 @@ public class ObjectG {
         return generate(clazz, configuration);
     }
 
+    public static <T> T unique(Class<T> clazz, Object... configuredObjects){
+        GenerationConfiguration configuration = contextFromObjects(configuredObjects);
+        configuration.setUnique(true);
+        return generate(clazz, configuration);
+    }
+
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
         return (T) GeneratorRegistry.getInstance().generate(configuration, new GenerationContext(clazz));
     }
@@ -45,7 +49,7 @@ public class ObjectG {
     /**
      * will create GenerationCOnfiguration from {@code configuredObjects} for this generation
      */
-    public static <T> T unique(Class<T> clazz, Object... configuredObjects){
+    public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration, Object... configuredObjects){
         return unique(clazz, contextFromObjects(configuredObjects));
     }
 
@@ -58,13 +62,13 @@ public class ObjectG {
     public static GenerationConfiguration contextFromObjects(Object... objects){
         GenerationConfiguration result = new GenerationConfiguration();
         for (Object each : objects){
-            GenerationConfiguration contextForObject = configurationHandler.getGenerationConfiguration(each);
-            if (contextForObject == null){
-                logger.debug("no GenerationContext contained in configurationHanlder for object " + each
+            List<GenerationRule> rules = configurationHandler.getRules(each);
+            if (rules == null){
+                logger.debug("no rules contained in configurationHanlder for object " + each
                     +" was this object created using ObjectG.config(Class)?");
             }
             else {
-                result.putChild(contextForObject);
+                result.addAllRules(rules);
             }
         }
         return result;
@@ -113,5 +117,9 @@ public class ObjectG {
             result.add(unique(clazz));
         }
         return result;
+    }
+
+    public static ConfigurationBuilder config() {
+        return new ConfigurationBuilder();
     }
 }

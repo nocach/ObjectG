@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,16 +17,8 @@ import java.util.Set;
  */
 public class NativeClassUniqueGeneratorTest extends Assert{
 
-    private Generator generator;
-
-    @Before
-    public void setup(){
-        generator = new NativeClassGenerator();
-    }
-
     @Test
     public void primitivesAreUnique(){
-        generator = new NativeClassGenerator();
         assertUnique(Integer.class);
         assertUnique(int.class);
         assertUnique(Double.class);
@@ -39,25 +32,29 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         assertUnique(Character.class);
         assertUnique(char.class);
         assertUnique(String.class);
+        assertUnique(BigDecimal.class);
+        assertUnique(Boolean.class);
+        assertUnique(boolean.class);
         //TODO: fill other types
     }
 
     @Test
     public void generatedPrimitivesCanBeAssigned(){
-        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
-        int intValue = generator.generate(generationConfiguration, new GenerationContext<Integer>(int.class));
-        Integer intValueRef = generator.generate(generationConfiguration, new GenerationContext<Integer>(Integer.class));
-        long longValue = generator.generate(generationConfiguration, new GenerationContext<Long>(long.class));
-        Long longValueRef = generator.generate(generationConfiguration, new GenerationContext<Long>(Long.class));
-        double doubleValue = generator.generate(generationConfiguration, new GenerationContext<Double>(double.class));
-        Double doubleValueRef = generator.generate(generationConfiguration, new GenerationContext<Double>(Double.class));
-        float floatValue = generator.generate(generationConfiguration, new GenerationContext<Float>(float.class));
-        Float floatValueRef = generator.generate(generationConfiguration, new GenerationContext<Float>(Float.class));
-        byte byteValue = generator.generate(generationConfiguration, new GenerationContext<Byte>(byte.class));
-        Byte byteValueRef = generator.generate(generationConfiguration, new GenerationContext<Byte>(Byte.class));
-        char charValue = generator.generate(generationConfiguration, new GenerationContext<Character>(char.class));
-        Character charValueRef = generator.generate(generationConfiguration, new GenerationContext<Character>(Character.class));
-        String stringValue = generator.generate(generationConfiguration, new GenerationContext<String>(String.class));
+        int intValue = ObjectG.unique(int.class);
+        Integer intValueRef = ObjectG.unique(Integer.class);
+        long longValue = ObjectG.unique(long.class);
+        Long longValueRef = ObjectG.unique(Long.class);
+        double doubleValue = ObjectG.unique(double.class);
+        Double doubleValueRef = ObjectG.unique(Double.class);
+        float floatValue = ObjectG.unique(float.class);
+        Float floatValueRef = ObjectG.unique(Float.class);
+        byte byteValue = ObjectG.unique(byte.class);
+        Byte byteValueRef = ObjectG.unique(Byte.class);
+        char charValue = ObjectG.unique(char.class);
+        Character charValueRef = ObjectG.unique(Character.class);
+        String stringValue = ObjectG.unique(String.class);
+        boolean booleanValue = ObjectG.unique(boolean.class);
+        Boolean booleanRefValue = ObjectG.unique(Boolean.class);
     }
 
     @Test
@@ -82,7 +79,6 @@ public class NativeClassUniqueGeneratorTest extends Assert{
     }
 
     private void assertUnique(Class type) {
-        assertTrue("expect to support type "+ type.getName(), generator.supportsType(type));
         Object firstValue = ObjectG.unique(type);
         Object secondValue = ObjectG.unique(type);
         assertNotSame("expect to generate unique values for type "+type.getName(), firstValue, secondValue);
