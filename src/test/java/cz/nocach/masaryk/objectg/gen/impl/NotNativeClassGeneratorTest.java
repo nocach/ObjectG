@@ -1,7 +1,6 @@
-package cz.nocach.masaryk.objectg.gen;
+package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;

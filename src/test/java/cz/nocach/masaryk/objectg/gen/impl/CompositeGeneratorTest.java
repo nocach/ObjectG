@@ -1,6 +1,10 @@
-package cz.nocach.masaryk.objectg.gen;
+package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.CompositeGenerator;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.Generator;
+import cz.nocach.masaryk.objectg.gen.impl.NativeClassGenerator;
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;
 import org.junit.runner.JUnitCore;
@@ -35,7 +39,7 @@ public class CompositeGeneratorTest {
         }
     }
 
-    private static class DummyGenerator extends Generator{
+    private static class DummyGenerator extends Generator {
 
         @Override
         public Object generateValue(GenerationConfiguration configuration, GenerationContext type) {

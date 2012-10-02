@@ -1,12 +1,10 @@
-package cz.nocach.masaryk.objectg.gen;
+package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

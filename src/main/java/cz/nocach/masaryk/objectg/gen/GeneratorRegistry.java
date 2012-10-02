@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -19,11 +20,11 @@ public class GeneratorRegistry {
     private static final Logger logger = LoggerFactory.getLogger(GeneratorRegistry.class);
 
     private final CompositeGenerator generatorChain = new CompositeGenerator(
-            new NativeClassGenerator(),
-            new ListGenerator(),
-            new MapGenerator(),
-            new SetGenerator(),
-            new NotNativeClassGenerator());
+            Generators.nativeClass(),
+            Generators.list(),
+            Generators.map(),
+            Generators.set(),
+            Generators.notNativeClass());
     private static final GeneratorRegistry instance = new GeneratorRegistry();
 
     /**

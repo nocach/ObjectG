@@ -1,6 +1,9 @@
-package cz.nocach.masaryk.objectg.gen;
+package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationException;
+import cz.nocach.masaryk.objectg.gen.Generator;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -10,7 +13,7 @@ import java.lang.reflect.Type;
  * User: __nocach
  * Date: 28.9.12
  */
-abstract class CollectionGenerator<CollectionT> extends Generator{
+abstract class CollectionGenerator<CollectionT> extends Generator {
     @Override
     public final <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> context) {
         if (context.getField() == null
