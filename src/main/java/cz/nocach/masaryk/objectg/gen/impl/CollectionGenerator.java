@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationException;
 import cz.nocach.masaryk.objectg.gen.Generator;
 
@@ -40,7 +40,7 @@ abstract class CollectionGenerator<CollectionT> extends Generator {
         //TODO: process all implementations of Type: GenericArrayTypeImpl, ParametrizedTypeImpl,
         // TypeVariableImpl, WildcardTypeImple
         Type firstType = actualTypeArguments[typeVarIndex];
-        return new GenerationContext((Class) firstType);
+        return context.push((Class) firstType);
     }
 
     private <T> CollectionT createCollectionInstance(GenerationContext<T> context) {

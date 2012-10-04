@@ -1,6 +1,8 @@
 package cz.nocach.masaryk.objectg.conf;
 
+import com.sun.corba.se.impl.orbutil.CacheTable;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.cycle.BackReferenceCycleStrategy;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import cz.nocach.masaryk.objectg.matcher.ClassGenerationContextFeature;
 import cz.nocach.masaryk.objectg.matcher.JavaNativeTypeMatcher;
@@ -20,5 +22,14 @@ public class ConfigurationBuilder {
         GenerationRule rule = Rules.onlyNull();
         rule.when(new ClassGenerationContextFeature(JavaNativeTypeMatcher.INSTANCE));
 //        resultConfiguration.addRule();
+    }
+
+    public ConfigurationBuilder backReferenceCycle() {
+        resultConfiguration.setCycleStrategy(new BackReferenceCycleStrategy());
+        return this;
+    }
+
+    public GenerationConfiguration done() {
+        return resultConfiguration;
     }
 }

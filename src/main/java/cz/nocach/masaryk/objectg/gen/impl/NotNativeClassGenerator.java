@@ -1,9 +1,11 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.Generator;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
@@ -21,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
  * </p>
  */
 class NotNativeClassGenerator extends Generator {
+    private static final Logger logger = LoggerFactory.getLogger(NotNativeClassGenerator.class);
 
     @Override
     public Object generateValue(final GenerationConfiguration configuration, final GenerationContext context) {
@@ -57,25 +60,18 @@ class NotNativeClassGenerator extends Generator {
 
     private Object findAndGenerate(GenerationConfiguration configuration, GenerationContext context, Class paramType) {
         GenerationContext pushedContext = context.push(paramType);
-        return generateForHierarchy(configuration, context, pushedContext);
+        return generateForHierarchy(configuration, pushedContext);
     }
 
-    private Object generateForHierarchy(GenerationConfiguration configuration, GenerationContext context, GenerationContext pushedContext) {
-        if (context.isCycle()) {
-            Object valueForCycle = configuration.getCycleStrategy().generateForCycle(configuration, context);
-            context.pop();
-            return valueForCycle;
-        }
+    private Object generateForHierarchy(GenerationConfiguration configuration, GenerationContext pushedContext) {
         Object result = GeneratorRegistry.getInstance().generate(configuration, pushedContext);
-        context.pop();
         return result;
     }
 
     private Object findAndGenerate(GenerationConfiguration configuration, GenerationContext context, Object parentObject, Field field) {
-        GenerationContext generationContext = context.push(field.getType());
-        generationContext.setField(field);
-        generationContext.setParentObject(parentObject);
-        return generateForHierarchy(configuration, context, generationContext);
+        GenerationContext pushedContext = context.push(field.getType(), parentObject);
+        pushedContext.setField(field);
+        return generateForHierarchy(configuration, pushedContext);
     }
 
 

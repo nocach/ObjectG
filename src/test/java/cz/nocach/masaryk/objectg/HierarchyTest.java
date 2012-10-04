@@ -1,5 +1,6 @@
-package cz.nocach.masaryk.objectg.gen;
+package cz.nocach.masaryk.objectg;
 
+import cz.nocach.masaryk.objectg.Hierarchy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,25 +22,17 @@ public class HierarchyTest {
     }
 
     @Test
-    public void afterStartNotCycle(){
-        hierarchy.push(ClassA.class);
-        assertFalse(hierarchy.isCycle());
-    }
-
-    @Test
     public void simpleCycle(){
         hierarchy.push(ClassA.class);
         hierarchy.push(ClassB.class);
-        hierarchy.push(ClassA.class);
-        assertTrue(hierarchy.isCycle());
+        assertTrue(hierarchy.isCycle(ClassA.class));
     }
 
     @Test
     public void noCycleTest(){
         hierarchy.push(ClassA.class);
         hierarchy.push(ClassB.class);
-        hierarchy.push(ClassC.class);
-        assertFalse(hierarchy.isCycle());
+        assertFalse(hierarchy.isCycle(ClassC.class));
     }
 
     @Test
@@ -47,18 +40,17 @@ public class HierarchyTest {
         hierarchy.push(ClassA.class);
         hierarchy.push(ClassB.class);
         hierarchy.push(ClassC.class);
-        hierarchy.push(ClassB.class);
-        assertTrue(hierarchy.isCycle());
+        assertTrue(hierarchy.isCycle(ClassB.class));
     }
 
     @Test
     public void canPopAfterCycle(){
         hierarchy.push(ClassA.class);
         hierarchy.push(ClassB.class);
-        hierarchy.push(ClassA.class);
-        assertTrue(hierarchy.isCycle());
+        assertTrue(hierarchy.isCycle(ClassA.class));
         hierarchy.pop();
-        assertFalse(hierarchy.isCycle());
+        hierarchy.pop();
+        assertFalse(hierarchy.isCycle(ClassA.class));
     }
 
     public static class ClassA{}

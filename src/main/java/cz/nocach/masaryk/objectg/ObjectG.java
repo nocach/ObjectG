@@ -3,7 +3,6 @@ package cz.nocach.masaryk.objectg;
 import cz.nocach.masaryk.objectg.conf.*;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -37,20 +36,20 @@ public class ObjectG {
     }
 
     public static <T> T unique(Class<T> clazz, Object... configuredObjects){
-        GenerationConfiguration configuration = contextFromObjects(configuredObjects);
+        return unique(clazz, new GenerationConfiguration(), configuredObjects);
+    }
+
+    /**
+     * will create GenerationConfiguration from {@code configuredObjects} for this generation
+     */
+    public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration, Object... configuredObjects){
         configuration.setUnique(true);
+        configuration.addAllRules(rulesFromObjects(configuredObjects));
         return generate(clazz, configuration);
     }
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
-        return (T) GeneratorRegistry.getInstance().generate(configuration, new GenerationContext(clazz));
-    }
-
-    /**
-     * will create GenerationCOnfiguration from {@code configuredObjects} for this generation
-     */
-    public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration, Object... configuredObjects){
-        return unique(clazz, contextFromObjects(configuredObjects));
+        return (T) GeneratorRegistry.getInstance().generate(configuration, GenerationContext.createRoot(clazz));
     }
 
     public static <T> T config(Class<T> clazz){
@@ -59,8 +58,8 @@ public class ObjectG {
         return result;
     }
 
-    public static GenerationConfiguration contextFromObjects(Object... objects){
-        GenerationConfiguration result = new GenerationConfiguration();
+    private static List<GenerationRule> rulesFromObjects(Object... objects){
+        List<GenerationRule> result = new ArrayList<GenerationRule>();
         for (Object each : objects){
             List<GenerationRule> rules = configurationHandler.getRules(each);
             if (rules == null){
@@ -68,7 +67,7 @@ public class ObjectG {
                     +" was this object created using ObjectG.config(Class)?");
             }
             else {
-                result.addAllRules(rules);
+                result.addAll(rules);
             }
         }
         return result;

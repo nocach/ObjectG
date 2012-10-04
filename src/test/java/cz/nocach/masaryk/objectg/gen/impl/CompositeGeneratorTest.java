@@ -2,9 +2,8 @@ package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.CompositeGenerator;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.Generator;
-import cz.nocach.masaryk.objectg.gen.impl.NativeClassGenerator;
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;
 import org.junit.runner.JUnitCore;
@@ -33,8 +32,8 @@ public class CompositeGeneratorTest {
         @Test
         public void test(){
             System.out.println("test of "+this);
-            Object firstValue = generator.generate(new GenerationConfiguration(), new GenerationContext<Integer>(Integer.class));
-            Object secondValue = generator.generate(new GenerationConfiguration(), new GenerationContext<Integer>(Integer.class));
+            Object firstValue = generator.generate(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class));
+            Object secondValue = generator.generate(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class));
             assertNotSame(firstValue, secondValue);
         }
     }

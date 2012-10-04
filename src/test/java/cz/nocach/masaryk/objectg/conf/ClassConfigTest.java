@@ -3,7 +3,6 @@ package cz.nocach.masaryk.objectg.conf;
 import cz.nocach.masaryk.objectg.ObjectG;
 import org.junit.Ignore;
 import org.junit.Test;
-import sun.java2d.pipe.RegionSpanIterator;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class ClassConfigTest {
         Person building = ObjectG.config(Person.class);
         building.setName(fromList("configuredValue"));
 
-        Person person = ObjectG.unique(Person.class, ObjectG.contextFromObjects(building));
+        Person person = ObjectG.unique(Person.class, building);
         assertEquals("configuredValue", person.getName());
     }
 
@@ -31,7 +30,7 @@ public class ClassConfigTest {
         building.setHomeAddress(ObjectG.config(Address.class));
         building.getHomeAddress().setStreet(fromList("streetConfiguredValue"));
 
-        Person person = ObjectG.unique(Person.class, ObjectG.contextFromObjects(building));
+        Person person = ObjectG.unique(Person.class, building);
         assertEquals("nameConfiguredValue", person.getName());
         assertEquals("streetConfiguredValue", person.getHomeAddress().getStreet());
         //we configured only HomeAddress setter
@@ -45,7 +44,7 @@ public class ClassConfigTest {
         Address buildingAddress = ObjectG.config(Address.class);
         buildingAddress.setStreet(fromList("streetConfiguredValue"));
 
-        Person person = ObjectG.unique(Person.class, ObjectG.contextFromObjects(buildingPerson, buildingAddress));
+        Person person = ObjectG.unique(Person.class, buildingPerson, buildingAddress);
         assertEquals("nameConfiguredValue", person.getName());
         assertEquals("streetConfiguredValue", person.getHomeAddress().getStreet());
         assertEquals("streetConfiguredValue", person.getWorkAddress().getStreet());

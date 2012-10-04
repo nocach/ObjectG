@@ -3,7 +3,8 @@ package cz.nocach.masaryk.objectg.gen.rule;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.RuleScope;
 
 import java.util.List;
 
@@ -29,7 +30,9 @@ class RulesOverrideGenerationRule extends GenerationRule {
     protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         for (GenerationRule each : rulesToOverride) each.setScope(getScope());
         GenerationConfiguration overridenConfiguration = currentConfiguration.newWithMoreRules(rulesToOverride);
-        return (T) GeneratorRegistry.getInstance().generate(overridenConfiguration
-                    , new GenerationContext(context.getClassThatIsGenerated()));
+        //prevent cycling applying of this rule
+        overridenConfiguration.removeRule(this);
+        return (T) GeneratorRegistry.getInstance().generate(overridenConfiguration, context);
     }
+
 }

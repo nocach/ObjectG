@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

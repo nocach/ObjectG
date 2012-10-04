@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.impl.*;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import org.springframework.util.Assert;
 /**
  * <p>
  *      Knows about all generators in the framework. Allows to generate value for any type by using
- *      {@link #generate(cz.nocach.masaryk.objectg.conf.GenerationConfiguration, GenerationContext)}
+ *      {@link #generate(cz.nocach.masaryk.objectg.conf.GenerationConfiguration, cz.nocach.masaryk.objectg.GenerationContext)}
  * </p>
  * <p>
  * User: __nocach
@@ -31,8 +32,7 @@ public class GeneratorRegistry {
      *
      *
      * @param context not null context for which generator must be found
-     * @return most matched Generator for the passed context
-     * @throws UnsupportedOperationException if generator for the passed context was not found
+     * @throws IllegalArgumentException if generator for the passed context and configuration was not found
      */
     public <T> T generate(GenerationConfiguration configuration,  GenerationContext context) {
         Assert.notNull(context, "context");

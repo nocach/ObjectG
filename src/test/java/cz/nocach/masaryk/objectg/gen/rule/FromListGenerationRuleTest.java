@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.GenerationContext;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
@@ -19,7 +19,7 @@ public class FromListGenerationRuleTest {
     public void canGenerateByRule(){
         FromListGenerationRule listGenerationRule = new FromListGenerationRule("one", "two", "three");
 
-        String generatedString = listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(String.class));
+        String generatedString = listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(String.class));
         assertTrue("returned generator should generate from rule values",
                 asList("one", "two", "three").contains(generatedString));
     }
@@ -28,9 +28,9 @@ public class FromListGenerationRuleTest {
     public void valuesGeneratedAreCyclic(){
         FromListGenerationRule listGenerationRule = new FromListGenerationRule(1,2);
 
-        assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(Integer.class)));
-        assertEquals(2, listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(Integer.class)));
-        assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), new GenerationContext(Integer.class)));
+        assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class)));
+        assertEquals(2, listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class)));
+        assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class)));
     }
 
     @Test(expected = IllegalArgumentException.class)

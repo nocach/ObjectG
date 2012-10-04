@@ -2,8 +2,7 @@ package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
-import cz.nocach.masaryk.objectg.gen.impl.NativeClassGenerator;
+import cz.nocach.masaryk.objectg.GenerationContext;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -66,7 +65,7 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         for (int i = 0; i < expectToGenerateUniqueChars; i++){
             int beforeInsert = chars.size();
             Character generated = (Character) nativeClassUniqueGenerator
-                    .generate(new GenerationConfiguration(), new GenerationContext(Character.class));
+                    .generate(new GenerationConfiguration(), GenerationContext.createRoot(Character.class));
             chars.add(generated);
             assertNotSame("failed on i="+i, beforeInsert, chars.size());
         }

@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,36 @@ public abstract class Generator {
      * @return new value
      */
     public final <T> T generate(GenerationConfiguration configuration, GenerationContext<T> context){
-        final GenerationRule rule = configuration.getRule(context);
-        if (rule != null){
-            logger.debug("found rule for conf="+configuration+" context="+context);
-            return (T)rule.getValue(configuration, context);
+        try{
+            final GenerationRule rule = configuration.getRule(context);
+            if (rule != null){
+                return returnFromRule(configuration, context, rule);
+            }
+
+            if (context.isCycle()) {
+                return returnFromCycle(configuration, context);
+            }
+
+            T result = generateValue(configuration, context);
+            return result;
         }
-        return (T) generateValue(configuration, context);
+        finally {
+            if (context.isPushed()) context.pop();
+        }
+    }
+
+    private <T> T returnFromCycle(GenerationConfiguration configuration, GenerationContext<T> context) {
+        if (logger.isDebugEnabled()){
+            logger.debug("found cycle when generating class="+context.getClassThatIsGenerated()
+                    +" in hierarchy=\n" + context.dumpHierarchy());
+        }
+        Object valueForCycle = configuration.getCycleStrategy().generateForCycle(configuration, context);
+        return (T)valueForCycle;
+    }
+
+    private <T> T returnFromRule(GenerationConfiguration configuration, GenerationContext<T> context, GenerationRule rule) {
+        logger.debug("found rule for conf="+configuration+" context="+context);
+        return (T)rule.getValue(configuration, context);
     }
 
     /**

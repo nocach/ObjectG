@@ -1,10 +1,8 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.matcher.ClassGenerationContextFeature;
 import cz.nocach.masaryk.objectg.matcher.FieldNameMatcher;
-import cz.nocach.masaryk.objectg.matcher.JavaNativeTypeMatcher;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.springframework.util.Assert;
@@ -73,10 +71,7 @@ public abstract class GenerationRule implements Comparable<GenerationRule>{
 
     @Override
     public int compareTo(GenerationRule o) {
-        if (o.scope.compareTo(o.scope) == 0) {
-            //prevent vanishing of rules with same scope
-            return -1;
-        }
         return o.scope.compareTo(o.scope);
     }
+
 }

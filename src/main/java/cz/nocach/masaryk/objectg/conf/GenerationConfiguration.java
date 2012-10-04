@@ -1,9 +1,9 @@
 package cz.nocach.masaryk.objectg.conf;
 
-import cz.nocach.masaryk.objectg.gen.CycleStrategy;
+import cz.nocach.masaryk.objectg.gen.cycle.CycleStrategy;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
-import cz.nocach.masaryk.objectg.gen.NullValueCycleStrategy;
+import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.cycle.NullValueCycleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -27,7 +27,7 @@ public class GenerationConfiguration implements Cloneable{
     private static final Logger logger = LoggerFactory.getLogger(GenerationConfiguration.class);
     private CycleStrategy cycleStrategy = new NullValueCycleStrategy();
     private boolean isUnique;
-    private Set<GenerationRule> rules = newSetForRules();
+    private Queue<GenerationRule> rules = new PriorityQueue();
 
     /**
      * how many objects to generate into collections
@@ -35,16 +35,6 @@ public class GenerationConfiguration implements Cloneable{
     private int objectsInCollections = 1;
 
     public GenerationConfiguration(){
-    }
-
-    private TreeSet<GenerationRule> newSetForRules() {
-        return new TreeSet<GenerationRule>();
-    }
-
-    private Set<GenerationRule> newSetForRules(Set<GenerationRule> rules) {
-        Set<GenerationRule> result = newSetForRules();
-        result.addAll(rules);
-        return result;
     }
 
     public void addRule(GenerationRule rule) {
@@ -85,7 +75,7 @@ public class GenerationConfiguration implements Cloneable{
         try{
             GenerationConfiguration result = (GenerationConfiguration) super.clone();
             //create defencive copies for collections
-            result.rules = newSetForRules(this.rules);
+            result.rules = new PriorityQueue<GenerationRule>(this.rules);
             return result;
         }
         catch (CloneNotSupportedException e){
@@ -135,5 +125,12 @@ public class GenerationConfiguration implements Cloneable{
     public void setCycleStrategy(CycleStrategy cycleStrategy) {
         Assert.notNull(cycleStrategy, "cycleStrategy");
         this.cycleStrategy = cycleStrategy;
+    }
+
+    public void removeRule(GenerationRule rule) {
+        boolean wasRemoved = rules.remove(rule);
+        if (!wasRemoved){
+            throw new IllegalArgumentException("configuraiton had no rule="+rule);
+        }
     }
 }

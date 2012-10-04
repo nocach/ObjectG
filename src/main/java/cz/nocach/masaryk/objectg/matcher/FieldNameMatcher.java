@@ -1,11 +1,8 @@
 package cz.nocach.masaryk.objectg.matcher;
 
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.GenerationContext;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.springframework.util.Assert;
-
-import java.lang.reflect.Field;
 
 /**
  * User: __nocach

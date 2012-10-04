@@ -1,6 +1,7 @@
-package cz.nocach.masaryk.objectg.gen;
+package cz.nocach.masaryk.objectg.gen.cycle;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.GenerationContext;
 
 /**
  * User: __nocach
