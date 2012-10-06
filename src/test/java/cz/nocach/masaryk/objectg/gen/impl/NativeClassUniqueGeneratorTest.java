@@ -58,24 +58,13 @@ public class NativeClassUniqueGeneratorTest extends Assert{
     }
 
     @Test
-    public void canGenerateManyUniqueCharacters(){
-        NativeClassGenerator nativeClassUniqueGenerator = new NativeClassGenerator();
-        int expectToGenerateUniqueChars = 100000;
-        Set<Character> chars = new HashSet<Character>(expectToGenerateUniqueChars);
-        for (int i = 0; i < expectToGenerateUniqueChars; i++){
-            int beforeInsert = chars.size();
-            Character generated = (Character) nativeClassUniqueGenerator
-                    .generate(new GenerationConfiguration(), GenerationContext.createRoot(Character.class));
-            chars.add(generated);
-            assertNotSame("failed on i="+i, beforeInsert, chars.size());
-        }
-    }
-
-    @Test
     @Ignore
     public void mustThrowWhenNoNextUniqueByteIsAvailable(){
         //TODO: same tests must exist for long, int, etc
+        //must allow in generation configuration if to use strict mode (throwing exception)
+        //or to revert sequence to the start and continue in generating
         fail("not implemented");
+
     }
 
     private void assertUnique(Class type) {

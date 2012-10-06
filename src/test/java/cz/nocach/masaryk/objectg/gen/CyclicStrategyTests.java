@@ -40,13 +40,13 @@ public class CyclicStrategyTests {
 
     @Test
     public void worksWithConfiguredObjects(){
-        ClassA configClassA = ObjectG.config(ClassA.class);
-        configClassA.setClassB(ObjectG.config(ClassB.class));
+        ClassA prototypeClassA = ObjectG.prototype(ClassA.class);
+        prototypeClassA.setClassB(ObjectG.prototype(ClassB.class));
 
         ClassA generatedA = ObjectG.unique(ClassA.class, ObjectG
                 .config()
                 .backReferenceCycle()
-                .done(), configClassA);
+                .done(), prototypeClassA);
 
         assertEquals(generatedA, generatedA.getClassB().getClassA());
     }

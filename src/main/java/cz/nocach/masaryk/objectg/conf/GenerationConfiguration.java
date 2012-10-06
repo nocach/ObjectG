@@ -63,9 +63,6 @@ public class GenerationConfiguration implements Cloneable{
                 logger.debug("rule=" +eachRule + " matched for context="+context);
                 return eachRule;
             }
-            else {
-                logger.debug("rule=" +eachRule + " did not match for context="+context);
-            }
         }
 
         return null;

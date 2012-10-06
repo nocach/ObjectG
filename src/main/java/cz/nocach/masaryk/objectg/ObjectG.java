@@ -23,8 +23,7 @@ import java.util.Set;
  */
 public class ObjectG {
     private static final Logger logger = LoggerFactory.getLogger(ObjectG.class);
-    private static final OngoingGenerationContextConfigurationHandler configurationHandler = new OngoingGenerationContextConfigurationHandler();
-    private static final SetterConfigurator setterConfigurator = new SetterConfigurator(configurationHandler);
+    private static final PrototypeCreator PROTOTYPE_CREATOR = new PrototypeCreator();
 
     public static <T> T unique(Class<T> clazz){
         return unique(clazz, new GenerationConfiguration());
@@ -52,19 +51,19 @@ public class ObjectG {
         return (T) GeneratorRegistry.getInstance().generate(configuration, GenerationContext.createRoot(clazz));
     }
 
-    public static <T> T config(Class<T> clazz){
-        T result = setterConfigurator.newConfigurator(clazz);
-        OngoingConfiguration.plannedConfigurationObject = result;
+    public static <T> T prototype(Class<T> clazz){
+        T result = PROTOTYPE_CREATOR.newPrototype(clazz);
+        OngoingConfiguration.plannedPrototype = result;
         return result;
     }
 
     private static List<GenerationRule> rulesFromObjects(Object... objects){
         List<GenerationRule> result = new ArrayList<GenerationRule>();
         for (Object each : objects){
-            List<GenerationRule> rules = configurationHandler.getRules(each);
+            List<GenerationRule> rules = PROTOTYPE_CREATOR.getRules(each);
             if (rules == null){
                 logger.debug("no rules contained in configurationHanlder for object " + each
-                    +" was this object created using ObjectG.config(Class)?");
+                    +" was this object created using ObjectG.prototype(Class)?");
             }
             else {
                 result.addAll(rules);

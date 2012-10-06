@@ -92,10 +92,10 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canConfigurateClassForGenericListField(){
-        ClassWithGenericList building = ObjectG.config(ClassWithGenericList.class);
-        building.setGenericList(OngoingRules.listDefinition(String.class));
+        ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
+        prototype.setGenericList(OngoingRules.listDefinition(String.class));
 
-        ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, building);
+        ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
         assertEquals(1, generated.getGenericList().size());
         assertTrue(generated.getGenericList().get(0) instanceof String);
@@ -104,10 +104,10 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canConfigurateClassForGenericSetField(){
-        ClassWithGenericSet building = ObjectG.config(ClassWithGenericSet.class);
-        building.setGenericSet(OngoingRules.setDefinition(String.class));
+        ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
+        prototype.setGenericSet(OngoingRules.setDefinition(String.class));
 
-        ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, building);
+        ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
         assertEquals(1, generated.getGenericSet().size());
         Object firstElement = generated.getGenericSet().iterator().next();
@@ -117,30 +117,30 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void configurateClassForGenericListFieldCanDefineSize(){
-        ClassWithGenericList building = ObjectG.config(ClassWithGenericList.class);
-        building.setGenericList(OngoingRules.listDefinition(String.class, 0));
+        ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
+        prototype.setGenericList(OngoingRules.listDefinition(String.class, 0));
 
-        ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, building);
+        ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
         assertEquals(0, generated.getGenericList().size());
     }
 
     @Test
     public void configurateClassForGenericSetFieldCanDefineSize(){
-        ClassWithGenericSet building = ObjectG.config(ClassWithGenericSet.class);
-        building.setGenericSet(OngoingRules.setDefinition(String.class, 0));
+        ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
+        prototype.setGenericSet(OngoingRules.setDefinition(String.class, 0));
 
-        ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, building);
+        ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
         assertEquals(0, generated.getGenericSet().size());
     }
 
     @Test
     public void configurateClassForGenericListFieldCanDefineValues(){
-        ClassWithGenericList building = ObjectG.config(ClassWithGenericList.class);
-        building.setGenericList(OngoingRules.listDefinition(String.class, "one", "two"));
+        ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
+        prototype.setGenericList(OngoingRules.listDefinition(String.class, "one", "two"));
 
-        ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, building);
+        ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
         assertEquals(2, generated.getGenericList().size());
         assertEquals("one", generated.getGenericList().get(0));
@@ -149,10 +149,10 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void configurateClassForGenericSetFieldCanDefineValues(){
-        ClassWithGenericSet building = ObjectG.config(ClassWithGenericSet.class);
-        building.setGenericSet(OngoingRules.setDefinition(String.class, "one", "two"));
+        ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
+        prototype.setGenericSet(OngoingRules.setDefinition(String.class, "one", "two"));
 
-        ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, building);
+        ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
         assertEquals(2, generated.getGenericSet().size());
         assertTrue("one", generated.getGenericSet().contains("one"));
@@ -183,10 +183,10 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canConfigurateCollectionOfConcreteType(){
-        ClassWithCollections building = ObjectG.config(ClassWithCollections.class);
-        building.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class));
+        ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
+        prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class));
 
-        ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, building);
+        ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
 
         assertEquals(1, generated.getArrayListString().size());
         assertNotNull(generated.getArrayListString().get(0));

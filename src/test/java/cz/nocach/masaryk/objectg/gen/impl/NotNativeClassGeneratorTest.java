@@ -12,12 +12,6 @@ import org.junit.Test;
  */
 public class NotNativeClassGeneratorTest extends Assert{
 
-    private NotNativeClassGenerator generator;
-
-    @Before
-    public void setup(){
-        generator = new NotNativeClassGenerator();
-    }
 
     @Test
     public void noArgConstructor(){

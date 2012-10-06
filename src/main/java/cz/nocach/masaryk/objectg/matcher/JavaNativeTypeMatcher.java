@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.matcher;
 
+import cz.nocach.masaryk.objectg.util.Types;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -17,8 +18,7 @@ public class JavaNativeTypeMatcher extends TypeSafeMatcher<Class> {
 
     @Override
     protected boolean matchesSafely(Class item) {
-        return item.getPackage().getName().startsWith("java.")
-                || item.getPackage().getName().startsWith("javax.");
+        return Types.isJavaType(item);
     }
 
 

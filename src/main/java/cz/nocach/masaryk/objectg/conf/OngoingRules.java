@@ -1,8 +1,5 @@
 package cz.nocach.masaryk.objectg.conf;
 
-import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.conf.OngoingConfiguration;
-import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.rule.*;
 import org.springframework.util.Assert;
 
@@ -10,7 +7,7 @@ import java.util.*;
 
 /**
  * <p>
- *     Factory for rules used in configuration through {@link cz.nocach.masaryk.objectg.conf.SetterConfigurator}
+ *     Factory for rules used in configuration through {@link PrototypeCreator}
  * </p>
  * <p>
  * User: __nocach

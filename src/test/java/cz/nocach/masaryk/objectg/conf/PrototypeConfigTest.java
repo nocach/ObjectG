@@ -1,9 +1,13 @@
 package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.ObjectG;
+import cz.nocach.masaryk.objectg.conf.exception.ConfigurationException;
+import cz.nocach.masaryk.objectg.conf.exception.PrototypeMisuseException;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static cz.nocach.masaryk.objectg.conf.OngoingRules.fromList;
@@ -13,24 +17,24 @@ import static junit.framework.Assert.*;
  * User: __nocach
  * Date: 15.9.12
  */
-public class ClassConfigTest {
+public class PrototypeConfigTest {
     @Test
     public void basic(){
-        Person building = ObjectG.config(Person.class);
-        building.setName(fromList("configuredValue"));
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.setName(fromList("configuredValue"));
 
-        Person person = ObjectG.unique(Person.class, building);
+        Person person = ObjectG.unique(Person.class, prototype);
         assertEquals("configuredValue", person.getName());
     }
 
     @Test
     public void nestedClassConfigurationThroughParentObject(){
-        Person building = ObjectG.config(Person.class);
-        building.setName(fromList("nameConfiguredValue"));
-        building.setHomeAddress(ObjectG.config(Address.class));
-        building.getHomeAddress().setStreet(fromList("streetConfiguredValue"));
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.setName(fromList("nameConfiguredValue"));
+        prototype.setHomeAddress(ObjectG.prototype(Address.class));
+        prototype.getHomeAddress().setStreet(fromList("streetConfiguredValue"));
 
-        Person person = ObjectG.unique(Person.class, building);
+        Person person = ObjectG.unique(Person.class, prototype);
         assertEquals("nameConfiguredValue", person.getName());
         assertEquals("streetConfiguredValue", person.getHomeAddress().getStreet());
         //we configured only HomeAddress setter
@@ -39,12 +43,12 @@ public class ClassConfigTest {
 
     @Test
     public void nestedClassConfigurationImplicit(){
-        Person buildingPerson = ObjectG.config(Person.class);
-        buildingPerson.setName(fromList("nameConfiguredValue"));
-        Address buildingAddress = ObjectG.config(Address.class);
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.setName(fromList("nameConfiguredValue"));
+        Address buildingAddress = ObjectG.prototype(Address.class);
         buildingAddress.setStreet(fromList("streetConfiguredValue"));
 
-        Person person = ObjectG.unique(Person.class, buildingPerson, buildingAddress);
+        Person person = ObjectG.unique(Person.class, prototype, buildingAddress);
         assertEquals("nameConfiguredValue", person.getName());
         assertEquals("streetConfiguredValue", person.getHomeAddress().getStreet());
         assertEquals("streetConfiguredValue", person.getWorkAddress().getStreet());
@@ -52,15 +56,15 @@ public class ClassConfigTest {
 
     @Test
     public void nestedClassCanBeConfiguredMoreThanOnce(){
-        Person confPerson = ObjectG.config(Person.class);
+        Person prototype = ObjectG.prototype(Person.class);
 
-        confPerson.setHomeAddress(ObjectG.config(Address.class));
-        confPerson.getHomeAddress().setStreet("homeConf");
+        prototype.setHomeAddress(ObjectG.prototype(Address.class));
+        prototype.getHomeAddress().setStreet("homeConf");
 
-        confPerson.setWorkAddress(ObjectG.config(Address.class));
-        confPerson.getWorkAddress().setStreet("workConf");
+        prototype.setWorkAddress(ObjectG.prototype(Address.class));
+        prototype.getWorkAddress().setStreet("workConf");
 
-        Person generated = ObjectG.unique(Person.class, confPerson);
+        Person generated = ObjectG.unique(Person.class, prototype);
 
         assertEquals("homeAddress must be configured", "homeConf", generated.getHomeAddress().getStreet());
         assertEquals("workAddress must be configured", "workConf", generated.getWorkAddress().getStreet());
@@ -68,26 +72,43 @@ public class ClassConfigTest {
 
     @Test
     public void canCombineExplicitAndImplicitObjectConfiguraiton(){
-        Person confPerson = ObjectG.config(Person.class);
+        Person prototype = ObjectG.prototype(Person.class);
 
-        confPerson.setHomeAddress(ObjectG.config(Address.class));
-        confPerson.getHomeAddress().setStreet("homeConf");
+        prototype.setHomeAddress(ObjectG.prototype(Address.class));
+        prototype.getHomeAddress().setStreet("homeConf");
 
-        Address implicitAddressConf = ObjectG.config(Address.class);
+        //does not work, because setHomeAddress creates OverrideRule
+        //and getHomeAddress() creates another OverrideRule and only
+        //first is applied.
+        //must throw when getter and setter are used together
+
+        Address implicitAddressConf = ObjectG.prototype(Address.class);
         implicitAddressConf.setStreet("workConf");
 
-        Person generated = ObjectG.unique(Person.class, confPerson, implicitAddressConf);
+        Person generated = ObjectG.unique(Person.class, prototype, implicitAddressConf);
 
         assertEquals("homeConf", generated.getHomeAddress().getStreet());
         assertEquals("workConf", generated.getWorkAddress().getStreet());
     }
 
     @Test
-    public void samePropertyIsConfiguredOnlyOnRightClass(){
-        ClassWithSameProperty1 buildingClass = ObjectG.config(ClassWithSameProperty1.class);
-        buildingClass.setProperty(fromList("configuredValue"));
+    public void canConfigureMoreThanOnePropertyOnGetter(){
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.getHomeAddress().setStreet("configuredStreetName");
+        prototype.getHomeAddress().setHouseNumber(222);
 
-        ClassWithSameProperty1 instance = ObjectG.unique(ClassWithSameProperty1.class, buildingClass);
+        Person generated = ObjectG.unique(Person.class, prototype);
+
+        assertEquals("configuredStreetName", generated.getHomeAddress().getStreet());
+        assertEquals(222, generated.getHomeAddress().getHouseNumber());
+    }
+
+    @Test
+    public void samePropertyIsConfiguredOnlyOnRightClass(){
+        ClassWithSameProperty1 prototype = ObjectG.prototype(ClassWithSameProperty1.class);
+        prototype.setProperty(fromList("configuredValue"));
+
+        ClassWithSameProperty1 instance = ObjectG.unique(ClassWithSameProperty1.class, prototype);
 
         assertEquals("configuredValue", instance.getProperty());
         assertNotSame("same property but on the other class should not be touched by configuration",
@@ -95,19 +116,18 @@ public class ClassConfigTest {
     }
 
     @Test
-    @Ignore
     public void globalConfigurationIsAppliedToInnerConfiguredClassesImplicitConfiguration(){
         GenerationConfiguration generationConfiguration = new GenerationConfiguration();
         generationConfiguration.setUnique(true);
         generationConfiguration.setObjectsInCollections(2);
 
-        ClassWithCollectionA configA = ObjectG.config(ClassWithCollectionA.class);
-        configA.setForConfiguration(fromList("confValueA"));
-        configA.setClassB(ObjectG.config(ClassWithCollectionB.class));
-        configA.getClassB().setForConfiguration(fromList("confValueB"));
+        ClassWithCollectionA prototype = ObjectG.prototype(ClassWithCollectionA.class);
+        prototype.setForConfiguration(fromList("confValueA"));
+        prototype.setClassB(ObjectG.prototype(ClassWithCollectionB.class));
+        prototype.getClassB().setForConfiguration(fromList("confValueB"));
 
         ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
-                generationConfiguration, configA);
+                generationConfiguration, prototype);
 
         assertEquals("confValueA", generated.getForConfiguration());
         assertEquals(2, generated.getStringList().size());
@@ -116,25 +136,83 @@ public class ClassConfigTest {
     }
 
     @Test
-    @Ignore
     public void globalConfigurationIsAppliedToInnerConfiguredClassesExplicitConfiguration(){
         GenerationConfiguration generationConfiguration = new GenerationConfiguration();
         generationConfiguration.setUnique(true);
         generationConfiguration.setObjectsInCollections(2);
 
-        ClassWithCollectionA configA = ObjectG.config(ClassWithCollectionA.class);
-        configA.setForConfiguration(fromList("confValueA"));
+        ClassWithCollectionA prototypeA = ObjectG.prototype(ClassWithCollectionA.class);
+        prototypeA.setForConfiguration(fromList("confValueA"));
 
-        ClassWithCollectionB configB = ObjectG.config(ClassWithCollectionB.class);
-        configB.setForConfiguration(fromList("confValueB"));
+        ClassWithCollectionB prototypeB = ObjectG.prototype(ClassWithCollectionB.class);
+        prototypeB.setForConfiguration(fromList("confValueB"));
 
         ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
-                generationConfiguration, configA, configB);
+                generationConfiguration, prototypeA, prototypeB);
 
         assertEquals("confValueA", generated.getForConfiguration());
         assertEquals(2, generated.getStringList().size());
         assertEquals("confValueB", generated.getClassB().getForConfiguration());
         assertEquals(2, generated.getClassB().getStringList().size());
+    }
+
+    @Test
+    public void configObjectGetterWillReturnAnotherConfigObject(){
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.getHomeAddress().setStreet("configured");
+
+        Person generated = ObjectG.unique(Person.class, prototype);
+
+        assertEquals("person.homeAddress.street should be configured"
+                , "configured", generated.getHomeAddress().getStreet());
+        assertNotSame("person.workAddress.steet should be generated the usual way"
+                , "configured", generated.getWorkAddress().getStreet());
+    }
+
+    @Test
+    public void canSetPrototypeAfterGetterIsCalled(){
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.getHomeAddress().setStreet("configuredWithGetter");
+
+        prototype.setHomeAddress(ObjectG.prototype(Address.class));
+        prototype.getHomeAddress().setStreet("configuredWithSetter");
+
+        Person generated = ObjectG.unique(Person.class, prototype);
+
+        assertEquals("configuredWithSetter", generated.getHomeAddress().getStreet());
+    }
+
+    @Test(expected = PrototypeMisuseException.class)
+    public void configObjectGetterWillNotWorkWithPrimitive(){
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.getName();
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void throwsWhenTryingConfigPrimitiveJavaLang(){
+        ObjectG.prototype(int.class);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void throwsWhenTryingConfigPrimitiveJavaMath(){
+        ObjectG.prototype(BigDecimal.class);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void throwsWhenTryingConfigPrimitiveJavaUtil(){
+        ObjectG.prototype(ArrayList.class);
+    }
+
+    @Test
+    @Ignore
+    public void configObjectGetterUsedWithSetter(){
+        fail("throw?");
+    }
+
+    @Test
+    @Ignore
+    public void configObjectWithPrimitiveClass(){
+        fail("throw?");
     }
 
     public static class ClassWithCollectionA{
@@ -220,6 +298,7 @@ public class ClassConfigTest {
 
     public static class Address{
         private String street;
+        private int houseNumber;
 
         public String getStreet() {
             return street;
@@ -227,6 +306,14 @@ public class ClassConfigTest {
 
         public void setStreet(String street) {
             this.street = street;
+        }
+
+        public int getHouseNumber() {
+            return houseNumber;
+        }
+
+        public void setHouseNumber(int houseNumber) {
+            this.houseNumber = houseNumber;
         }
     }
 

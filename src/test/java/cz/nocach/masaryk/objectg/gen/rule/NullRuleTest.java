@@ -18,7 +18,7 @@ public class NullRuleTest {
     @Test
     @Ignore
     public void writeTests(){
-//        ConfigurationBuilder conf = ObjectG.config();
+//        ConfigurationBuilder conf = ObjectG.prototype();
 //        conf.nullObjects();
 //        TourSeason tourSeason = ObjectG.unique(TourSeason.class, conf);
 //
