@@ -5,6 +5,8 @@ import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.Generator;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -22,21 +24,37 @@ class NativeClassGenerator extends Generator {
     //TODO: allow resetting of this sequences? E.g. this reset can be performed before any new TestCase is about to
     //be started
     private final AtomicLong longSequence = new AtomicLong();
+    private final AtomicInteger shortSequence = new AtomicInteger();
     private final AtomicInteger charSequence = new AtomicInteger();
     private final AtomicBoolean booleanSequence = new AtomicBoolean();
 
     @Override
     protected Object generateValue(GenerationConfiguration configuration, GenerationContext context) {
-        if (String.class.equals(context.getClassThatIsGenerated())) return Long.toString(longSequence.incrementAndGet());
+        if (String.class.equals(context.getClassThatIsGenerated())) return nextString();
         if (isLong(context.getClassThatIsGenerated())) return longSequence.incrementAndGet();
         if (isInteger(context.getClassThatIsGenerated())) return (int)longSequence.incrementAndGet();
         if (isDouble(context.getClassThatIsGenerated())) return (double)longSequence.incrementAndGet();
         if (isFloat(context.getClassThatIsGenerated())) return (float)longSequence.incrementAndGet();
         if (isByte(context.getClassThatIsGenerated())) return (byte)longSequence.incrementAndGet();
         if (isChar(context.getClassThatIsGenerated())) return returnNextCharOrThrow();
-        if (BigDecimal.class.isAssignableFrom(context.getClassThatIsGenerated())) return returnNextBigDecimal();
+        if (BigDecimal.class.equals(context.getClassThatIsGenerated())) return returnNextBigDecimal();
+        if (BigInteger.class.equals(context.getClassThatIsGenerated())) return new BigInteger(nextString());
         if (isBoolean(context.getClassThatIsGenerated())) return booleanSequence.getAndSet(!booleanSequence.get());
+        if (Date.class.equals(context.getClassThatIsGenerated())) return new Date(longSequence.incrementAndGet());
+        if (isSqlDate(context.getClassThatIsGenerated())) return new java.sql.Date(longSequence.incrementAndGet());
+        if (isShort(context.getClassThatIsGenerated())) return (short)shortSequence.incrementAndGet();
+        if (StringBuffer.class.equals(context.getClassThatIsGenerated())) return new StringBuffer(nextString());
+        if (StringBuilder.class.equals(context.getClassThatIsGenerated())) return new StringBuilder(nextString());
+        if (Void.class.equals(context.getClassThatIsGenerated())) return null;
         throw new IllegalArgumentException("can't generate value of type " + context);
+    }
+
+    private String nextString() {
+        return Long.toString(longSequence.incrementAndGet());
+    }
+
+    private boolean isSqlDate(Class clazz) {
+        return java.sql.Date.class.equals(clazz);
     }
 
     private BigDecimal returnNextBigDecimal() {
@@ -62,10 +80,21 @@ class NativeClassGenerator extends Generator {
                 || isChar(type)
                 || String.class.isAssignableFrom(type)
                 || isBoolean(type)
-                || BigDecimal.class.isAssignableFrom(type)){
+                || BigDecimal.class.equals(type)
+                || BigInteger.class.equals(type)
+                || Date.class.equals(type)
+                || isSqlDate(type)
+                || isShort(type)
+                || StringBuilder.class.equals(type)
+                || StringBuffer.class.equals(type)
+                || Void.class.equals(type)){
             return true;
         }
         return false;
+    }
+
+    private boolean isShort(Class type) {
+        return short.class.equals(type) || Short.class.equals(type);
     }
 
     private boolean isBoolean(Class type) {

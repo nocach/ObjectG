@@ -8,6 +8,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,8 +35,15 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         assertUnique(char.class);
         assertUnique(String.class);
         assertUnique(BigDecimal.class);
+        assertUnique(BigInteger.class);
         assertUnique(Boolean.class);
         assertUnique(boolean.class);
+        assertUnique(Date.class);
+        assertUnique(java.sql.Date.class);
+        assertUnique(short.class);
+        assertUnique(Short.class);
+        assertUnique(StringBuilder.class);
+        assertUnique(StringBuffer.class);
         //TODO: fill other types
     }
 
@@ -55,6 +64,8 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         String stringValue = ObjectG.unique(String.class);
         boolean booleanValue = ObjectG.unique(boolean.class);
         Boolean booleanRefValue = ObjectG.unique(Boolean.class);
+        short shortValue = ObjectG.unique(short.class);
+        Short shortRefValue = ObjectG.unique(Short.class);
     }
 
     @Test
@@ -65,6 +76,12 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         //or to revert sequence to the start and continue in generating
         fail("not implemented");
 
+    }
+
+    @Test
+    public void forVoidOnlyNullIsGenerated(){
+        assertNull("first value", ObjectG.unique(Void.class));
+        assertNull("second value", ObjectG.unique(Void.class));
     }
 
     private void assertUnique(Class type) {
