@@ -26,4 +26,8 @@ public class Generators {
     public static Generator set(){
         return new SetGenerator();
     }
+
+    public static Generator enumeration(){
+        return new EnumerationGenerator();
+    }
 }

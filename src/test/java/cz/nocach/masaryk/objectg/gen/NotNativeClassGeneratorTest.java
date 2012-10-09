@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.gen.impl;
+package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import org.junit.Assert;

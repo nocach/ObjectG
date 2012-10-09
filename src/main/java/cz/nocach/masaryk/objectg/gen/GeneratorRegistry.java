@@ -25,6 +25,7 @@ public class GeneratorRegistry {
             Generators.list(),
             Generators.map(),
             Generators.set(),
+            Generators.enumeration(),
             Generators.notNativeClass());
     private static final GeneratorRegistry instance = new GeneratorRegistry();
 

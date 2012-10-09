@@ -13,6 +13,7 @@ public class Tour {
     private Money standardPrice;
     private Integer standardCapacity;
     private List<TourStop> stops;
+    private TourType tourType;
 
     public Long getId() {
         return id;
@@ -60,5 +61,13 @@ public class Tour {
 
     public void setStops(List<TourStop> stops) {
         this.stops = stops;
+    }
+
+    public TourType getTourType() {
+        return tourType;
+    }
+
+    public void setTourType(TourType tourType) {
+        this.tourType = tourType;
     }
 }
