@@ -1,13 +1,21 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.net.URL;
 
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class DestLink {
+    @Id
+    @GeneratedValue
     private Long id;
+    @ManyToOne
     private Destination destination;
     private URL url;
 

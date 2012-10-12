@@ -1,11 +1,13 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Embeddable
 public class Money {
     private BigDecimal amount;
     private String currency;

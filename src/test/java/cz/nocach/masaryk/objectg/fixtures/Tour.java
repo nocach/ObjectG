@@ -1,18 +1,25 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class Tour {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private String description;
     private Money standardPrice;
     private Integer standardCapacity;
+    @OneToMany(mappedBy = "tour")
     private List<TourStop> stops;
+    @ManyToOne
+    private TourSeason season;
     private TourType tourType;
 
     public Long getId() {
@@ -69,5 +76,13 @@ public class Tour {
 
     public void setTourType(TourType tourType) {
         this.tourType = tourType;
+    }
+
+    public TourSeason getSeason() {
+        return season;
+    }
+
+    public void setSeason(TourSeason season) {
+        this.season = season;
     }
 }

@@ -1,13 +1,20 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.*;
+
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class GuideAssignment {
+    @Id
+    @GeneratedValue
     private Long id;
+    @OneToOne
     private Departure departure;
-    private Person person;
+    @ManyToOne
+    private Guide guide;
     private String duties;
 
     public Long getId() {
@@ -26,12 +33,12 @@ public class GuideAssignment {
         this.departure = departure;
     }
 
-    public Person getPerson() {
-        return person;
+    public Guide getGuide() {
+        return guide;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setGuide(Guide guide) {
+        this.guide = guide;
     }
 
     public String getDuties() {

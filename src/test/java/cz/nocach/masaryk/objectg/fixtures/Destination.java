@@ -1,16 +1,21 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class Destination {
+    @Id
+    @GeneratedValue
     private Long id;
     private String city;
     private String region;
     private String country;
+    @OneToMany(mappedBy = "destination")
     private List<DestLink> references;
 
     public Long getId() {

@@ -1,17 +1,26 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.*;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class Customer {
+    @Id
+    @GeneratedValue
+    private Long id;
+    @OneToOne
     private Person person;
     private String notes;
+    @OneToMany(mappedBy = "customer")
     private Set<Reservation> reservations;
-    private LinkedList<Preference> preferences;
+    @OneToMany(mappedBy = "customer" )
+    private List<Preference> preferences;
 
     public Person getPerson() {
         return person;
@@ -37,11 +46,19 @@ public class Customer {
         this.reservations = reservations;
     }
 
-    public LinkedList<Preference> getPreferences() {
+    public List<Preference> getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(LinkedList<Preference> preferences) {
+    public void setPreferences(List<Preference> preferences) {
         this.preferences = preferences;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

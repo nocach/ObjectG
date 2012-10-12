@@ -1,10 +1,19 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
+
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class Person {
+    @Id
+    @GeneratedValue
     private Long id;
     private String firstName;
     private String middleName;
@@ -68,4 +77,5 @@ public class Person {
     public void setGuide(boolean guide) {
         isGuide = guide;
     }
+
 }

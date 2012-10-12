@@ -30,6 +30,7 @@ class NativeClassGenerator extends Generator {
 
     @Override
     protected Object generateValue(GenerationConfiguration configuration, GenerationContext context) {
+        //TODO: can be optimized by using hashmap Map<Class, Sequence>
         if (String.class.equals(context.getClassThatIsGenerated())) return nextString();
         if (isLong(context.getClassThatIsGenerated())) return longSequence.incrementAndGet();
         if (isInteger(context.getClassThatIsGenerated())) return (int)longSequence.incrementAndGet();
@@ -72,6 +73,7 @@ class NativeClassGenerator extends Generator {
 
     @Override
     public boolean supportsType(Class type) {
+        //TODO: can be optimized by using hashmap Map<Class, Boolean>
         if (isInteger(type)
                 || isDouble(type)
                 || isLong(type)

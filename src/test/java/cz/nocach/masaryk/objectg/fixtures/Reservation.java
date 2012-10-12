@@ -1,15 +1,22 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * User: __nocach
  * Date: 29.9.12
  */
+@Entity
 public class Reservation {
+    @Id
+    @GeneratedValue
     private Long id;
+    @OneToOne
     private Agent agent;
+    @ManyToOne
     private Departure departure;
+    @ManyToOne
     private Customer customer;
     private Date dateReserved;
     private int numberOfPersons;
