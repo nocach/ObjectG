@@ -24,6 +24,7 @@
         <mapping class="cz.nocach.masaryk.objectg.fixtures.GuideAssignment"></mapping>
         <mapping class="cz.nocach.masaryk.objectg.fixtures.Money"></mapping>
         <mapping class="cz.nocach.masaryk.objectg.fixtures.Person"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.Person2Address"></mapping>
         <mapping class="cz.nocach.masaryk.objectg.fixtures.Preference"></mapping>
         <mapping class="cz.nocach.masaryk.objectg.fixtures.Reservation"></mapping>
         <mapping class="cz.nocach.masaryk.objectg.fixtures.Tour"></mapping>

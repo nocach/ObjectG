@@ -1,9 +1,6 @@
 package cz.nocach.masaryk.objectg.fixtures;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -21,6 +18,8 @@ public class Person {
     private boolean isCustomer;
     private boolean isAgent;
     private boolean isGuide;
+    @OneToMany(mappedBy = "person")
+    private List<Person2Address> employee2Addresses;
 
     public Long getId() {
         return id;
@@ -76,6 +75,14 @@ public class Person {
 
     public void setGuide(boolean guide) {
         isGuide = guide;
+    }
+
+    public List<Person2Address> getEmployee2Addresses() {
+        return employee2Addresses;
+    }
+
+    public void setEmployee2Addresses(List<Person2Address> employee2Addresses) {
+        this.employee2Addresses = employee2Addresses;
     }
 
 }

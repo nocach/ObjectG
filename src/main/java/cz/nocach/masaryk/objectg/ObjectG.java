@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg;
 
 import cz.nocach.masaryk.objectg.conf.*;
+import cz.nocach.masaryk.objectg.conf.exception.ConfigurationException;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 import org.slf4j.Logger;
@@ -34,16 +35,30 @@ public class ObjectG {
         return generate(clazz, configuration);
     }
 
-    public static <T> T unique(Class<T> clazz, Object... configuredObjects){
-        return unique(clazz, new GenerationConfiguration(), configuredObjects);
+    public static <T> T unique(Class<T> clazz, Object... prototypes){
+        assertPrototypesAreValid(prototypes);
+        return unique(clazz, new GenerationConfiguration(), prototypes);
+    }
+
+    private static void assertPrototypesAreValid(Object[] prototypes) {
+        for (Object each : prototypes){
+            if (each instanceof ConfigurationBuilder){
+                throw new ConfigurationException("tried to use ConfigurationBuilder as prototype object. " +
+                        "Did you forget to call .done()? Check ObjectG.config() for more info");
+            }
+            if ( !(each instanceof InterceptedBySetterConfigurator) ){
+                throw new ConfigurationException("tried to pass not prototype instance. " +
+                        "Make sure you passed instances return by ObjectG.prototype()");
+            }
+        }
     }
 
     /**
-     * will create GenerationConfiguration from {@code configuredObjects} for this generation
+     * will create GenerationConfiguration from {@code prototypes} for this generation
      */
-    public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration, Object... configuredObjects){
+    public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration, Object... prototypes){
         configuration.setUnique(true);
-        configuration.addAllRules(rulesFromObjects(configuredObjects));
+        configuration.addAllRules(rulesFromPrototypes(prototypes));
         return generate(clazz, configuration);
     }
 
@@ -57,9 +72,9 @@ public class ObjectG {
         return result;
     }
 
-    private static List<GenerationRule> rulesFromObjects(Object... objects){
+    private static List<GenerationRule> rulesFromPrototypes(Object... prototypes){
         List<GenerationRule> result = new ArrayList<GenerationRule>();
-        for (Object each : objects){
+        for (Object each : prototypes){
             List<GenerationRule> rules = PROTOTYPE_CREATOR.getRules(each);
             if (rules == null){
                 logger.debug("no rules contained in configurationHanlder for object " + each

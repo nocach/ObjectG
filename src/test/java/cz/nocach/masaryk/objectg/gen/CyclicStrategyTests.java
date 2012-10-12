@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
+import cz.nocach.masaryk.objectg.fixtures.Person;
 import org.junit.Test;
 
 import java.util.List;
