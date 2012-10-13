@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg;
+package cz.nocach.masaryk.objectg.gen;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,7 @@ package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.CompositeGenerator;
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.Generator;
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;

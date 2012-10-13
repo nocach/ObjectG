@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.cycle;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 
 /**
  * User: __nocach
@@ -11,5 +11,10 @@ public class NullValueCycleStrategy implements CycleStrategy {
     @Override
     public Object generateForCycle(GenerationConfiguration configuration, GenerationContext context) {
         return null;
+    }
+
+    @Override
+    public boolean shouldGenerateValueInCollection() {
+        return false;
     }
 }

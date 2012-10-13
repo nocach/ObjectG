@@ -1,6 +1,6 @@
 package cz.nocach.masaryk.objectg.matcher;
 
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 

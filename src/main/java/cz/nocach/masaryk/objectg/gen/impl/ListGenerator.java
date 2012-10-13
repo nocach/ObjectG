@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ class ListGenerator extends CollectionGenerator<List>{
     protected void addNewObject(List collection,
                                 GenerationConfiguration configuration, GenerationContext contextOfCollection) {
         GenerationContext contextForCollectionsObject = getContextForGeneratingObjectsOfCollection(contextOfCollection);
+        if (!shouldAddObjectForContext(configuration, contextForCollectionsObject)) return;
         Object generatedValue = GeneratorRegistry.getInstance().generate(configuration, contextForCollectionsObject);
         collection.add(generatedValue);
     }

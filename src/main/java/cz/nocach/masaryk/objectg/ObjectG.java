@@ -2,8 +2,10 @@ package cz.nocach.masaryk.objectg;
 
 import cz.nocach.masaryk.objectg.conf.*;
 import cz.nocach.masaryk.objectg.conf.exception.ConfigurationException;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
+import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -63,7 +65,12 @@ public class ObjectG {
     }
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
+        addDefaultRules(configuration);
         return (T) GeneratorRegistry.getInstance().generate(configuration, GenerationContext.createRoot(clazz));
+    }
+
+    private static void addDefaultRules(GenerationConfiguration configuration) {
+        configuration.addAllRules(Rules.defaultRules());
     }
 
     public static <T> T prototype(Class<T> clazz){

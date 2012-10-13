@@ -15,5 +15,16 @@ package cz.nocach.masaryk.objectg.gen;
  * </p>
  */
 public enum RuleScope {
-    GLOBAL, PROPERTY,
+    /**
+     * rule is applied as the default
+     */
+    INTERNAL_DEFAULT,
+    /**
+     * rule is globally applied
+     */
+    GLOBAL,
+    /**
+     * rule is applied to property
+     */
+    PROPERTY,
 }

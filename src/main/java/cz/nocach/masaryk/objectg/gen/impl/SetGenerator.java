@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 
 import java.util.HashSet;
@@ -15,6 +15,7 @@ class SetGenerator extends CollectionGenerator<Set> {
     @Override
     protected void addNewObject(Set collection, GenerationConfiguration configuration, GenerationContext contextOfCollection) {
         GenerationContext contextForGenertingSetObj = getContextForGenericType(contextOfCollection, 0);
+        if (!shouldAddObjectForContext(configuration, contextForGenertingSetObj)) return;
         Object objectForCollection = GeneratorRegistry.getInstance().generate(configuration, contextForGenertingSetObj);
         collection.add(objectForCollection);
     }

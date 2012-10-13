@@ -1,6 +1,5 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.impl.*;
 import org.slf4j.Logger;
@@ -10,7 +9,7 @@ import org.springframework.util.Assert;
 /**
  * <p>
  *      Knows about all generators in the framework. Allows to generate value for any type by using
- *      {@link #generate(cz.nocach.masaryk.objectg.conf.GenerationConfiguration, cz.nocach.masaryk.objectg.GenerationContext)}
+ *      {@link #generate(cz.nocach.masaryk.objectg.conf.GenerationConfiguration, GenerationContext)}
  * </p>
  * <p>
  * User: __nocach

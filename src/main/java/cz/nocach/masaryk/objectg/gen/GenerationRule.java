@@ -1,6 +1,5 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import cz.nocach.masaryk.objectg.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.matcher.FieldNameMatcher;
 import org.hamcrest.Matcher;
@@ -20,6 +19,12 @@ import org.springframework.util.Assert;
 public abstract class GenerationRule implements Comparable<GenerationRule>{
     private Matcher<GenerationContext> matcher;
     private RuleScope scope = RuleScope.GLOBAL;
+
+    public GenerationRule(){}
+
+    protected GenerationRule(RuleScope scope) {
+        this.scope = scope;
+    }
 
     /**
      *
@@ -53,7 +58,7 @@ public abstract class GenerationRule implements Comparable<GenerationRule>{
     @Override
     public String toString() {
         StringDescription describeMatcher = new StringDescription();
-        matcher.describeTo(describeMatcher);
+        if (matcher != null) matcher.describeTo(describeMatcher);
         return getClass().getSimpleName()+"{" +
                 "matcher=" + describeMatcher +
                 ", scope=" + scope.name() +

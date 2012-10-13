@@ -1,8 +1,6 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.GenerationContext;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -10,8 +8,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * User: __nocach

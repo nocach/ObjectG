@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 
 import java.util.HashMap;
@@ -21,8 +21,10 @@ class MapGenerator extends CollectionGenerator<Map>{
     @Override
     protected void addNewObject(Map collection,
                                 GenerationConfiguration configuration, GenerationContext contextOfCollection) {
+        GenerationContext contextForGeneratingKey = getContextForGeneratingKey(contextOfCollection);
+        if (!shouldAddObjectForContext(configuration, contextForGeneratingKey)) return;
         Object mapKey = GeneratorRegistry.getInstance()
-                .generate(configuration, getContextForGeneratingKey(contextOfCollection));
+                .generate(configuration, contextForGeneratingKey);
         Object mapValue = GeneratorRegistry.getInstance()
                 .generate(configuration, getContextForGeneratingValue(contextOfCollection));
         collection.put(mapKey, mapValue);

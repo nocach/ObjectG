@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.cycle;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 
 /**
  * <p>
@@ -15,5 +15,10 @@ import cz.nocach.masaryk.objectg.GenerationContext;
 public class BackReferenceCycleStrategy implements CycleStrategy {
     public Object generateForCycle(GenerationConfiguration configuration, GenerationContext context) {
         return context.getLastGeneratedObject(context.getClassThatIsGenerated());
+    }
+
+    @Override
+    public boolean shouldGenerateValueInCollection() {
+        return true;
     }
 }

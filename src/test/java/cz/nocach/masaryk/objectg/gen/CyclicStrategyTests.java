@@ -1,13 +1,14 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.fixtures.Person;
 import org.junit.Test;
 
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: __nocach
@@ -29,14 +30,14 @@ public class CyclicStrategyTests {
 
     @Test
     public void backReferenceStrategyCollection(){
-        ClassARefCollection instance = ObjectG.unique(ClassARefCollection.class,
+        ClassARefCollectionB instance = ObjectG.unique(ClassARefCollectionB.class,
                 ObjectG.config().backReferenceCycle().done());
 
         assertNotNull("list must be set", instance.getClassBList());
         assertEquals("generated list be not empty", 1, instance.getClassBList().size());
         ClassB firstClassB = instance.getClassBList().get(0);
         assertEquals("back reference must be set in collection generated objects",
-                instance, firstClassB.getClassARefCollection());
+                instance, firstClassB.getClassARefCollectionB());
     }
 
     @Test
@@ -52,6 +53,19 @@ public class CyclicStrategyTests {
         assertEquals(generatedA, generatedA.getClassB().getClassA());
     }
 
+    @Test
+    public void nullCyclicStrategy(){
+        ClassA classA = ObjectG.unique(ClassA.class, ObjectG.config().nullCycle().done());
+        assertNotNull("classB should be generated", classA.getClassB());
+        assertNull("classA referenced in ClassB should be null, because of cycle", classA.getClassB().getClassA());
+    }
+
+    @Test
+    public void nullCyclicStrategyLeavesCollectionAsEmpty(){
+        ClassB classB = ObjectG.unique(ClassB.class, ObjectG.config().nullCycle().done());
+        assertEquals(0, classB.getClassARefCollectionB().getClassBList().size());
+    }
+
     public static class ClassA{
         private ClassB classB;
 
@@ -63,7 +77,7 @@ public class CyclicStrategyTests {
         }
     }
 
-    public static class ClassARefCollection{
+    public static class ClassARefCollectionB {
         private List<ClassB> classBList;
 
         public List<ClassB> getClassBList() {
@@ -77,7 +91,7 @@ public class CyclicStrategyTests {
 
     public static class ClassB{
         private ClassA classA;
-        private ClassARefCollection classARefCollection;
+        private ClassARefCollectionB classARefCollectionB;
 
         public ClassA getClassA() {
             return classA;
@@ -86,12 +100,12 @@ public class CyclicStrategyTests {
             this.classA = classA;
         }
 
-        public ClassARefCollection getClassARefCollection() {
-            return classARefCollection;
+        public ClassARefCollectionB getClassARefCollectionB() {
+            return classARefCollectionB;
         }
 
-        public void setClassARefCollection(ClassARefCollection classARefCollection) {
-            this.classARefCollection = classARefCollection;
+        public void setClassARefCollectionB(ClassARefCollectionB classARefCollectionB) {
+            this.classARefCollectionB = classARefCollectionB;
         }
     }
 }

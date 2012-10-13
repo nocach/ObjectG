@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.RuleScope;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -10,6 +11,9 @@ import java.util.*;
  * Date: 29.9.12
  */
 public class Rules {
+
+    private static final JpaRule jpaRule = new JpaRule(RuleScope.INTERNAL_DEFAULT);
+
     public static GenerationRule fromList(Object... values){
         return new FromListGenerationRule(values);
     }
@@ -53,5 +57,11 @@ public class Rules {
 
     public static GenerationRule onlyNull(){
         return new NullValueGenerationRule();
+    }
+
+    public static List<GenerationRule> defaultRules(){
+        List<GenerationRule> result = new ArrayList<GenerationRule>();
+        result.add(jpaRule);
+        return result;
     }
 }

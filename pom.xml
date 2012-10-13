@@ -6,7 +6,7 @@
 
     <groupId>com.github.nocach</groupId>
     <artifactId>objectg</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>javassist</groupId>
@@ -47,6 +47,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>4.1.7.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>13.0.1</version>
         </dependency>
 
 
