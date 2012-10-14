@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.matcher;
+package cz.nocach.masaryk.objectg.matcher.impl;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.hamcrest.Description;

@@ -37,6 +37,14 @@ public class ObjectG {
         return generate(clazz, configuration);
     }
 
+    public static <T> T unique(Class<T> clazz, ConfigurationBuilder configurationBuilder){
+        return unique(clazz, configurationBuilder.done());
+    }
+
+    public static <T> T unique(Class<T> clazz, ConfigurationBuilder configurationBuilder, Object... prototypes){
+        return unique(clazz, configurationBuilder.done(), prototypes);
+    }
+
     public static <T> T unique(Class<T> clazz, Object... prototypes){
         assertPrototypesAreValid(prototypes);
         return unique(clazz, new GenerationConfiguration(), prototypes);

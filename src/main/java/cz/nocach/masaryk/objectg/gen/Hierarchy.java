@@ -63,4 +63,8 @@ class Hierarchy {
         }
         return dump.toString();
     }
+
+    public boolean isEmpty() {
+        return hierarchyClass.isEmpty();
+    }
 }

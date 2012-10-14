@@ -14,6 +14,10 @@ public class Rules {
 
     private static final JpaRule jpaRule = new JpaRule(RuleScope.INTERNAL_DEFAULT);
 
+    public static GenerationRule value(Object value){
+        return fromList(value);
+    }
+
     public static GenerationRule fromList(Object... values){
         return new FromListGenerationRule(values);
     }
@@ -63,5 +67,13 @@ public class Rules {
         List<GenerationRule> result = new ArrayList<GenerationRule>();
         result.add(jpaRule);
         return result;
+    }
+
+    public static GenerationRule emptyCollection(){
+        return new EmptyCollectionGenerationRule();
+    }
+
+    public static GenerationRule emptyMap(){
+        return new EmptyMapCollectionGenerationRule();
     }
 }

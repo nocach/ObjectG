@@ -126,4 +126,8 @@ public class GenerationContext<T> {
     public Field getParentField(){
         return parentField;
     }
+
+    public boolean isRoot(){
+        return hierarchy.isEmpty();
+    }
 }

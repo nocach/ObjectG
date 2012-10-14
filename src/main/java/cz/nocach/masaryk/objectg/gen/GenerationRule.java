@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.matcher.FieldNameMatcher;
+import cz.nocach.masaryk.objectg.matcher.impl.FieldNameMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.springframework.util.Assert;
