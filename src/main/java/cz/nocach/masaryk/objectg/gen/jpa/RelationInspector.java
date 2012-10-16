@@ -123,16 +123,24 @@ public class RelationInspector {
 
     private Set<Class> collectRelatedEntityClasses(Class clazz) {
         Set<Class> relatedEntityClasses = Sets.newHashSet(clazz);
+        collectRelatedEntityClassesNested(clazz, relatedEntityClasses);
+        return relatedEntityClasses;
+    }
+
+    private void collectRelatedEntityClassesNested(Class clazz, Set<Class> relatedEntityClasses) {
         for (Field each : clazz.getDeclaredFields()){
-            if (isEntityAnnotationPresent(each.getType())){
+            if (isEntityAnnotationPresent(each.getType()) && !relatedEntityClasses.contains(each.getType())){
                 relatedEntityClasses.add(each.getType());
+                collectRelatedEntityClassesNested(each.getType(), relatedEntityClasses);
             } else if(isFieldGenericCollection(each)){
                 //TODO: currenty will fall if it will be generic collection without TypeVars defined
-                Type typeParam = Fields.extractTypeFromGenerics(each, 0);
-                relatedEntityClasses.add((Class)typeParam);
+                Class typeParam = (Class)Fields.extractTypeFromGenerics(each, 0);
+                if (isEntityAnnotationPresent(typeParam) && !relatedEntityClasses.contains(typeParam)){
+                    relatedEntityClasses.add(typeParam);
+                    collectRelatedEntityClassesNested(typeParam, relatedEntityClasses);
+                }
             }
         }
-        return relatedEntityClasses;
     }
 
     private boolean isFieldGenericCollection(Field each) {

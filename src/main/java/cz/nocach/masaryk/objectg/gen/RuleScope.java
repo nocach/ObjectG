@@ -2,7 +2,8 @@ package cz.nocach.masaryk.objectg.gen;
 
 /**
  * <p>
- *     Defines scope of the rule.
+ *     Defines scope of the rule. Rules with BIGGER ordinal are applied FIRST.
+ *     (ordinal is order in which enum constant is defined)
  * </p>
  * <p>
  *     E.g. some rule can be global {@code nullFor(anyClass())} but at the same time

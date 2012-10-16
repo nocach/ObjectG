@@ -2,6 +2,7 @@ package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.RuleScope;
 import org.hamcrest.Matcher;
 import org.springframework.util.Assert;
 
@@ -23,6 +24,12 @@ public class WhenBuilder {
 
     public ConfigurationBuilder rule(GenerationRule rule){
         rule.when(contextMatcher);
+        configurationBuilder.addRule(rule);
+        return configurationBuilder;
+    }
+    public ConfigurationBuilder rule(GenerationRule rule, RuleScope scope){
+        rule.when(contextMatcher);
+        rule.setScope(scope);
         configurationBuilder.addRule(rule);
         return configurationBuilder;
     }

@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.integration;
 
 import cz.nocach.masaryk.objectg.ObjectG;
+import cz.nocach.masaryk.objectg.fixtures.Departure;
 import cz.nocach.masaryk.objectg.fixtures.Person;
 import cz.nocach.masaryk.objectg.fixtures.Person2Address;
 import org.junit.Test;
@@ -23,5 +24,11 @@ public class BasicJPAIntegrationTest {
         assertNull("owner should be null, because nullOnCycleStrategy must be used for it", owner);
         assertNotNull("dependentPersons should be set", person2Address.getDependentPersons());
         assertEquals("dependentPersons should be empty", 0, person2Address.getDependentPersons().size());
+    }
+
+    @Test
+    public void willDiscoverEntitiesReferencingFromCollections(){
+        //Departure has List<Reservation> and Reservation points to more classes
+        ObjectG.unique(Departure.class);
     }
 }

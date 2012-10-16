@@ -51,6 +51,11 @@ public class JpaRelationTest {
         assertClassMappignsAreValid(OrganizationWithoutCollectionType.class, OrganizationUnitWithoutCollectionType.class);
     }
 
+    @Test
+    public void projectEntitiesMappingIsValid(){
+        assertClassMappignsAreValid(Project.class, SubProject.class, Team.class);
+    }
+
     private void assertClassMappignsAreValid(Class... classes) {
         Configuration configuration = new Configuration();
         for (Class each : classes){
@@ -104,10 +109,16 @@ public class JpaRelationTest {
     }
 
     @Test
-    public void shouldWorkWithInheretedEntityAnnotation(){
+    public void shouldWorkWithInheritedEntityAnnotation(){
         Map<Class, List<Relation>>  relationsFromOrganization = relationInspector.fromEntity(OrganizationUnitBaseEntity.class);
 
         assertEquals(2, relationsFromOrganization.size());
+    }
+
+    @Test
+    public void shouldDiscoverRelationsReferencedFromCollection(){
+        Map<Class, List<Relation>> relations = relationInspector.fromEntity(Project.class);
+        assertEquals(3, relations.size());
     }
 
     @Test
@@ -190,13 +201,36 @@ public class JpaRelationTest {
     }
 
     @Entity
-    @Table(name = "TEST")
     public static class OrganizationUnitWithoutCollectionType {
         @Id
         @GeneratedValue
         private Long id;
         @ManyToOne
         private OrganizationWithoutCollectionType organization;
+    }
+
+    @Entity
+    public static class Project{
+        @Id
+        private Long id;
+        @OneToMany
+        private List<SubProject> subProjects;
+    }
+
+    @Entity
+    public static class SubProject{
+        @Id
+        private Long id;
+        @OneToMany(mappedBy = "subProject")
+        private List<Team> teams;
+    }
+
+    @Entity
+    public static class Team{
+        @Id
+        private Long id;
+        @ManyToOne
+        private SubProject subProject;
     }
 
 }
