@@ -12,12 +12,8 @@ import static org.junit.Assert.fail;
  */
 public class PrototypeCreatorTest {
 
-    private String onSetterPropertyName;
-    private Object onSetterObjectUnderConfiguration;
-    private Object onInitObjectUnderConfiguration;
-
     @Test
-    public void canCreateTwoConfigurators(){
+    public void canCreateTwoPrototypes(){
         PrototypeCreator prototypeCreator = new PrototypeCreator();
         prototypeCreator.newPrototype(ClassWithProperties.class);
         prototypeCreator.newPrototype(ClassWithProperties.class);
@@ -25,8 +21,14 @@ public class PrototypeCreatorTest {
 
     @Test
     @Ignore
-    public void handlerNotifiedOnSetterCallForInterface(){
-        fail("test showing that PrototypeCreator can be used to configure interface classes (IPerson.class)");
+    public void whatWillHappenWhenClassIsInterface(){
+        fail("think about it");
+    }
+
+    @Test
+    @Ignore
+    public void whatWillHappenWhenClassIsAbstract(){
+        fail("think about it");
     }
 
     public static class ClassWithProperties{
