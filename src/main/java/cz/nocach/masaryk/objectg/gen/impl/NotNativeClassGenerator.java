@@ -4,6 +4,7 @@ import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.Generator;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
+import cz.nocach.masaryk.objectg.util.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -92,7 +93,6 @@ class NotNativeClassGenerator extends Generator {
 
     @Override
     public boolean supportsType(Class type) {
-        //TODO: return !Types.isJavaType(type)
-        return true;
+        return !Types.isJavaType(type);
     }
 }
