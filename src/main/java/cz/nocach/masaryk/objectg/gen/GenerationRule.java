@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
  * Date: 1.9.12
  * </p>
  */
-public abstract class GenerationRule implements Comparable<GenerationRule>{
+public abstract class GenerationRule<T> implements Comparable<GenerationRule>{
     private Matcher<GenerationContext> matcher;
     private RuleScope scope = RuleScope.GLOBAL;
 
@@ -34,7 +34,7 @@ public abstract class GenerationRule implements Comparable<GenerationRule>{
         this.matcher = matcher;
     }
 
-    protected abstract <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context);
+    protected abstract T getValue(GenerationConfiguration currentConfiguration, GenerationContext context);
 
     /**
      * @param parentClass class where property is

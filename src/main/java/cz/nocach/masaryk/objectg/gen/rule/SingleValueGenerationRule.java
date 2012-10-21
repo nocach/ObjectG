@@ -9,14 +9,14 @@ import cz.nocach.masaryk.objectg.gen.GenerationRule;
  * Date: 23.9.12
  */
 
-class SingleValueGenerationRule<T> extends GenerationRule{
+class SingleValueGenerationRule<T> extends GenerationRule<T>{
     private T value;
 
     public SingleValueGenerationRule(T value){
         this.value = value;
     }
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        return (T)value;
+    protected T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+        return value;
     }
 }

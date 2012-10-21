@@ -6,11 +6,13 @@ import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 /**
  * User: __nocach
  * Date: 23.9.12
  */
-class GenericListGenerationRule extends GenerationRule {
+class GenericListGenerationRule extends GenerationRule<List> {
     private final Class genericDefinition;
     private final int size;
 
@@ -23,7 +25,7 @@ class GenericListGenerationRule extends GenerationRule {
         this.size = size;
     }
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        return (T)ObjectG.generateList(genericDefinition, size);
+    protected List getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+        return ObjectG.generateList(genericDefinition, size);
     }
 }

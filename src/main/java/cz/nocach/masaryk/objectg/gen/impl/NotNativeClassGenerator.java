@@ -12,6 +12,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 /**
  * <p>
@@ -31,7 +32,7 @@ class NotNativeClassGenerator extends Generator {
         try {
             Constructor constructor = getConstructorWithMostArgs(context.getClassThatIsGenerated());
             final Object resultObj = constructor.newInstance(createUniqueConstructorArgs(configuration, context, constructor));
-            ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), new ReflectionUtils.FieldCallback() {
+            ReflectionUtils.FieldCallback generateValueForField = new ReflectionUtils.FieldCallback() {
                 @Override
                 public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                     Object generatedValueForField = findAndGenerate(configuration, context, resultObj, field);
@@ -39,7 +40,15 @@ class NotNativeClassGenerator extends Generator {
                     field.set(resultObj, generatedValueForField);
                 }
 
-            });
+            };
+            ReflectionUtils.FieldFilter filteringStaticAndFinals = new ReflectionUtils.FieldFilter() {
+                @Override
+                public boolean matches(Field field) {
+                    return !Modifier.isStatic(field.getModifiers())
+                            && !Modifier.isFinal(field.getModifiers());
+                }
+            };
+            ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), generateValueForField, filteringStaticAndFinals);
             return resultObj;
         } catch (InstantiationException e) {
             throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);

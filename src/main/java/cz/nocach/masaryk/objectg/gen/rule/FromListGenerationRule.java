@@ -17,36 +17,23 @@ import java.util.List;
  * Date: 1.9.12
  * </p>
  */
-class FromListGenerationRule extends GenerationRule {
-    private Class classOfTheFirstValue;
-    private List values;
+class FromListGenerationRule<T> extends GenerationRule<T> {
+    private List<T> values;
     private FromListGenerator fromListGenerator;
 
-    public <T> FromListGenerationRule(T... values){
+    public FromListGenerationRule(T... values){
         this(Arrays.asList(values));
 
     }
-    public <T> FromListGenerationRule(List<T> values){
+    public FromListGenerationRule(List<T> values){
         Assert.notNull(values, "at least one value must be provided, values are null");
         Assert.isTrue(!values.isEmpty(), "at least one value must be provided, values are empty");
-        assignClassOfNotNullValue(values);
         this.values = values;
         fromListGenerator = new FromListGenerator(values);
     }
 
-    private <T> void assignClassOfNotNullValue(List<T> values) {
-        for (T each : values){
-            if (each != null){
-                classOfTheFirstValue = each.getClass();
-                return;
-            }
-        }
-        //TODO: add hint to the exception that NullGenerator must be used to set null valeus only
-        throw new IllegalArgumentException("at least one not null value must exist");
-    }
-
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    protected T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         return (T)fromListGenerator.generateValue();
     }
 

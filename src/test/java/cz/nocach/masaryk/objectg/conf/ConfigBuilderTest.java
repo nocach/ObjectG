@@ -4,6 +4,7 @@ import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.exception.ConfigurationException;
 import cz.nocach.masaryk.objectg.fixtures.Person;
 import cz.nocach.masaryk.objectg.fixtures.Tour;
+import cz.nocach.masaryk.objectg.fixtures.TourSeason;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import cz.nocach.masaryk.objectg.matcher.ContextMatchers;
 import org.junit.Test;
@@ -50,6 +51,23 @@ public class ConfigBuilderTest {
         ClassWithMap classWithMap = ObjectG.unique(ClassWithMap.class, ObjectG.config().noObjects());
 
         assertEquals("map should be empty", 0, classWithMap.getMap().size());
+    }
+
+    @Test
+    public void canSimplyConfigValueForClass(){
+        TourSeason expectedSeason = new TourSeason();
+        Tour generated = ObjectG.unique(Tour.class,
+                ObjectG.config().forClass(TourSeason.class).value(expectedSeason));
+
+        assertEquals(expectedSeason, generated.getSeason());
+    }
+
+    @Test
+    public void canSimplyConfigNullForClass(){
+        Tour generated = ObjectG.unique(Tour.class,
+                ObjectG.config().forClass(TourSeason.class).setNull());
+
+        assertNull(generated.getSeason());
     }
 
     public static class ClassWithMap{

@@ -11,14 +11,14 @@ import java.util.Collection;
  * User: __nocach
  * Date: 14.10.12
  */
-class EmptyCollectionGenerationRule extends GenerationRule {
+class EmptyCollectionGenerationRule extends GenerationRule<Collection> {
 
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    protected Collection getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         configurationOfCollection.removeRule(this);
         Collection collection = (Collection) ObjectG.generate(context.getClassThatIsGenerated(), configurationOfCollection);
-        return (T)collection;
+        return collection;
     }
 }

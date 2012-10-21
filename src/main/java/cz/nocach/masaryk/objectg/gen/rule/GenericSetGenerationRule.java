@@ -5,11 +5,13 @@ import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 
+import java.util.Set;
+
 /**
  * User: __nocach
  * Date: 28.9.12
  */
-class GenericSetGenerationRule extends GenerationRule{
+class GenericSetGenerationRule extends GenerationRule<Set>{
     private Class classOfObjects;
     private int size;
 
@@ -23,7 +25,7 @@ class GenericSetGenerationRule extends GenerationRule{
     }
 
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        return (T) ObjectG.generateSet(classOfObjects, size);
+    protected Set getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+        return ObjectG.generateSet(classOfObjects, size);
     }
 }

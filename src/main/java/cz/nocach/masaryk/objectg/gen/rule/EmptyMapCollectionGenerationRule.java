@@ -11,14 +11,14 @@ import java.util.Map;
  * User: __nocach
  * Date: 14.10.12
  */
-class EmptyMapCollectionGenerationRule extends GenerationRule {
+class EmptyMapCollectionGenerationRule extends GenerationRule<Map> {
 
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    protected Map getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         configurationOfCollection.removeRule(this);
         Map collection = (Map) ObjectG.generate(context.getClassThatIsGenerated(), configurationOfCollection);
-        return (T)collection;
+        return collection;
     }
 }

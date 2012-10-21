@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
  * </p>
  */
 public class ContextMatchers {
-    public static Matcher<GenerationContext> instancesOf(Class... classes){
+    public static <U> ValueTypeHintMatcher<GenerationContext, U> instancesOf(Class<? extends U>... classes){
         Assert.notEmpty(classes, "at least one class object should be provided");
         Assert.noNullElements(classes, "no null elements allowed");
         Matcher[] classMatchers = new Matcher[classes.length];

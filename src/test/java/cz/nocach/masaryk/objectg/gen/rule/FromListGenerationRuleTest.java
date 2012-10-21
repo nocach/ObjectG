@@ -17,7 +17,7 @@ public class FromListGenerationRuleTest {
 
     @Test
     public void canGenerateByRule(){
-        FromListGenerationRule listGenerationRule = new FromListGenerationRule("one", "two", "three");
+        FromListGenerationRule<String> listGenerationRule = new FromListGenerationRule("one", "two", "three");
 
         String generatedString = listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(String.class));
         assertTrue("returned generator should generate from rule values",
@@ -36,11 +36,6 @@ public class FromListGenerationRuleTest {
     @Test(expected = IllegalArgumentException.class)
     public void throwsIfNoValues(){
         new FromListGenerationRule();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void throwsIfNoNotNullValues(){
-        new FromListGenerationRule((String)null);
     }
 
     @Test

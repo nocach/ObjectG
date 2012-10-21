@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.matcher.impl;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.matcher.ValueTypeHintMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -8,7 +9,8 @@ import org.hamcrest.TypeSafeMatcher;
  * User: __nocach
  * Date: 29.9.12
  */
-public class FieldNameMatcher extends TypeSafeMatcher<GenerationContext> {
+public class FieldNameMatcher<U> extends TypeSafeMatcher<GenerationContext>
+                                implements ValueTypeHintMatcher<GenerationContext, U>{
     private Class<?> parentClass;
     private String fieldName;
 

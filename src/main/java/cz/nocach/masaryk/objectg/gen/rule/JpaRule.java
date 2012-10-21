@@ -15,7 +15,7 @@ import java.util.List;
  * User: __nocach
  * Date: 12.10.12
  */
-class JpaRule extends GenerationRule{
+class JpaRule extends GenerationRule<Object>{
     private RelationValueProvider relationValueProvider;
     JpaRule(RuleScope scope) {
         super(scope);
@@ -23,9 +23,9 @@ class JpaRule extends GenerationRule{
     }
 
     @Override
-    protected <T> T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    protected Object getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         List<Relation> relations = relationValueProvider.getRelationsFor(context.getClassThatIsGenerated());
-        return (T)findGeneratedObjectFromRelations(context, relations);
+        return findGeneratedObjectFromRelations(context, relations);
     }
 
     @Override
