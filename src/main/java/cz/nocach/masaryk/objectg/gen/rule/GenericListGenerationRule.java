@@ -26,6 +26,6 @@ class GenericListGenerationRule extends GenerationRule<List> {
     }
     @Override
     protected List getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        return ObjectG.generateList(genericDefinition, size);
+        return ObjectG.uniqueList(genericDefinition, size);
     }
 }

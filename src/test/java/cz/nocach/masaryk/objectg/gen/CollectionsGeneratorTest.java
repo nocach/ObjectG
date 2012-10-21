@@ -42,7 +42,7 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canGenerateGenericList(){
-        List<ClassWithCollections> result = ObjectG.generateList(ClassWithCollections.class);
+        List<ClassWithCollections> result = ObjectG.uniqueList(ClassWithCollections.class);
 
         assertEquals("must be list with one element", 1, result.size());
         assertNotNull("list must have not null generated object", result.get(0));
@@ -51,7 +51,7 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canGenerateGenericSet(){
-        Set<ClassWithCollections> result = ObjectG.generateSet(ClassWithCollections.class);
+        Set<ClassWithCollections> result = ObjectG.uniqueSet(ClassWithCollections.class);
 
         assertEquals("must be list with one element", 1, result.size());
         ClassWithCollections firstElement = result.iterator().next();
@@ -61,7 +61,7 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canGenerateGenericListWithSize(){
-        List<ClassWithCollections> result = ObjectG.generateList(ClassWithCollections.class, 2);
+        List<ClassWithCollections> result = ObjectG.uniqueList(ClassWithCollections.class, 2);
 
         assertEquals("must be collection with two elements", 2, result.size());
         assertNotNull("collection must have not null generated object", result.get(0));
@@ -72,7 +72,7 @@ public class CollectionsGeneratorTest {
 
     @Test
     public void canGenerateGenericSetWithSize(){
-        Set<ClassWithCollections> result = ObjectG.generateSet(ClassWithCollections.class, 2);
+        Set<ClassWithCollections> result = ObjectG.uniqueSet(ClassWithCollections.class, 2);
 
         assertEquals("must be collection with two elements", 2, result.size());
         Iterator<ClassWithCollections> iterator = result.iterator();
@@ -82,12 +82,12 @@ public class CollectionsGeneratorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void throwsWhenTryingToGenerateCollectionOfNegativeSize(){
-        ObjectG.generateList(ClassWithCollections.class, -1);
+        ObjectG.uniqueList(ClassWithCollections.class, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void throwsWhenTryingToGenerateSetOfNegativeSize(){
-        ObjectG.generateSet(ClassWithCollections.class, -1);
+        ObjectG.uniqueSet(ClassWithCollections.class, -1);
     }
 
     @Test
@@ -203,6 +203,7 @@ public class CollectionsGeneratorTest {
     public void canConfigurateCollectionOfConcreteTypeAndCanValues(){
         fail("not implemented");
     }
+
 
     public static class ClassWithCollections{
         private List<String> listString;

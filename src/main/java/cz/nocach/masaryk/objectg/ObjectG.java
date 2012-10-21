@@ -108,8 +108,41 @@ public class ObjectG {
      * @param <T>
      * @return
      */
-    public static <T> List<T> generateList(Class<T> clazz) {
-        return generateList(clazz, 1);
+    public static <T> List<T> uniqueList(Class<T> clazz) {
+        return uniqueList(clazz, 1);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, Object... prototypes){
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        return uniqueList(clazz, generationConfiguration, 1, prototypes);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration generationConfiguration){
+        return uniqueList(clazz, generationConfiguration, 1);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration generationConfiguration, int size){
+        return uniqueList(clazz, generationConfiguration, size, new Object[]{});
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder){
+        return uniqueList(clazz, generationBuilder.done(), 1);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, int size){
+        return uniqueList(clazz, generationBuilder.done(), size);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration generationConfiguration, Object... prototypes){
+        return uniqueList(clazz, generationConfiguration, 1, prototypes);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, Object... prototypes){
+        return uniqueList(clazz, generationBuilder.done(), 1, prototypes);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, int size, Object... prototypes){
+        return uniqueList(clazz, generationBuilder.done(), size, prototypes);
     }
 
     /**
@@ -119,11 +152,18 @@ public class ObjectG {
      * @param <T>
      * @return
      */
-    public static <T> List<T> generateList(Class<T> clazz, int size) {
+    public static <T> List<T> uniqueList(Class<T> clazz, int size) {
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        return uniqueList(clazz, generationConfiguration, size);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration configuration, int size, Object... prototypes){
         Assert.isTrue(size >= 0, "size must be >= 0");
         List<T> result = new ArrayList<T>(size);
+        configuration.setUnique(true);
+        configuration.addAllRules(rulesFromPrototypes(prototypes));
         for (int i = 0; i < size; i++){
-            result.add(i, unique(clazz));
+            result.add(i, generate(clazz, configuration));
         }
         return result;
     }
@@ -134,15 +174,63 @@ public class ObjectG {
      * @param <T>
      * @return
      */
-    public static <T> Set<T> generateSet(Class<T> clazz) {
-        return generateSet(clazz, 1);
+    public static <T> Set<T> uniqueSet(Class<T> clazz) {
+        return uniqueSet(clazz, 1);
     }
 
-    public static <T> Set<T> generateSet(Class<T> clazz, int size){
+    public static <T> Set<T> uniqueSet(Class<T> clazz, Object... prototypes){
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        return uniqueSet(clazz, generationConfiguration, 1, prototypes);
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration generationConfiguration){
+        return uniqueSet(clazz, generationConfiguration, 1);
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration generationConfiguration, int size){
+        return uniqueSet(clazz, generationConfiguration, size, new Object[]{});
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder){
+        return uniqueSet(clazz, generationBuilder.done(), 1);
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, int size){
+        return uniqueSet(clazz, generationBuilder.done(), size);
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration generationConfiguration, Object... prototypes){
+        return uniqueSet(clazz, generationConfiguration, 1, prototypes);
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, Object... prototypes){
+        return uniqueSet(clazz, generationBuilder.done(), 1, prototypes);
+    }
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, int size, Object... prototypes){
+        return uniqueSet(clazz, generationBuilder.done(), size, prototypes);
+    }
+
+    /**
+     *
+     * @param clazz type of the objects for list
+     * @param size how many objects to generate
+     * @param <T>
+     * @return
+     */
+    public static <T> Set<T> uniqueSet(Class<T> clazz, int size) {
+        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
+        return uniqueSet(clazz, generationConfiguration, size);
+    }
+
+
+    public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration configuration, int size, Object... prototypes){
         Assert.isTrue(size >= 0, "size must be >= 0");
-        Set<T> result = new HashSet<T>(size);
+        Set<T> result = new HashSet<T>();
+        configuration.setUnique(true);
+        configuration.addAllRules(rulesFromPrototypes(prototypes));
         for (int i = 0; i < size; i++){
-            result.add(unique(clazz));
+            result.add(generate(clazz, configuration));
         }
         return result;
     }
