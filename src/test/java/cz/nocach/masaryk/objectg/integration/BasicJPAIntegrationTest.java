@@ -1,9 +1,9 @@
 package cz.nocach.masaryk.objectg.integration;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.fixtures.Departure;
-import cz.nocach.masaryk.objectg.fixtures.Person;
-import cz.nocach.masaryk.objectg.fixtures.Person2Address;
+import cz.nocach.masaryk.objectg.fixtures.domain.Departure;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person2Address;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;

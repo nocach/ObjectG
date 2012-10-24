@@ -1,5 +1,6 @@
 package cz.nocach.masaryk.objectg.gen;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
 /**
@@ -26,6 +27,7 @@ public class GenerationContext<T> {
     private Hierarchy hierarchy;
     private boolean isPushed;
     private Field parentField;
+    private PropertyDescriptor fieldPropertyDescriptor;
 
     GenerationContext(Class<T> classThatIsGenerated) {
         this(classThatIsGenerated, null);
@@ -129,5 +131,17 @@ public class GenerationContext<T> {
 
     public boolean isRoot(){
         return hierarchy.isEmpty();
+    }
+
+    public void setClassThatIsGenerated(Class<?> classThatIsGenerated) {
+        this.classThatIsGenerated = classThatIsGenerated;
+    }
+
+    public void setFieldPropertyDescriptor(PropertyDescriptor fieldPropertyDescriptor) {
+        this.fieldPropertyDescriptor = fieldPropertyDescriptor;
+    }
+
+    public PropertyDescriptor getFieldPropertyDescriptor() {
+        return fieldPropertyDescriptor;
     }
 }

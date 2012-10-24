@@ -1,9 +1,8 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.fixtures.Tour;
-import cz.nocach.masaryk.objectg.fixtures.TourType;
-import org.junit.Ignore;
+import cz.nocach.masaryk.objectg.fixtures.domain.Tour;
+import cz.nocach.masaryk.objectg.fixtures.domain.TourType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

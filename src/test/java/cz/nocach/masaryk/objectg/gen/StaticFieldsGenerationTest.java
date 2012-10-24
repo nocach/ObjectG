@@ -1,7 +1,7 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.fixtures.Person;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

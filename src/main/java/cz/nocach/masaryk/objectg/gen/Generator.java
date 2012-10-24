@@ -58,11 +58,11 @@ public abstract class Generator {
     /**
      *
      * @param configuration configuration under which to generate value
-     * @param type type of the value to generate
+     * @param conte type of the value to generate
      * @param <T>
      * @return new generated value for the passed configuration
      */
-    protected abstract <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> type);
+    protected abstract <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> conte);
 
     /**
      *

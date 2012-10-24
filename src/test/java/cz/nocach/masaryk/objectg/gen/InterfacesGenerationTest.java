@@ -14,7 +14,6 @@ import static junit.framework.Assert.fail;
 public class InterfacesGenerationTest {
 
     @Test
-    @Ignore
     public void canInstantiateNoMethodsInterface(){
         NoMethodsInterface noMethodsInterface = ObjectG.unique(NoMethodsInterface.class);
         assertNotNull(noMethodsInterface);

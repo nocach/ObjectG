@@ -1,7 +1,6 @@
-package cz.nocach.masaryk.objectg.fixtures;
+package cz.nocach.masaryk.objectg.fixtures.domain;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 /**

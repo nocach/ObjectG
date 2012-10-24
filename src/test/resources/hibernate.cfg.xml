@@ -15,21 +15,21 @@
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">create</property>
 
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Agent"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Customer"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Departure"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Destination"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.DestLink"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Guide"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.GuideAssignment"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Money"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Person"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Person2Address"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Preference"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Reservation"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.Tour"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.TourSeason"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.TourStop"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Agent"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Customer"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Departure"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Destination"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.DestLink"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Guide"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.GuideAssignment"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Money"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Person"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Person2Address"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Preference"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Reservation"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Tour"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.TourSeason"></mapping>
+        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.TourStop"></mapping>
     </session-factory>
 
 </hibernate-configuration>

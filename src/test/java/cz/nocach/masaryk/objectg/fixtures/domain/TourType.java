@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.fixtures;
+package cz.nocach.masaryk.objectg.fixtures.domain;
 
 /**
  * User: __nocach

@@ -15,13 +15,13 @@ import static junit.framework.Assert.fail;
  * User: __nocach
  * Date: 18.10.12
  */
-public class FakeImplFactoryTest {
+public class FakeInterfaceFactoryTest {
 
-    private FakeImplFactory factory;
+    private FakeInterfaceFactory factory;
 
     @Before
     public void setup(){
-        factory = new FakeImplFactory();
+        factory = new FakeInterfaceFactory();
     }
 
     @Test

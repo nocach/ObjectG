@@ -1,10 +1,14 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
+import cz.nocach.masaryk.objectg.fixtures.domain.IPerson;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: __nocach
@@ -74,15 +78,200 @@ public class NotNativeClassGeneratorTest extends Assert{
     }
 
     @Test
-    @Ignore
+    public void willWorkWithInherritedFields(){
+        ExtendingBaseClass generated = ObjectG.unique(ExtendingBaseClass.class);
+
+        assertNotNull("propertyForOverride", generated.getPropertyForOverride());
+        assertNotNull("baseClassProperty", generated.getBaseClassProperty());
+        assertNotNull("extendingBaseClassProperty", generated.getExtendingBaseClassProperty());
+    }
+
+    @Test
     public void canConstructInterfaces(){
-        fail("field IPerson");
+        IPerson generated1 = ObjectG.unique(IPerson.class);
+        IPerson generated2 = ObjectG.unique(IPerson.class);
+        assertNotSame("firstName", generated1.getFirstName(), generated2.getFirstName());
+        assertEquals("person.Employee2Address.size", 1, generated1.getEmployee2Addresses().size());
+    }
+
+    @Test
+    public void canInferCollectionObjectsTypeFromSetter(){
+        CollectionSetterType unique = ObjectG.unique(CollectionSetterType.class);
+
+        assertTrue(unique.getList().get(0) instanceof String);
+        assertNotNull(unique.getList().get(0));
+
+        assertTrue(unique.getMap().size() == 1);
+        assertNotNull(unique.getMap().keySet().iterator().next());
+    }
+
+    @Test
+    public void canInferCollectionObjectsTypeFromGetter(){
+        CollectionGetterType unique = ObjectG.unique(CollectionGetterType.class);
+
+        assertTrue(unique.getList().get(0) instanceof String);
+        assertNotNull(unique.getList().get(0));
+
+        assertTrue(unique.getMap().size() == 1);
+        assertNotNull(unique.getMap().keySet().iterator().next());
+    }
+
+    @Test
+    public void canInferCollectionObjectsTypeFromField(){
+        CollectionFieldType unique = ObjectG.unique(CollectionFieldType.class);
+
+        assertTrue(unique.getList().get(0) instanceof String);
+        assertNotNull(unique.getList().get(0));
+
+        assertTrue(unique.getMap().size() == 1);
+        assertNotNull(unique.getMap().keySet().iterator().next());
+    }
+
+    @Test
+    public void canInferCollectionObjectTypeFromInterfaceGetter(){
+        CollectionSetterTypeImpl unique = ObjectG.unique(CollectionSetterTypeImpl.class);
+
+        assertTrue(unique.getList().get(0) instanceof String);
+        assertNotNull(unique.getList().get(0));
+
+        assertTrue(unique.getMap().size() == 1);
+        assertNotNull(unique.getMap().keySet().iterator().next());
+    }
+
+    @Test
+    public void canInferCollectionObjectTypeFromInterfaceSetter(){
+        CollectionGetterTypeImpl unique = ObjectG.unique(CollectionGetterTypeImpl.class);
+
+        assertTrue(unique.getList().get(0) instanceof String);
+        assertNotNull(unique.getList().get(0));
+
+        assertTrue(unique.getMap().size() == 1);
+        assertNotNull(unique.getMap().keySet().iterator().next());
     }
 
     @Test
     @Ignore
     public void canConstructAbstractClasses(){
         fail("field AbstractPerson");
+    }
+
+    public static class CollectionSetterType{
+        private List list;
+        private Map map;
+
+        public List getList() {
+            return list;
+        }
+
+        public void setList(List<String> list) {
+            this.list = list;
+        }
+
+        public Map getMap() {
+            return map;
+        }
+
+        public void setMap(Map<String, String> map) {
+            this.map = map;
+        }
+    }
+
+    public static interface ICollectionSetterType{
+        public List getList();
+        public void setList(List<String> list);
+        public Map getMap();
+        public void setMap(Map<String, String> map);
+    }
+
+    public static class CollectionSetterTypeImpl implements ICollectionSetterType{
+        private List list;
+        private Map map;
+
+        public List getList() {
+            return list;
+        }
+
+        public void setList(List list) {
+            this.list = list;
+        }
+
+        public Map getMap() {
+            return map;
+        }
+
+        public void setMap(Map map) {
+            this.map = map;
+        }
+    }
+
+    public static interface ICollectionGetterType{
+        public List<String> getList();
+        public void setList(List list);
+        public Map<String, String> getMap();
+        public void setMap(Map map);
+    }
+
+    public static class CollectionGetterTypeImpl implements ICollectionGetterType{
+        private List list;
+        private Map map;
+
+        public List getList() {
+            return list;
+        }
+
+        public void setList(List list) {
+            this.list = list;
+        }
+
+        public Map getMap() {
+            return map;
+        }
+
+        public void setMap(Map map) {
+            this.map = map;
+        }
+    }
+
+    public static class CollectionGetterType{
+        private List list;
+        private Map map;
+
+        public List<String> getList() {
+            return list;
+        }
+
+        public void setList(List list) {
+            this.list = list;
+        }
+
+        public Map<String, String> getMap() {
+            return map;
+        }
+
+        public void setMap(Map map) {
+            this.map = map;
+        }
+    }
+
+    public static class CollectionFieldType{
+        private List<String> list;
+        private Map<String, String> map;
+
+        public List getList() {
+            return list;
+        }
+
+        public void setList(List list) {
+            this.list = list;
+        }
+
+        public Map getMap() {
+            return map;
+        }
+
+        public void setMap(Map map) {
+            this.map = map;
+        }
     }
 
     public static class CyclicConstructor{
@@ -158,5 +347,47 @@ public class NotNativeClassGeneratorTest extends Assert{
     public static class ClassReferencingOtherClass{
         private ClassWithMultipleField classWithMultipleField1;
         private ClassWithMultipleField classWithMultipleField2;
+    }
+
+    public static class BaseClass{
+        private String baseClassProperty;
+        private String propertyForOverride;
+
+        public String getBaseClassProperty() {
+            return baseClassProperty;
+        }
+
+        public void setBaseClassProperty(String baseClassProperty) {
+            this.baseClassProperty = baseClassProperty;
+        }
+
+        public String getPropertyForOverride() {
+            return propertyForOverride;
+        }
+
+        public void setPropertyForOverride(String propertyForOverride) {
+            this.propertyForOverride = propertyForOverride;
+        }
+    }
+
+    public static class ExtendingBaseClass extends BaseClass{
+        private String extendingBaseClassProperty;
+        private String propertyForOverride;
+
+        public String getPropertyForOverride() {
+            return propertyForOverride;
+        }
+
+        public void setPropertyForOverride(String propertyForOverride) {
+            this.propertyForOverride = propertyForOverride;
+        }
+
+        public String getExtendingBaseClassProperty() {
+            return extendingBaseClassProperty;
+        }
+
+        public void setExtendingBaseClassProperty(String extendingBaseClassProperty) {
+            this.extendingBaseClassProperty = extendingBaseClassProperty;
+        }
     }
 }

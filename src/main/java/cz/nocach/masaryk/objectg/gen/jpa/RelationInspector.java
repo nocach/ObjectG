@@ -2,17 +2,15 @@ package cz.nocach.masaryk.objectg.gen.jpa;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import cz.nocach.masaryk.objectg.util.Fields;
+import cz.nocach.masaryk.objectg.util.Generics;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.*;
 import org.hibernate.mapping.Collection;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 
-import javax.naming.event.ObjectChangeListener;
 import javax.persistence.Entity;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +132,7 @@ public class RelationInspector {
                 collectRelatedEntityClassesNested(each.getType(), relatedEntityClasses);
             } else if(isFieldGenericCollection(each)){
                 //TODO: currenty will fall if it will be generic collection without TypeVars defined
-                Class typeParam = (Class)Fields.extractTypeFromGenerics(each, 0);
+                Class typeParam = (Class) Generics.extractTypeFromGenerics(each, 0);
                 if (isEntityAnnotationPresent(typeParam) && !relatedEntityClasses.contains(typeParam)){
                     relatedEntityClasses.add(typeParam);
                     collectRelatedEntityClassesNested(typeParam, relatedEntityClasses);

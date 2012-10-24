@@ -1,9 +1,8 @@
 package cz.nocach.masaryk.objectg.fixtures.hibernate;
 
-import cz.nocach.masaryk.objectg.fixtures.Person;
-import cz.nocach.masaryk.objectg.fixtures.Person2Address;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person2Address;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.engine.spi.Mapping;
 import org.hibernate.mapping.*;
 import org.junit.Test;
 

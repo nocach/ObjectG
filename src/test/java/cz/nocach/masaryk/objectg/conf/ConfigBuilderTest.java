@@ -2,9 +2,9 @@ package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.exception.ConfigurationException;
-import cz.nocach.masaryk.objectg.fixtures.Person;
-import cz.nocach.masaryk.objectg.fixtures.Tour;
-import cz.nocach.masaryk.objectg.fixtures.TourSeason;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person;
+import cz.nocach.masaryk.objectg.fixtures.domain.Tour;
+import cz.nocach.masaryk.objectg.fixtures.domain.TourSeason;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import cz.nocach.masaryk.objectg.matcher.ContextMatchers;
 import org.junit.Test;

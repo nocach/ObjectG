@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import javassist.*;
+import javassist.bytecode.AttributeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -15,8 +16,8 @@ import java.util.Set;
  * User: __nocach
  * Date: 18.10.12
  */
-class FakeImplFactory {
-    private Logger logger = LoggerFactory.getLogger(FakeImplFactory.class);
+class FakeInterfaceFactory {
+    private Logger logger = LoggerFactory.getLogger(FakeInterfaceFactory.class);
     public <T> T create(Class<T> interfaze) {
         try {
             Assert.notNull(interfaze);

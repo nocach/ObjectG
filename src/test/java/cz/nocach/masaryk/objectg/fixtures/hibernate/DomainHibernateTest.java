@@ -1,19 +1,13 @@
 package cz.nocach.masaryk.objectg.fixtures.hibernate;
 
-import cz.nocach.masaryk.objectg.fixtures.Person;
-import cz.nocach.masaryk.objectg.fixtures.Person2Address;
-import cz.nocach.masaryk.objectg.fixtures.Tour;
+import cz.nocach.masaryk.objectg.fixtures.domain.Tour;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.engine.spi.Mapping;
-import org.hibernate.mapping.PersistentClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 /**

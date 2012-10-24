@@ -1,15 +1,10 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
 import cz.nocach.masaryk.objectg.ObjectG;
-import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.fixtures.*;
-import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person;
 import cz.nocach.masaryk.objectg.gen.RuleScope;
 import cz.nocach.masaryk.objectg.matcher.ContextMatchers;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.HashSet;
 
 import static org.junit.Assert.*;
 

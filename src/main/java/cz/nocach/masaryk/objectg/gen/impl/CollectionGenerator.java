@@ -4,12 +4,10 @@ import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationException;
 import cz.nocach.masaryk.objectg.gen.Generator;
-import cz.nocach.masaryk.objectg.util.Fields;
+import cz.nocach.masaryk.objectg.util.Generics;
+import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 
 /**
  * User: __nocach
@@ -43,13 +41,69 @@ abstract class CollectionGenerator<CollectionT> extends Generator {
     }
 
     protected <T> GenerationContext getContextForGenericType(GenerationContext<T> context, int typeVarIndex) {
-        if (!(context.getField().getGenericType() instanceof ParameterizedType)){
+
+        Type genericType = extractGenericType(context, typeVarIndex);
+
+        if (genericType == null){
             throw new GenerationException("no generic information for field, context="+context);
         }
-        Field contextField = context.getField();
-        Type firstType = Fields.extractTypeFromGenerics(contextField, typeVarIndex);
-        GenerationContext contextForGenType = context.push((Class) firstType);
+        GenerationContext contextForGenType = context.push((Class) genericType);
         return contextForGenType;
+    }
+
+    private <T> Type extractGenericType(GenerationContext<T> fromContext, int typeVarIndex) {
+        Type genericType = null;
+        if (fromContext.getFieldPropertyDescriptor() != null){
+            genericType = extractGenericTypeFromMethodsSignature(fromContext, typeVarIndex, genericType);
+            if (genericType != null) return genericType;
+        }
+        if (genericType == null){
+            Field contextField = fromContext.getField();
+            genericType = Generics.extractTypeFromGenerics(contextField, typeVarIndex);
+        }
+        return genericType;
+    }
+
+    private <T> Type extractGenericTypeFromMethodsSignature(GenerationContext<T> fromContext, int typeVarIndex, Type genericType) {
+        Method readMethod = fromContext.getFieldPropertyDescriptor().getReadMethod();
+        if (readMethod != null){
+            genericType = extractGenericTypeFromGetter(fromContext, typeVarIndex, readMethod);
+        }
+        Method writeMethod = fromContext.getFieldPropertyDescriptor().getWriteMethod();
+        if (writeMethod != null && genericType == null){
+            genericType = extractGenericTypeFromSetter(fromContext, typeVarIndex, writeMethod);
+        }
+        return genericType;
+    }
+
+    private <T> Type extractGenericTypeFromSetter(GenerationContext<T> fromContext, int typeVarIndex, Method writeMethod) {
+        Type genericType;
+        genericType = Generics.extractTypeFromSetter(writeMethod, typeVarIndex);
+        if (fromContext.getParentObject() != null && genericType == null){
+            //what if interfaces of parent object have generic info hints?
+            for (Class each : fromContext.getParentObject().getClass().getInterfaces()){
+                Method methodWithGenericInfo = ReflectionUtils.findMethod(each, writeMethod.getName(), writeMethod.getParameterTypes());
+                if (methodWithGenericInfo != null){
+                    genericType = Generics.extractTypeFromSetter(methodWithGenericInfo, typeVarIndex);
+                }
+            }
+        }
+        return genericType;
+    }
+
+    private <T> Type extractGenericTypeFromGetter(GenerationContext<T> fromContext, int typeVarIndex, Method readMethod) {
+        Type genericType;
+        genericType = Generics.extractTypeFromGetter(readMethod, typeVarIndex);
+        if (fromContext.getParentObject() != null && genericType == null){
+            //what if interfaces of parent object have generic info hints?
+            for (Class each : fromContext.getParentObject().getClass().getInterfaces()){
+                Method methodWithGenericInfo = ReflectionUtils.findMethod(each, readMethod.getName());
+                if (methodWithGenericInfo != null){
+                    genericType = Generics.extractTypeFromGetter(methodWithGenericInfo, typeVarIndex);
+                }
+            }
+        }
+        return genericType;
     }
 
     private <T> CollectionT createCollectionInstance(GenerationContext<T> context) {

@@ -1,10 +1,8 @@
 package cz.nocach.masaryk.objectg;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.fixtures.Person;
+import cz.nocach.masaryk.objectg.fixtures.domain.Person;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * User: __nocach
