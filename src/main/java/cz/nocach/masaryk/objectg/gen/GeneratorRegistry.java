@@ -20,11 +20,12 @@ public class GeneratorRegistry {
     private static final Logger logger = LoggerFactory.getLogger(GeneratorRegistry.class);
 
     private final CompositeGenerator generatorChain = new CompositeGenerator(
-            Generators.nativeClass(),
+            Generators.primitive(),
             Generators.list(),
             Generators.map(),
             Generators.set(),
             Generators.enumeration(),
+            Generators.array(),
             Generators.notNativeClass());
     private static final GeneratorRegistry instance = new GeneratorRegistry();
 

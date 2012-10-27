@@ -71,6 +71,12 @@ public class ConfigurationBuilder {
         return this;
     }
 
+    /**
+     *
+     * @param contextMatcher see {@link ContextMatchers}
+     * @param <U>
+     * @return
+     */
     public <U> WhenBuilder<U> when(ValueTypeHintMatcher<GenerationContext, ? extends U> contextMatcher){
         return new WhenBuilder(contextMatcher, this);
     }

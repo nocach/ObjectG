@@ -15,8 +15,8 @@ public class Generators {
         return new ListGenerator();
     }
 
-    public static Generator nativeClass(){
-        return new NativeClassGenerator();
+    public static Generator primitive(){
+        return new PrimitiveGenerator();
     }
 
     public static Generator notNativeClass(){
@@ -29,5 +29,9 @@ public class Generators {
 
     public static Generator enumeration(){
         return new EnumerationGenerator();
+    }
+
+    public static Generator array(){
+        return new ArrayGenerator(primitive());
     }
 }

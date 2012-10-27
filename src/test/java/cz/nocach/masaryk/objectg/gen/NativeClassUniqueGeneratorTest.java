@@ -18,29 +18,53 @@ public class NativeClassUniqueGeneratorTest extends Assert{
     @Test
     public void primitivesAreUnique(){
         assertUnique(Integer.class);
+        assertUnique(Integer[].class);
         assertUnique(int.class);
+        assertUnique(int[].class);
         assertUnique(Double.class);
+        assertUnique(Double[].class);
         assertUnique(double.class);
+        assertUnique(double[].class);
         assertUnique(Long.class);
+        assertUnique(Long[].class);
         assertUnique(long.class);
+        assertUnique(long[].class);
         assertUnique(Float.class);
+        assertUnique(Float[].class);
         assertUnique(float.class);
+        assertUnique(float[].class);
         assertUnique(Byte.class);
+        assertUnique(Byte[].class);
         assertUnique(byte.class);
+        assertUnique(byte[].class);
         assertUnique(Character.class);
+        assertUnique(Character[].class);
         assertUnique(char.class);
+        assertUnique(char[].class);
         assertUnique(String.class);
+        assertUnique(String[].class);
         assertUnique(BigDecimal.class);
+        assertUnique(BigDecimal[].class);
         assertUnique(BigInteger.class);
+        assertUnique(BigInteger[].class);
         assertUnique(Boolean.class);
+        assertUnique(Boolean[].class);
         assertUnique(boolean.class);
+        assertUnique(boolean[].class);
         assertUnique(Date.class);
+        assertUnique(Date[].class);
         assertUnique(java.sql.Date.class);
+        assertUnique(java.sql.Date[].class);
         assertUnique(short.class);
+        assertUnique(short[].class);
         assertUnique(Short.class);
+        assertUnique(Short[].class);
         assertUnique(StringBuilder.class);
+        assertUnique(StringBuilder[].class);
         assertUnique(StringBuffer.class);
+        assertUnique(StringBuffer[].class);
         assertUnique(Object.class);
+        assertUnique(Object[].class);
     }
 
     @Test

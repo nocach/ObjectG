@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Date: 26.8.12
  * </p>
  */
-class NativeClassGenerator extends Generator {
+class PrimitiveGenerator extends Generator {
     //TODO: allow resetting of this sequences? E.g. this reset can be performed before any new TestCase is about to
     //be started
     private final AtomicLong longSequence = new AtomicLong();

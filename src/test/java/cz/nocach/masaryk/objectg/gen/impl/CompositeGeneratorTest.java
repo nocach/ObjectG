@@ -17,7 +17,7 @@ import static junit.framework.Assert.assertNotSame;
 public class CompositeGeneratorTest {
     private static final CompositeGenerator generator = new CompositeGenerator(
             new DummyGenerator(),
-            new NativeClassGenerator());
+            new PrimitiveGenerator());
 
     @Test
     public void testConcurrent(){
