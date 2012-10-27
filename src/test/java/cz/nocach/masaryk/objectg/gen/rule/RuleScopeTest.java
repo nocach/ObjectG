@@ -6,7 +6,7 @@ import cz.nocach.masaryk.objectg.gen.RuleScope;
 import cz.nocach.masaryk.objectg.matcher.ContextMatchers;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * User: __nocach

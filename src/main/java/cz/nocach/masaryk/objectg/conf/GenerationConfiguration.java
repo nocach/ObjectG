@@ -1,14 +1,16 @@
 package cz.nocach.masaryk.objectg.conf;
 
-import cz.nocach.masaryk.objectg.gen.cycle.CycleStrategy;
-import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.cycle.CycleStrategy;
 import cz.nocach.masaryk.objectg.gen.cycle.NullValueCycleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * <p>

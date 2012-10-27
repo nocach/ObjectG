@@ -4,8 +4,6 @@ import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.fixtures.domain.Person;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * User: __nocach
  * Date: 21.10.12

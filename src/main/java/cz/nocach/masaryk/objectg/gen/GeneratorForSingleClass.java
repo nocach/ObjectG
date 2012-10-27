@@ -1,6 +1,5 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import cz.nocach.masaryk.objectg.gen.Generator;
 import org.springframework.util.Assert;
 
 /**

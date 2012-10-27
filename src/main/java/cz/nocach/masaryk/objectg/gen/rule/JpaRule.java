@@ -1,14 +1,13 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.RuleScope;
 import cz.nocach.masaryk.objectg.gen.jpa.Relation;
 import cz.nocach.masaryk.objectg.gen.jpa.RelationValueProvider;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**

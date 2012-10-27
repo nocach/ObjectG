@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import cz.nocach.masaryk.objectg.util.Generics;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.mapping.*;
 import org.hibernate.mapping.Collection;
+import org.hibernate.mapping.*;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 

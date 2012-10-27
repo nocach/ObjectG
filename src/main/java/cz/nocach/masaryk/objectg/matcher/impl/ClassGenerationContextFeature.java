@@ -1,7 +1,6 @@
 package cz.nocach.masaryk.objectg.matcher.impl;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
-import cz.nocach.masaryk.objectg.matcher.ValueTypeHint;
 import cz.nocach.masaryk.objectg.matcher.ValueTypeHintMatcher;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;

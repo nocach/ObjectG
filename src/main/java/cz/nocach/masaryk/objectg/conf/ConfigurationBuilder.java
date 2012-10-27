@@ -6,11 +6,9 @@ import cz.nocach.masaryk.objectg.gen.cycle.BackReferenceCycleStrategy;
 import cz.nocach.masaryk.objectg.gen.cycle.NullValueCycleStrategy;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import cz.nocach.masaryk.objectg.matcher.ContextMatchers;
-import cz.nocach.masaryk.objectg.matcher.ValueTypeHint;
 import cz.nocach.masaryk.objectg.matcher.ValueTypeHintMatcher;
 import cz.nocach.masaryk.objectg.matcher.impl.GenerationContextFeatures;
 import cz.nocach.masaryk.objectg.matcher.impl.JavaNativeTypeMatcher;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.springframework.util.Assert;
 
@@ -18,7 +16,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import static cz.nocach.masaryk.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.typeCompatibleWith;
 
 /**
  * User: __nocach

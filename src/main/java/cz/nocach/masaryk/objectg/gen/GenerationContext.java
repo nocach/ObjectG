@@ -1,6 +1,5 @@
 package cz.nocach.masaryk.objectg.gen;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
 /**

@@ -1,7 +1,5 @@
 package cz.nocach.masaryk.objectg.gen.jpa;
 
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

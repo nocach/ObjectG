@@ -5,10 +5,8 @@ import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationException;
 import cz.nocach.masaryk.objectg.gen.Generator;
 import cz.nocach.masaryk.objectg.util.Generics;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 

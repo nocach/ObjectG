@@ -1,9 +1,12 @@
 package cz.nocach.masaryk.objectg.conf;
 
-import cz.nocach.masaryk.objectg.gen.rule.*;
+import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>

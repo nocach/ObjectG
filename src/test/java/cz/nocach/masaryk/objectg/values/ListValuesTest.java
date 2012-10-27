@@ -1,6 +1,5 @@
 package cz.nocach.masaryk.objectg.values;
 
-import org.h2.value.ValueShort;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;

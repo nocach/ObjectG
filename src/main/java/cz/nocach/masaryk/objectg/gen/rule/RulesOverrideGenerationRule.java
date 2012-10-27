@@ -1,9 +1,9 @@
 package cz.nocach.masaryk.objectg.gen.rule;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
-import cz.nocach.masaryk.objectg.gen.GenerationContext;
 
 import java.util.List;
 

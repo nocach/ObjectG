@@ -1,10 +1,8 @@
 package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.util.Generics;
-import org.apache.commons.beanutils.MethodUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import sun.reflect.misc.MethodUtil;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;

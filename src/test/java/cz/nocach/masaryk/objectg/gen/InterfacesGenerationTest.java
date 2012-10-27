@@ -5,9 +5,7 @@ import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static cz.nocach.masaryk.objectg.gen.InterfacesGenerationTest.DifferentTypesFromSettersAndGetters.*;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertThat;
 

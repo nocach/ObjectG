@@ -13,7 +13,8 @@ import java.util.List;
 
 import static cz.nocach.masaryk.objectg.conf.OngoingRules.fromList;
 import static cz.nocach.masaryk.objectg.conf.OngoingRules.value;
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotSame;
 
 /**
  * User: __nocach

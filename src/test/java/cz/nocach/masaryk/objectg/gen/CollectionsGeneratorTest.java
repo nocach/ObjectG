@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.util.*;
 
 import static junit.framework.Assert.*;
-import static junit.framework.Assert.assertEquals;
 
 /**
  * User: __nocach

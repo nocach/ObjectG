@@ -1,13 +1,13 @@
 package cz.nocach.masaryk.objectg;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import static cz.nocach.masaryk.objectg.ApiPreviewTest.Api.*;
+import static cz.nocach.masaryk.objectg.ApiPreviewTest.Api.build;
+import static cz.nocach.masaryk.objectg.ApiPreviewTest.Api.gen;
 import static cz.nocach.masaryk.objectg.ApiPreviewTest.Generators.fromList;
 import static cz.nocach.masaryk.objectg.ApiPreviewTest.Generators.range;
 import static junit.framework.Assert.assertNotNull;

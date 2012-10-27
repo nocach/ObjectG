@@ -13,7 +13,6 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
 
 /**
  * User: __nocach

@@ -2,8 +2,8 @@ package cz.nocach.masaryk.objectg.gen.rule;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
-import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationRule;
 import org.springframework.util.Assert;
 
 import java.util.List;

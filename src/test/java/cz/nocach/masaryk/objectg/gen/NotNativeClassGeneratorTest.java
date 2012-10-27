@@ -3,7 +3,6 @@ package cz.nocach.masaryk.objectg.gen;
 import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.fixtures.domain.IPerson;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
