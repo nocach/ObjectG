@@ -21,13 +21,12 @@ import java.util.List;
 public class PrototypeCreator {
 
     public static final String FIELD_NAME_OF_PROTOTYPE_HANDLER = "$objectgPrototypeCreatorHandler";
-    public static final String FIELD_NAME_OF_PROTOTYPE_CREATOR = "$objectgPrototypeCreator";
     public static final int SETTER_PREFIX_LENGTH = 3;
     public static final int GETTER_PREFIX_LENGTH = 3;
     private PrototypeSetterHandler configurationHandler;
 
     public PrototypeCreator(){
-        this.configurationHandler = new PrototypeSetterHandler();
+        this.configurationHandler = new PrototypeSetterHandler(this);
     }
 
     public <T> T newPrototype(Class<T> clazz){
@@ -67,9 +66,6 @@ public class PrototypeCreator {
         Field handlerField = modifiedInstance.getClass().getDeclaredField(FIELD_NAME_OF_PROTOTYPE_HANDLER);
         ReflectionUtils.setField(handlerField, modifiedInstance, configurationHandler);
 
-        Field setterConfiguratorField = modifiedInstance.getClass().getDeclaredField(FIELD_NAME_OF_PROTOTYPE_CREATOR);
-        ReflectionUtils.setField(setterConfiguratorField, modifiedInstance, this);
-
         return modifiedInstance;
     }
 
@@ -81,17 +77,13 @@ public class PrototypeCreator {
         }
         CtClass interceptedClass = createInterceptedClass(originalClass);
         addHandlerField(interceptedClass);
-        addPropertyCreatorField(interceptedClass);
         interceptSetters(interceptedClass);
         interceptGetters(interceptedClass);
         return interceptedClass.toClass();
     }
 
-    private void addPropertyCreatorField(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
-        CtClass setterConfiguratorCtType = ClassPool.getDefault().get(getClass().getName());
-        CtField ctField = new CtField(setterConfiguratorCtType, FIELD_NAME_OF_PROTOTYPE_CREATOR, interceptedClass);
-        ctField.setModifiers(Modifier.PUBLIC);
-        interceptedClass.addField(ctField);
+    public Class<?> getRealObjectClass(Object prototype) {
+        return prototype.getClass().getSuperclass();
     }
 
     private void interceptGetters(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
@@ -117,7 +109,6 @@ public class PrototypeCreator {
                             + "this"
                             + ", " + method.getReturnType().getName() + ".class"
                             + ", \""+propertyName+"\""
-                            + ", " + FIELD_NAME_OF_PROTOTYPE_CREATOR + ""
                          + ");"
                     + "}";
             method.setBody(interceptedBody);
@@ -146,7 +137,6 @@ public class PrototypeCreator {
 
     private void setBodyToInvokeConfigurationHandler(CtMethod each) throws NotFoundException, CannotCompileException {
         String propertyName = extractPropertyNameOfGetterSetter(each);
-        boolean isVoidReturn = isVoidReturn(each);
         //basically it looks like this:
         // {
         //   prototypeHandler.onSetter(this, $firstArg, propertyName);

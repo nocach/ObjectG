@@ -46,6 +46,11 @@ public class PrototypeSetterHandler {
      */
     private Map<Integer, Map<String, List<GenerationRule>>> rulesForPrototypeProperties =
             new ConcurrentHashMap<Integer, Map<String, List<GenerationRule>>>();
+    private PrototypeCreator prototypeCreator;
+
+    public PrototypeSetterHandler(PrototypeCreator prototypeCreator) {
+        this.prototypeCreator = prototypeCreator;
+    }
 
     /**
     * called when new protype is created
@@ -57,10 +62,6 @@ public class PrototypeSetterHandler {
             //we are extracting superclass, because PrototypeCreator is creating new subclass in runtime
             rulesForPrototype.put(identityOfObject, new LinkedList<GenerationRule>());
         }
-    }
-
-    private Class<?> getRealObjectClass(Object prototype) {
-        return prototype.getClass().getSuperclass();
     }
 
     /**
@@ -104,7 +105,7 @@ public class PrototypeSetterHandler {
     private void addValueRule(Object prototype, Object value, String propertyName) {
         List<GenerationRule> configuredRules = getOngoingRules(prototype);
         GenerationRule generationRule = Rules.fromList(value);
-        generationRule.setForProperty(getRealObjectClass(prototype), propertyName);
+        generationRule.setForProperty(prototypeCreator.getRealObjectClass(prototype), propertyName);
         configuredRules.add(generationRule);
     }
 
@@ -130,7 +131,7 @@ public class PrototypeSetterHandler {
 
     private void addPlannedRuleForProperty(Object prototype, String propertyName, List<GenerationRule> rulesForPrototype) {
         GenerationRule plannedRule = OngoingConfiguration.plannedRule;
-        plannedRule.setForProperty(getRealObjectClass(prototype), propertyName);
+        plannedRule.setForProperty(prototypeCreator.getRealObjectClass(prototype), propertyName);
         rulesForPrototype.add(plannedRule);
     }
 
@@ -158,13 +159,12 @@ public class PrototypeSetterHandler {
         for (Map.Entry<String, List<GenerationRule>> each : rulesForProperties.entrySet()){
             GenerationRule specificConfigurationRule = Rules.specificRules(each.getValue());
             specificConfigurationRule.setScope(RuleScope.PROPERTY);
-            specificConfigurationRule.setForProperty(getRealObjectClass(prototype), each.getKey());
+            specificConfigurationRule.setForProperty(prototypeCreator.getRealObjectClass(prototype), each.getKey());
             resultRules.add(specificConfigurationRule);
         }
     }
 
-    public Object newPrototypeFromGetter(Object prototypeParent, Class clazz, String propertyName
-            , PrototypeCreator prototypeCreator){
+    public Object newPrototypeFromGetter(Object prototypeParent, Class clazz, String propertyName){
         try{
             if (getPrototypeFromSetter(prototypeParent, propertyName) != null){
                 return getPrototypeFromSetter(prototypeParent, propertyName);

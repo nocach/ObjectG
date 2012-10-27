@@ -1,6 +1,7 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
+import cz.nocach.masaryk.objectg.gen.ExtendedPropertyDescriptor;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.Generator;
 import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
@@ -13,7 +14,10 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,11 +55,12 @@ class NotNativeClassGenerator extends Generator {
     private void setValuesOnFields(final GenerationConfiguration configuration, final GenerationContext context, final Object resultObj) {
         try {
             final List<Field> allFieldsToSetValues = getFieldForValueSetting(context);
-            final Map<String, PropertyDescriptor> propertyDescriptorMap = getPropertyDescriptorMap(context);
+            final Map<String, ExtendedPropertyDescriptor> propertyDescriptorMap = getPropertyDescriptorMap(context);
             for (Field each : allFieldsToSetValues){
-                GenerationContext pushedContext = context.push(each.getType(), resultObj);
+                ExtendedPropertyDescriptor fieldPropertyDesc = getPropertyDescriptorForField(each, propertyDescriptorMap);
+                GenerationContext pushedContext = context.push(getMostSpecificFieldType(each, fieldPropertyDesc), resultObj);
                 pushedContext.setField(each);
-                pushedContext.setFieldPropertyDescriptor(propertyDescriptorMap.get(each.getName()));
+                pushedContext.setFieldPropertyDescriptor(fieldPropertyDesc);
                 Object generatedValueForField = generateForHierarchy(configuration, pushedContext);
                 each.set(resultObj, generatedValueForField);
             }
@@ -64,18 +69,27 @@ class NotNativeClassGenerator extends Generator {
         }
     }
 
+    private Class<?> getMostSpecificFieldType(Field each, ExtendedPropertyDescriptor fieldPropertyDesc) {
+        if (fieldPropertyDesc != null) return fieldPropertyDesc.getMostSpecificPropertyType();
+        return each.getType();
+    }
+
+    private ExtendedPropertyDescriptor getPropertyDescriptorForField(Field field, Map<String, ExtendedPropertyDescriptor> propertyDescriptorMap) {
+        return propertyDescriptorMap.get(field.getName());
+    }
 
     /**
      *
      * @param context
      * @return key is propertyName, value is PropertyDescriptor for propertyName
      */
-    private Map<String, PropertyDescriptor> getPropertyDescriptorMap(GenerationContext context) {
-        Map<String, PropertyDescriptor> result = new HashMap<String, PropertyDescriptor>();
+    private Map<String, ExtendedPropertyDescriptor> getPropertyDescriptorMap(GenerationContext context) {
+        Map<String, ExtendedPropertyDescriptor> result = new HashMap<String, ExtendedPropertyDescriptor>();
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(context.getClassThatIsGenerated(), Object.class);
             for (PropertyDescriptor each : beanInfo.getPropertyDescriptors()){
-                result.put(each.getName(), each);
+                Field filedProperty = ReflectionUtils.findField(context.getClassThatIsGenerated(), each.getName());
+                result.put(each.getName(), new ExtendedPropertyDescriptor(filedProperty, each));
             }
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);

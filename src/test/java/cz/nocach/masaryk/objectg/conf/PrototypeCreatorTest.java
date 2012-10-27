@@ -21,12 +21,6 @@ public class PrototypeCreatorTest {
 
     @Test
     @Ignore
-    public void whatWillHappenWhenClassIsInterface(){
-        fail("think about it");
-    }
-
-    @Test
-    @Ignore
     public void whatWillHappenWhenClassIsAbstract(){
         fail("think about it");
     }

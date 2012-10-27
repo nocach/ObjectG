@@ -1,12 +1,14 @@
 package cz.nocach.masaryk.objectg.gen.impl;
 
 import javassist.*;
-import javassist.bytecode.AttributeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -74,7 +76,7 @@ class FakeInterfaceFactory {
         Set<Method> methodsToExclude = new HashSet<Method>();
         for (Class eachInterface : getAllInterfaces(interfaze)){
             try{
-                addMethodsToExlude(methodsToExclude, eachInterface);
+                addMethodsToExclude(methodsToExclude, eachInterface);
             }
             catch (IntrospectionException e) {
                 logger.error("could not extract methods from " + eachInterface, e);
@@ -83,7 +85,7 @@ class FakeInterfaceFactory {
         return methodsToExclude;
     }
 
-    private void addMethodsToExlude(Set<Method> methodsToExclude, Class fromInterface) throws IntrospectionException {
+    private void addMethodsToExclude(Set<Method> methodsToExclude, Class fromInterface) throws IntrospectionException {
         BeanInfo beanInfo = Introspector.getBeanInfo(fromInterface);
         for(PropertyDescriptor each : beanInfo.getPropertyDescriptors()){
             if (each.getReadMethod() != null) methodsToExclude.add(each.getReadMethod());
@@ -141,6 +143,6 @@ class FakeInterfaceFactory {
     }
 
     private <T> String getFakeImplementationName(Class<T> interfaze) {
-        return "objectgFakeInterface" + interfaze.getName();
+        return interfaze.getName() + "objectgFakeInterface";
     }
 }

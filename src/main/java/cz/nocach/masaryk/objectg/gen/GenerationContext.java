@@ -27,7 +27,7 @@ public class GenerationContext<T> {
     private Hierarchy hierarchy;
     private boolean isPushed;
     private Field parentField;
-    private PropertyDescriptor fieldPropertyDescriptor;
+    private ExtendedPropertyDescriptor fieldPropertyDescriptor;
 
     GenerationContext(Class<T> classThatIsGenerated) {
         this(classThatIsGenerated, null);
@@ -137,11 +137,11 @@ public class GenerationContext<T> {
         this.classThatIsGenerated = classThatIsGenerated;
     }
 
-    public void setFieldPropertyDescriptor(PropertyDescriptor fieldPropertyDescriptor) {
+    public void setFieldPropertyDescriptor(ExtendedPropertyDescriptor fieldPropertyDescriptor) {
         this.fieldPropertyDescriptor = fieldPropertyDescriptor;
     }
 
-    public PropertyDescriptor getFieldPropertyDescriptor() {
+    public ExtendedPropertyDescriptor getFieldPropertyDescriptor() {
         return fieldPropertyDescriptor;
     }
 }

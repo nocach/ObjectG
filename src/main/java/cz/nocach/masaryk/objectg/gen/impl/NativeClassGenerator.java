@@ -31,22 +31,24 @@ class NativeClassGenerator extends Generator {
     @Override
     protected Object generateValue(GenerationConfiguration configuration, GenerationContext context) {
         //TODO: can be optimized by using hashmap Map<Class, Sequence>
-        if (String.class.equals(context.getClassThatIsGenerated())) return nextString();
-        if (isLong(context.getClassThatIsGenerated())) return longSequence.incrementAndGet();
-        if (isInteger(context.getClassThatIsGenerated())) return (int)longSequence.incrementAndGet();
-        if (isDouble(context.getClassThatIsGenerated())) return (double)longSequence.incrementAndGet();
-        if (isFloat(context.getClassThatIsGenerated())) return (float)longSequence.incrementAndGet();
-        if (isByte(context.getClassThatIsGenerated())) return (byte)longSequence.incrementAndGet();
-        if (isChar(context.getClassThatIsGenerated())) return returnNextCharOrThrow();
-        if (BigDecimal.class.equals(context.getClassThatIsGenerated())) return returnNextBigDecimal();
-        if (BigInteger.class.equals(context.getClassThatIsGenerated())) return new BigInteger(nextString());
-        if (isBoolean(context.getClassThatIsGenerated())) return booleanSequence.getAndSet(!booleanSequence.get());
-        if (Date.class.equals(context.getClassThatIsGenerated())) return new Date(longSequence.incrementAndGet());
-        if (isSqlDate(context.getClassThatIsGenerated())) return new java.sql.Date(longSequence.incrementAndGet());
-        if (isShort(context.getClassThatIsGenerated())) return (short)shortSequence.incrementAndGet();
-        if (StringBuffer.class.equals(context.getClassThatIsGenerated())) return new StringBuffer(nextString());
-        if (StringBuilder.class.equals(context.getClassThatIsGenerated())) return new StringBuilder(nextString());
-        if (Void.class.equals(context.getClassThatIsGenerated())) return null;
+        Class generatedClass = context.getClassThatIsGenerated();
+        if (String.class.equals(generatedClass)) return nextString();
+        if (isLong(generatedClass)) return longSequence.incrementAndGet();
+        if (isInteger(generatedClass)) return (int)longSequence.incrementAndGet();
+        if (isDouble(generatedClass)) return (double)longSequence.incrementAndGet();
+        if (isFloat(generatedClass)) return (float)longSequence.incrementAndGet();
+        if (isByte(generatedClass)) return (byte)longSequence.incrementAndGet();
+        if (isChar(generatedClass)) return returnNextCharOrThrow();
+        if (BigDecimal.class.equals(generatedClass)) return returnNextBigDecimal();
+        if (BigInteger.class.equals(generatedClass)) return new BigInteger(nextString());
+        if (isBoolean(generatedClass)) return booleanSequence.getAndSet(!booleanSequence.get());
+        if (Date.class.equals(generatedClass)) return new Date(longSequence.incrementAndGet());
+        if (isSqlDate(generatedClass)) return new java.sql.Date(longSequence.incrementAndGet());
+        if (isShort(generatedClass)) return (short)shortSequence.incrementAndGet();
+        if (StringBuffer.class.equals(generatedClass)) return new StringBuffer(nextString());
+        if (StringBuilder.class.equals(generatedClass)) return new StringBuilder(nextString());
+        if (Void.class.equals(generatedClass)) return null;
+        if (Object.class.equals(generatedClass)) return new Object();
         throw new IllegalArgumentException("can't generate value of type " + context);
     }
 
@@ -89,7 +91,8 @@ class NativeClassGenerator extends Generator {
                 || isShort(type)
                 || StringBuilder.class.equals(type)
                 || StringBuffer.class.equals(type)
-                || Void.class.equals(type)){
+                || Void.class.equals(type)
+                || Object.class.equals(type)){
             return true;
         }
         return false;

@@ -28,6 +28,10 @@ public class ObjectG {
     private static final Logger logger = LoggerFactory.getLogger(ObjectG.class);
     private static final PrototypeCreator PROTOTYPE_CREATOR = new PrototypeCreator();
 
+    public static <T> T unique(T prototype){
+        return (T)unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), prototype);
+    }
+
     public static <T> T unique(Class<T> clazz){
         return unique(clazz, new GenerationConfiguration());
     }
@@ -110,6 +114,10 @@ public class ObjectG {
      */
     public static <T> List<T> uniqueList(Class<T> clazz) {
         return uniqueList(clazz, 1);
+    }
+
+    public static <T> List<T> uniqueList(Class<T> clazz, int size, Object... prototypes){
+        return uniqueList(clazz, new GenerationConfiguration(), size, prototypes);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, Object... prototypes){

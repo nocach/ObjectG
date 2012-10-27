@@ -3,6 +3,7 @@ package cz.nocach.masaryk.objectg.conf;
 import cz.nocach.masaryk.objectg.ObjectG;
 import cz.nocach.masaryk.objectg.conf.exception.ConfigurationException;
 import cz.nocach.masaryk.objectg.conf.exception.PrototypeMisuseException;
+import cz.nocach.masaryk.objectg.fixtures.domain.IPerson;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -227,6 +228,16 @@ public class PrototypeConfigTest {
         Person person = ObjectG.unique(Person.class, prototype);
 
         assertEquals(explicitAddress, person.getHomeAddress());
+    }
+
+    @Test
+    @Ignore
+    public void canConfigureInterface(){
+        IPerson prototype = ObjectG.prototype(IPerson.class);
+        prototype.setFirstName("firstNamePrototyped");
+
+        IPerson unique = ObjectG.unique(prototype);
+        assertEquals("firstNamePrototyped", unique.getFirstName());
     }
 
     public static class ClassWithCollectionA{

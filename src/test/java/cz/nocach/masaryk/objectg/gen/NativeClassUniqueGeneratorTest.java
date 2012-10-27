@@ -1,4 +1,4 @@
-package cz.nocach.masaryk.objectg.gen.impl;
+package cz.nocach.masaryk.objectg.gen;
 
 import cz.nocach.masaryk.objectg.ObjectG;
 import junit.framework.Assert;
@@ -40,7 +40,7 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         assertUnique(Short.class);
         assertUnique(StringBuilder.class);
         assertUnique(StringBuffer.class);
-        //TODO: fill other types
+        assertUnique(Object.class);
     }
 
     @Test

@@ -4,6 +4,8 @@ import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.fixtures.domain.Person;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * User: __nocach
  * Date: 21.10.12
@@ -11,12 +13,18 @@ import org.junit.Test;
 public class ObjectGTest {
 
     @Test
+    public void canGenerateFromPrototype(){
+        Person prototype = ObjectG.prototype(Person.class);
+        Person unique = ObjectG.unique(prototype);
+    }
+
+    @Test
     public void canGenerateList(){
         Person prototype = ObjectG.prototype(Person.class);
 
         ObjectG.uniqueList(Person.class);
         ObjectG.uniqueList(Person.class, 1);
-        ObjectG.uniqueList(Person.class, prototype);
+        ObjectG.uniqueList(Person.class, 1, prototype);
         ObjectG.uniqueList(Person.class, new GenerationConfiguration());
         ObjectG.uniqueList(Person.class, new GenerationConfiguration(), prototype);
         ObjectG.uniqueList(Person.class, new GenerationConfiguration(), 1);
