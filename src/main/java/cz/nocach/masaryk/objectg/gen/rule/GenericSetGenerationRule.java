@@ -25,7 +25,7 @@ class GenericSetGenerationRule extends GenerationRule<Set>{
     }
 
     @Override
-    protected Set getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public Set getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         return ObjectG.uniqueSet(classOfObjects, size);
     }
 }

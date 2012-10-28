@@ -26,7 +26,7 @@ class RulesOverrideGenerationRule extends GenerationRule<Object> {
     }
 
     @Override
-    protected Object getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public Object getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         for (GenerationRule each : rulesToOverride) each.setScope(getScope());
         GenerationConfiguration overridenConfiguration = currentConfiguration.newWithMoreRules(rulesToOverride);
         //prevent cycling applying of this rule

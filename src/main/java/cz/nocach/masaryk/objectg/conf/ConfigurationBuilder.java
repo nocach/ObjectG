@@ -2,6 +2,7 @@ package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.PostProcessor;
 import cz.nocach.masaryk.objectg.gen.cycle.BackReferenceCycleStrategy;
 import cz.nocach.masaryk.objectg.gen.cycle.NullValueCycleStrategy;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
@@ -24,8 +25,11 @@ import static org.hamcrest.Matchers.typeCompatibleWith;
  */
 public class ConfigurationBuilder {
     private GenerationConfiguration resultConfiguration;
+    private PrototypeCreator prototypeCreator;
 
-    public ConfigurationBuilder(){
+    public ConfigurationBuilder(PrototypeCreator prototypeCreator){
+        Assert.notNull(prototypeCreator, "prototypeCreator");
+        this.prototypeCreator = prototypeCreator;
         resultConfiguration = new GenerationConfiguration();
     }
 
@@ -88,5 +92,26 @@ public class ConfigurationBuilder {
     void addRule(GenerationRule rule) {
         Assert.notNull(rule, "rule");
         resultConfiguration.addRule(rule);
+    }
+
+    /**
+     *
+     * @param propertyExpression expression defining property for which this WhenBuilder will be applied.
+     *                           collections and arrays are supported.
+     *                           Example : {@code when("person2Address[0].owner.firstName)"}
+     * @param <T>
+     * @return
+     */
+    public <T> WhenBuilder<T> when(String propertyExpression) {
+        return new WhenBuilder<T>(propertyExpression, this);
+    }
+
+    public ConfigurationBuilder addPostProcessor(PostProcessor postProcessor) {
+        resultConfiguration.addPostProcessor(postProcessor);
+        return this;
+    }
+
+    PrototypeCreator getPrototypeCreator() {
+        return prototypeCreator;
     }
 }

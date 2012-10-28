@@ -2,15 +2,14 @@ package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.PostProcessor;
 import cz.nocach.masaryk.objectg.gen.cycle.CycleStrategy;
 import cz.nocach.masaryk.objectg.gen.cycle.NullValueCycleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * <p>
@@ -30,6 +29,7 @@ public class GenerationConfiguration implements Cloneable{
     private CycleStrategy cycleStrategy = new NullValueCycleStrategy();
     private boolean isUnique;
     private Queue<GenerationRule> rules = new PriorityQueue();
+    private List<PostProcessor> postProcessors = new LinkedList<PostProcessor>();
 
     /**
      * how many objects to generate into collections
@@ -127,9 +127,21 @@ public class GenerationConfiguration implements Cloneable{
     }
 
     public void removeRule(GenerationRule rule) {
-        boolean wasRemoved = rules.remove(rule);
-        if (!wasRemoved){
-            throw new IllegalArgumentException("configuraiton had no rule="+rule);
+        rules.remove(rule);
+    }
+
+    public void addPostProcessor(PostProcessor postProcessor) {
+        Assert.notNull(postProcessor, "postProcessor");
+        postProcessors.add(postProcessor);
+    }
+
+    public <T> T postProcess(T result) {
+        Iterator<PostProcessor> iterator = postProcessors.iterator();
+        while (iterator.hasNext()){
+            PostProcessor each = iterator.next();
+            iterator.remove();
+            result = each.process(this, result);
         }
+        return result;
     }
 }

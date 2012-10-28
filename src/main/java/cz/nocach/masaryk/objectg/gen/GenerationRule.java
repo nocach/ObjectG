@@ -6,6 +6,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.springframework.util.Assert;
 
+import static org.hamcrest.Matchers.any;
+
 /**
  * <p>
  *     GenerationRule defines what specific rules and when are used for generating of property value.
@@ -34,7 +36,7 @@ public abstract class GenerationRule<T> implements Comparable<GenerationRule>{
         this.matcher = matcher;
     }
 
-    protected abstract T getValue(GenerationConfiguration currentConfiguration, GenerationContext context);
+    public abstract T getValue(GenerationConfiguration currentConfiguration, GenerationContext context);
 
     /**
      * @param parentClass class where property is
@@ -52,7 +54,7 @@ public abstract class GenerationRule<T> implements Comparable<GenerationRule>{
     public boolean matches(GenerationContext context){
         if (matcher != null) return matcher.matches(context);
         throw new IllegalStateException("Rule without matching rule. " +
-                "when(matcher) must be called");
+                "when(matcher) must be called to set when rule must be applied");
     }
 
     @Override
@@ -79,4 +81,7 @@ public abstract class GenerationRule<T> implements Comparable<GenerationRule>{
         return o.scope.compareTo(o.scope);
     }
 
+    public void matchAlways() {
+        when(any(GenerationContext.class));
+    }
 }

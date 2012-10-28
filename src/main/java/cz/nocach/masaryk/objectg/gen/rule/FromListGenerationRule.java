@@ -33,7 +33,7 @@ class FromListGenerationRule<T> extends GenerationRule<T> {
     }
 
     @Override
-    protected T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         return (T)fromListGenerator.generateValue();
     }
 

@@ -14,7 +14,7 @@ import java.util.Collection;
 class EmptyCollectionGenerationRule extends GenerationRule<Collection> {
 
     @Override
-    protected Collection getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public Collection getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         configurationOfCollection.removeRule(this);

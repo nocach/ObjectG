@@ -194,7 +194,7 @@ public class PrototypeCreator {
         interceptedClass.addField(ctField);
     }
 
-    public List<GenerationRule> getRules(Object configObject) {
-        return configurationHandler.getRules(configObject);
+    public List<GenerationRule> getRules(Object prototype) {
+        return configurationHandler.getRules(prototype);
     }
 }

@@ -22,7 +22,7 @@ class JpaRule extends GenerationRule<Object>{
     }
 
     @Override
-    protected Object getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public Object getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         List<Relation> relations = relationValueProvider.getRelationsFor(context.getClassThatIsGenerated());
         return findGeneratedObjectFromRelations(context, relations);
     }

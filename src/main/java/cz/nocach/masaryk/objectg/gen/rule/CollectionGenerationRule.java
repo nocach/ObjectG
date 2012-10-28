@@ -21,7 +21,7 @@ class CollectionGenerationRule<T> extends GenerationRule<T>{
     }
 
     @Override
-    protected T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         Collection collection = ObjectG.generate(collectionClass, configurationOfCollection);

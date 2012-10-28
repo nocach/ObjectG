@@ -78,7 +78,9 @@ public class ObjectG {
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
         addDefaultRules(configuration);
-        return (T) GeneratorRegistry.getInstance().generate(configuration, GenerationContext.createRoot(clazz));
+        T result = (T) GeneratorRegistry.getInstance().generate(configuration, GenerationContext.createRoot(clazz));
+        configuration.postProcess(result);
+        return result;
     }
 
     private static void addDefaultRules(GenerationConfiguration configuration) {
@@ -244,6 +246,6 @@ public class ObjectG {
     }
 
     public static ConfigurationBuilder config() {
-        return new ConfigurationBuilder();
+        return new ConfigurationBuilder(PROTOTYPE_CREATOR);
     }
 }

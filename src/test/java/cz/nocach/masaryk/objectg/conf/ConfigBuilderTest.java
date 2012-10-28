@@ -7,12 +7,14 @@ import cz.nocach.masaryk.objectg.fixtures.domain.Tour;
 import cz.nocach.masaryk.objectg.fixtures.domain.TourSeason;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import cz.nocach.masaryk.objectg.matcher.ContextMatchers;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
 
 /**
  * User: __nocach
@@ -67,6 +69,47 @@ public class ConfigBuilderTest {
                 ObjectG.config().forClass(TourSeason.class).setNull());
 
         assertNull(generated.getSeason());
+    }
+
+    @Test
+    public void canUsePropertyExpressionToSetValue(){
+        Person unique = ObjectG.unique(Person.class
+                , ObjectG.config()
+                .backReferenceCycle()
+                .when("employee2Addresses[0].owner.firstName")
+                .value("setByExpression"));
+
+        assertEquals("setByExpression", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
+    }
+
+    @Test
+    public void canUsePropertyExpressionToUsePrototype(){
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.setFirstName("fromPrototype");
+        Person unique = ObjectG.unique(Person.class
+                , ObjectG.config()
+                .when("employee2Addresses[0].owner")
+                .usePrototype(prototype));
+
+        assertEquals("fromPrototype", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
+    }
+
+    @Test
+    public void canUsePropertyExpressionToSpecifyRule(){
+        Person prototype = ObjectG.prototype(Person.class);
+        prototype.setFirstName("fromPrototype");
+        Person unique = ObjectG.unique(Person.class
+                , ObjectG.config()
+                .when("employee2Addresses")
+                .rule(Rules.emptyCollection()));
+
+        assertEquals(0, unique.getEmployee2Addresses().size());
+    }
+
+    @Test
+    @Ignore
+    public void canInferPropertyTypeForExpressionMatchingCollection(){
+        fail("when(employee2Addresses[0]) should work");
     }
 
     public static class ClassWithMap{

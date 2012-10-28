@@ -14,7 +14,7 @@ import java.util.Map;
 class EmptyMapCollectionGenerationRule extends GenerationRule<Map> {
 
     @Override
-    protected Map getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
+    public Map getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         configurationOfCollection.removeRule(this);

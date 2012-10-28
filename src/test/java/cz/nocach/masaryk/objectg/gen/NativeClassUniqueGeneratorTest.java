@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -65,6 +66,8 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         assertUnique(StringBuffer[].class);
         assertUnique(Object.class);
         assertUnique(Object[].class);
+        assertUnique(URL.class);
+        assertUnique(URL[].class);
     }
 
     @Test
@@ -86,6 +89,7 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         Boolean booleanRefValue = ObjectG.unique(Boolean.class);
         short shortValue = ObjectG.unique(short.class);
         Short shortRefValue = ObjectG.unique(Short.class);
+        URL[] urlArray = ObjectG.unique(URL[].class);
     }
 
     @Test

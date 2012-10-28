@@ -32,6 +32,6 @@ public class Generators {
     }
 
     public static Generator array(){
-        return new ArrayGenerator(primitive());
+        return new ArrayGenerator();
     }
 }

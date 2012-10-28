@@ -6,6 +6,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.springframework.util.Assert;
 
+import static org.hamcrest.Matchers.is;
+
 /**
  * <p>
  *     Provides fluent api for creating Matcher<GenerationContext> used in {@link cz.nocach.masaryk.objectg.gen.GenerationRule}
@@ -24,5 +26,9 @@ public class ContextMatchers {
             classMatchers[i] = Matchers.typeCompatibleWith(classes[i]);
         }
         return GenerationContextFeatures.forClass(Matchers.anyOf(classMatchers));
+    }
+
+    public static ValueTypeHintMatcher<GenerationContext, ?> expression(String expression){
+        return GenerationContextFeatures.forIsRoot(is(true));
     }
 }

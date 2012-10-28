@@ -2,8 +2,11 @@ package cz.nocach.masaryk.objectg.gen.impl;
 
 import cz.nocach.masaryk.objectg.conf.GenerationConfiguration;
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
+import cz.nocach.masaryk.objectg.gen.GenerationException;
 import cz.nocach.masaryk.objectg.gen.Generator;
+import cz.nocach.masaryk.objectg.gen.GeneratorRegistry;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -13,44 +16,96 @@ import java.util.Date;
  * Date: 27.10.12
  */
 class ArrayGenerator extends Generator {
-    private Generator primitiveGenerator;
-
-    public ArrayGenerator(Generator primitiveGenerator){
-        this.primitiveGenerator = primitiveGenerator;
-    }
     @Override
-    protected <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> context) {
-        //TODO: can be optimized with HashMap
-        Class type = context.getClassThatIsGenerated();
-        if (type.equals(Integer[].class)) return (T) new Integer[]{generatePrimitive(configuration, context, Integer.class)};
-        if (type.equals(int[].class)) return (T) new int[]{generatePrimitive(configuration, context, int.class)};
-        if (type.equals(Double[].class)) return (T) new Double[]{generatePrimitive(configuration, context, Double.class)};
-        if (type.equals(double[].class)) return (T) new double[]{generatePrimitive(configuration, context, double.class)};
-        if (type.equals(Long[].class)) return (T) new Long[]{generatePrimitive(configuration, context, Long.class)};
-        if (type.equals(long[].class)) return (T) new long[]{generatePrimitive(configuration, context, long.class)};
-        if (type.equals(Float[].class)) return (T) new Float[]{generatePrimitive(configuration, context, Float.class)};
-        if (type.equals(float[].class)) return (T) new float[]{generatePrimitive(configuration, context, float.class)};
-        if (type.equals(Byte[].class)) return (T) new Byte[]{generatePrimitive(configuration, context, Byte.class)};
-        if (type.equals(byte[].class)) return (T) new byte[]{generatePrimitive(configuration, context, byte.class)};
-        if (type.equals(Character[].class)) return (T) new Character[]{generatePrimitive(configuration, context, Character.class)};
-        if (type.equals(char[].class)) return (T) new char[]{generatePrimitive(configuration, context, char.class)};
-        if (type.equals(String[].class)) return (T) new String[]{generatePrimitive(configuration, context, String.class)};
-        if (type.equals(BigDecimal[].class)) return (T) new BigDecimal[]{generatePrimitive(configuration, context, BigDecimal.class)};
-        if (type.equals(BigInteger[].class)) return (T) new BigInteger[]{generatePrimitive(configuration, context, BigInteger.class)};
-        if (type.equals(Boolean[].class)) return (T) new Boolean[]{generatePrimitive(configuration, context, Boolean.class)};
-        if (type.equals(boolean[].class)) return (T) new boolean[]{generatePrimitive(configuration, context, boolean.class)};
-        if (type.equals(Date[].class)) return (T) new Date[]{generatePrimitive(configuration, context, Date.class)};
-        if (type.equals(java.sql.Date[].class)) return (T) new java.sql.Date[]{generatePrimitive(configuration, context, java.sql.Date.class)};
-        if (type.equals(short[].class)) return (T) new short[]{generatePrimitive(configuration, context, short.class)};
-        if (type.equals(Short[].class)) return (T) new Short[]{generatePrimitive(configuration, context, Short.class)};
-        if (type.equals(StringBuilder[].class)) return (T) new StringBuilder[]{generatePrimitive(configuration, context, StringBuilder.class)};
-        if (type.equals(StringBuffer[].class)) return (T) new StringBuffer[]{generatePrimitive(configuration, context, StringBuffer.class)};
-        if (type.equals(Object[].class)) return (T) new Object[]{generatePrimitive(configuration, context, Object.class)};
-        throw new IllegalArgumentException("can't generate value of type " + context);
+    protected Object generateValue(GenerationConfiguration configuration, GenerationContext context){
+        try {
+            return createArray(configuration, context);
+        } catch (ClassNotFoundException e) {
+            throw new GenerationException(e);
+        }
     }
 
-    private <T> T generatePrimitive(GenerationConfiguration configuration, GenerationContext<?> context, Class<T> clazz) {
-        return primitiveGenerator.generate(configuration, context.push(clazz));
+    private Class getArrayObjectClass(Class arrayType) {
+        if (arrayType.equals(int[].class)) return int.class;
+        if (arrayType.equals(double[].class)) return double.class;
+        if (arrayType.equals(long[].class)) return long.class;
+        if (arrayType.equals(float[].class)) return float.class;
+        if (arrayType.equals(byte[].class)) return byte.class;
+        if (arrayType.equals(char[].class)) return char.class;
+        if (arrayType.equals(boolean[].class)) return boolean.class;
+        if (arrayType.equals(short[].class)) return short.class;
+        try {
+            return Class.forName(arrayType.getName().substring(2, arrayType.getName().length() - 1));
+        } catch (ClassNotFoundException e) {
+            throw new GenerationException(e);
+        }
+    }
+
+    private <T, U> T createArray(GenerationConfiguration configuration, GenerationContext context) throws ClassNotFoundException {
+        Class arrayType = context.getClassThatIsGenerated();
+        if (arrayType.equals(int[].class))  {
+            int[] result = new int[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Integer>generate(configuration, context.push(int.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(double[].class)) {
+            double[] result = new double[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Double>generate(configuration, context.push(double.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(long[].class)) {
+            long[] result = new long[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Long>generate(configuration, context.push(long.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(float[].class)) {
+            float[] result = new float[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Float>generate(configuration, context.push(float.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(byte[].class)) {
+            byte[] result = new byte[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Byte>generate(configuration, context.push(byte.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(char[].class)) {
+            char[] result = new char[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Character>generate(configuration, context.push(char.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(boolean[].class)) {
+            boolean[] result = new boolean[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Boolean>generate(configuration, context.push(boolean.class));
+            }
+            return (T)result;
+        }
+        if (arrayType.equals(short[].class)) {
+            short[] result = new short[configuration.getObjectsInCollections()];
+            for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+                result[i] = GeneratorRegistry.getInstance().<Short>generate(configuration, context.push(short.class));
+            }
+            return (T)result;
+        }
+        //magic magic magic
+        Class<U> arrayObjectClass = (Class<U>)Class.forName(arrayType.getName().substring(2, arrayType.getName().length() - 1));
+        U[] array = (U[])Array.newInstance(arrayObjectClass, configuration.getObjectsInCollections());
+        for (int i = 0; i < configuration.getObjectsInCollections(); i++){
+            array[i] = GeneratorRegistry.getInstance().<U>generate(configuration, context.push(getArrayObjectClass(arrayType)));
+        }
+        return (T)array;
     }
 
     @Override
@@ -79,6 +134,6 @@ class ArrayGenerator extends Generator {
             || type.equals(Short[].class)
             || type.equals(StringBuilder[].class)
             || type.equals(StringBuffer[].class)
-            || type.equals(Object[].class);
+            || type.getName().startsWith("[L");
     }
 }

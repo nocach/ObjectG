@@ -36,7 +36,7 @@ public class GenerationContext<T> {
         this.parentObject = parentObject;
     }
 
-    public Class getClassThatIsGenerated() {
+    public Class<T> getClassThatIsGenerated() {
         return classThatIsGenerated;
     }
 
@@ -142,5 +142,9 @@ public class GenerationContext<T> {
 
     public ExtendedPropertyDescriptor getFieldPropertyDescriptor() {
         return fieldPropertyDescriptor;
+    }
+
+    public void setParentObject(Object parentObject) {
+        this.parentObject = parentObject;
     }
 }

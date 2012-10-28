@@ -2,7 +2,10 @@ package cz.nocach.masaryk.objectg.conf;
 
 import cz.nocach.masaryk.objectg.gen.GenerationContext;
 import cz.nocach.masaryk.objectg.gen.GenerationRule;
+import cz.nocach.masaryk.objectg.gen.PostProcessor;
 import cz.nocach.masaryk.objectg.gen.RuleScope;
+import cz.nocach.masaryk.objectg.gen.postproc.ApplyRuleHandler;
+import cz.nocach.masaryk.objectg.gen.postproc.ExpressionPostProcessor;
 import cz.nocach.masaryk.objectg.gen.rule.Rules;
 import org.hamcrest.Matcher;
 import org.springframework.util.Assert;
@@ -12,8 +15,9 @@ import org.springframework.util.Assert;
  * Date: 14.10.12
  */
 public class WhenBuilder<T> {
-    private final Matcher<GenerationContext> contextMatcher;
+    private Matcher<GenerationContext> contextMatcher;
     private final ConfigurationBuilder configurationBuilder;
+    private String expression;
 
     public WhenBuilder(Matcher<GenerationContext> contextMatcher, ConfigurationBuilder configurationBuilder) {
         Assert.notNull(contextMatcher, "contextMatcher");
@@ -23,14 +27,28 @@ public class WhenBuilder<T> {
         this.configurationBuilder = configurationBuilder;
     }
 
+    public WhenBuilder(String expression, ConfigurationBuilder configurationBuilder) {
+        Assert.notNull(expression, "expression");
+        Assert.notNull(configurationBuilder, "configurationBuilder");
+        this.expression = expression;
+
+        this.configurationBuilder = configurationBuilder;
+    }
+
     public ConfigurationBuilder rule(GenerationRule rule){
-        addRuleForMatcher(rule);
+        addRule(rule);
         return configurationBuilder;
     }
 
-    private void addRuleForMatcher(GenerationRule rule) {
-        rule.when(contextMatcher);
-        configurationBuilder.addRule(rule);
+    private void addRule(GenerationRule rule) {
+        if (contextMatcher != null){
+            rule.when(contextMatcher);
+            configurationBuilder.addRule(rule);
+        }
+        else {
+            PostProcessor expressionPostProc = new ExpressionPostProcessor(expression, new ApplyRuleHandler(rule));
+            configurationBuilder.addPostProcessor(expressionPostProc);
+        }
     }
 
     private void addRuleForMatcher(GenerationRule rule, RuleScope scope) {
@@ -46,13 +64,21 @@ public class WhenBuilder<T> {
 
     public ConfigurationBuilder value(T value){
         GenerationRule setValueRule = Rules.value(value);
-        addRuleForMatcher(setValueRule);
+        addRule(setValueRule);
         return configurationBuilder;
     }
 
     public ConfigurationBuilder setNull(){
         GenerationRule setValueRule = Rules.value(null);
-        addRuleForMatcher(setValueRule);
+        addRule(setValueRule);
+        return configurationBuilder;
+    }
+
+    public ConfigurationBuilder usePrototype(Object prototype) {
+        PrototypeCreator prototypeCreator = configurationBuilder.getPrototypeCreator();
+        GenerationRule specificConfigurationRule = Rules.specificRules(prototypeCreator.getRules(prototype));
+        specificConfigurationRule.setScope(RuleScope.PROPERTY);
+        addRule(specificConfigurationRule);
         return configurationBuilder;
     }
 }
