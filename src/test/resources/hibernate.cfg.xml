@@ -15,21 +15,21 @@
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">create</property>
 
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Agent"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Customer"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Departure"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Destination"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.DestLink"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Guide"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.GuideAssignment"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Money"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Person"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Person2Address"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Preference"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Reservation"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.Tour"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.TourSeason"></mapping>
-        <mapping class="cz.nocach.masaryk.objectg.fixtures.domain.TourStop"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Agent"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Customer"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Departure"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Destination"></mapping>
+        <mapping class="org.objectg.fixtures.domain.DestLink"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Guide"></mapping>
+        <mapping class="org.objectg.fixtures.domain.GuideAssignment"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Money"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Person"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Person2Address"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Preference"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Reservation"></mapping>
+        <mapping class="org.objectg.fixtures.domain.Tour"></mapping>
+        <mapping class="org.objectg.fixtures.domain.TourSeason"></mapping>
+        <mapping class="org.objectg.fixtures.domain.TourStop"></mapping>
     </session-factory>
 
 </hibernate-configuration>
