@@ -119,7 +119,7 @@ public class PrototypeSetterHandler {
     }
 
     private boolean needToUseConfigurationObject(Object prototype) {
-        return prototype instanceof InterceptedBySetterConfigurator
+        return prototype instanceof InterceptedByPrototypeCreator
                 && OngoingConfiguration.plannedPrototype != null
                 && OngoingConfiguration.plannedPrototype != prototype;
     }

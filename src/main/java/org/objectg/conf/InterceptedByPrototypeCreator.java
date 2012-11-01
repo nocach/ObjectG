@@ -9,5 +9,5 @@ package org.objectg.conf;
  * Date: 16.9.12
  * </p>
  */
-public interface InterceptedBySetterConfigurator {
+public interface InterceptedByPrototypeCreator {
 }

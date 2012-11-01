@@ -60,7 +60,7 @@ public class ObjectG {
                 throw new ConfigurationException("tried to use ConfigurationBuilder as prototype object. " +
                         "Did you forget to call .done()? Check ObjectG.config() for more info");
             }
-            if ( !(each instanceof InterceptedBySetterConfigurator) ){
+            if ( !(each instanceof InterceptedByPrototypeCreator) ){
                 throw new ConfigurationException("tried to pass not prototype instance. " +
                         "Make sure you passed instances return by ObjectG.prototype()");
             }

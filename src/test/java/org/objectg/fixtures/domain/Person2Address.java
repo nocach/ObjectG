@@ -18,6 +18,7 @@ public class Person2Address {
     private Person owner;
     @OneToMany
     private Set<Person> dependentPersons;
+    private String name;
 
     public Long getId() {
         return id;
@@ -49,5 +50,13 @@ public class Person2Address {
 
     public void setDependentPersons(Set<Person> dependentPersons) {
         this.dependentPersons = dependentPersons;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

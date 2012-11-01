@@ -1,11 +1,12 @@
 package org.objectg.conf;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.conf.exception.PrototypeMisuseException;
+import org.objectg.fixtures.DerivedInterface;
 import org.objectg.fixtures.domain.IPerson;
+import org.objectg.fixtures.domain.ITour;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -232,13 +233,33 @@ public class PrototypeConfigTest {
     }
 
     @Test
-    @Ignore
-    public void canConfigureInterface(){
+    public void canConfigureInterfaceBasic(){
         IPerson prototype = ObjectG.prototype(IPerson.class);
         prototype.setFirstName("firstNamePrototyped");
 
         IPerson unique = ObjectG.unique(prototype);
         assertEquals("firstNamePrototyped", unique.getFirstName());
+    }
+
+    @Test
+    public void canConfigureInterfaceGetterReturnsPrototype(){
+        ITour prototype = ObjectG.prototype(ITour.class);
+        prototype.getSeason().setName("prototyped");
+
+        ITour generated = ObjectG.unique(prototype);
+        assertEquals("prototyped", generated.getSeason().getName());
+    }
+
+    @Test
+    public void canConfigureInterfaceInheritedInterfacesWillWork(){
+        DerivedInterface prototype = ObjectG.prototype(DerivedInterface.class);
+        prototype.getParentPerson().setFirstName("prototypedPerson");
+        prototype.getTour().setName("prototypedTour");
+
+        DerivedInterface generated = ObjectG.unique(prototype);
+
+        assertEquals("prototypedPerson", generated.getParentPerson().getFirstName());
+        assertEquals("prototypedTour", generated.getTour().getName());
     }
 
     public static class ClassWithCollectionA{
