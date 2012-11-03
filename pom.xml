@@ -20,6 +20,10 @@
         <url>https://github.com/nocach/ObjectG</url>
     </scm>
 
+    <properties>
+        <version.hamcrest>1.3</version.hamcrest>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>javassist</groupId>
@@ -53,9 +57,13 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
-            <scope>compile</scope>
+            <artifactId>hamcrest-core</artifactId>
+            <version>${version.hamcrest}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${version.hamcrest}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

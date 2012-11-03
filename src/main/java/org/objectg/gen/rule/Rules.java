@@ -1,13 +1,13 @@
 package org.objectg.gen.rule;
 
-import org.objectg.gen.GenerationRule;
-import org.objectg.gen.RuleScope;
-import org.springframework.util.Assert;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import org.objectg.gen.GenerationRule;
+import org.objectg.gen.RuleScope;
+import org.springframework.util.Assert;
 
 /**
  * User: __nocach
@@ -79,4 +79,8 @@ public class Rules {
     public static GenerationRule emptyMap(){
         return new EmptyMapCollectionGenerationRule();
     }
+
+	public static GenerationRule contextOverride(GenerationContextTransformer contextTransformer){
+		return new OverrideContextGenerationRule(contextTransformer);
+	}
 }

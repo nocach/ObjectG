@@ -1,18 +1,23 @@
 package org.objectg.conf;
 
+import java.util.Map;
+
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Tour;
 import org.objectg.fixtures.domain.TourSeason;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 
-import java.util.Map;
-
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertThat;
 
 /**
  * User: __nocach
@@ -104,11 +109,31 @@ public class ConfigBuilderTest {
         assertEquals(0, unique.getEmployee2Addresses().size());
     }
 
+	@Test
+	public void canSpecifyImplementation(){
+		ClassWithIPerson classWithIPerson = ObjectG.unique(ClassWithIPerson.class,
+				ObjectG.config().when(IPerson.class).useClass(Person.class));
+
+		assertThat(classWithIPerson.getPerson(), IsInstanceOf.instanceOf(Person.class));
+	}
+
     @Test
     @Ignore
     public void canInferPropertyTypeForExpressionMatchingCollection(){
         fail("when(employee2Addresses[0]) should work");
     }
+
+	public static class ClassWithIPerson{
+		private IPerson person;
+
+		public IPerson getPerson() {
+			return person;
+		}
+
+		public void setPerson(final IPerson person) {
+			this.person = person;
+		}
+	}
 
     public static class ClassWithMap{
         private Map map;

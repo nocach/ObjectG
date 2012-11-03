@@ -1,5 +1,8 @@
 package org.objectg.conf;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.hamcrest.Matchers;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
@@ -12,9 +15,6 @@ import org.objectg.matcher.ValueTypeHintMatcher;
 import org.objectg.matcher.impl.GenerationContextFeatures;
 import org.objectg.matcher.impl.JavaNativeTypeMatcher;
 import org.springframework.util.Assert;
-
-import java.util.Collection;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.typeCompatibleWith;
 import static org.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
@@ -114,4 +114,8 @@ public class ConfigurationBuilder {
     PrototypeCreator getPrototypeCreator() {
         return prototypeCreator;
     }
+
+	public <T> WhenBuilder<T> when(final Class<T> clazz) {
+		return new WhenBuilder<T>(ContextMatchers.instancesOf(clazz), this);
+	}
 }

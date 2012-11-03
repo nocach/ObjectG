@@ -7,6 +7,7 @@ import org.objectg.gen.PostProcessor;
 import org.objectg.gen.RuleScope;
 import org.objectg.gen.postproc.ApplyRuleHandler;
 import org.objectg.gen.postproc.ExpressionPostProcessor;
+import org.objectg.gen.rule.GenerationContextTransformer;
 import org.objectg.gen.rule.Rules;
 import org.springframework.util.Assert;
 
@@ -81,4 +82,15 @@ public class WhenBuilder<T> {
         addRule(specificConfigurationRule);
         return configurationBuilder;
     }
+
+	public ConfigurationBuilder useClass(final Class<? extends T> classHint) {
+		Assert.notNull(classHint, "classHint");
+		final GenerationRule overrideClassRule = Rules.contextOverride(new GenerationContextTransformer() {
+			@Override
+			public void transform(final GenerationContext<?> context) {
+				context.setClassThatIsGenerated(classHint);
+			}
+		});
+		return rule(overrideClassRule, RuleScope.GLOBAL);
+	}
 }
