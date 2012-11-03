@@ -1,16 +1,16 @@
 package org.objectg.conf;
 
-import org.objectg.gen.rule.Rules;
-import org.springframework.util.Assert;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.objectg.gen.rule.Rules;
+import org.springframework.util.Assert;
+
 /**
  * <p>
- *     Factory for rules used in configuration through {@link PrototypeCreator}
+ *     Factory for rules used in configuration through {@link org.objectg.conf.prototype.PrototypeCreator}
  * </p>
  * <p>
  * User: __nocach

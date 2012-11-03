@@ -1,7 +1,17 @@
 package org.objectg;
 
-import org.objectg.conf.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.objectg.conf.ConfigurationBuilder;
+import org.objectg.conf.GenerationConfiguration;
+import org.objectg.conf.OngoingConfiguration;
 import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.conf.localconf.ConfigurationManager;
+import org.objectg.conf.prototype.InterceptedByPrototypeCreator;
+import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.GeneratorRegistry;
@@ -9,11 +19,6 @@ import org.objectg.gen.rule.Rules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -27,6 +32,7 @@ import java.util.Set;
 public class ObjectG {
     private static final Logger logger = LoggerFactory.getLogger(ObjectG.class);
     private static final PrototypeCreator PROTOTYPE_CREATOR = new PrototypeCreator();
+	private static final ConfigurationManager CONFIGURATION_MANAGER = new ConfigurationManager(2);
 
     public static <T> T unique(T prototype){
         return (T)unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), prototype);
@@ -78,7 +84,8 @@ public class ObjectG {
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
         addDefaultRules(configuration);
-        T result = (T) GeneratorRegistry.getInstance().generate(configuration, GenerationContext.createRoot(clazz));
+		GenerationConfiguration finalConfiguration = CONFIGURATION_MANAGER.getFinalConfiguration(configuration);
+        T result = (T) GeneratorRegistry.getInstance().generate(finalConfiguration, GenerationContext.createRoot(clazz));
         configuration.postProcess(result);
         return result;
     }
@@ -248,4 +255,8 @@ public class ObjectG {
     public static ConfigurationBuilder config() {
         return new ConfigurationBuilder(PROTOTYPE_CREATOR);
     }
+
+	public static void setupConfig(final Object objectWithConfiguration) {
+		CONFIGURATION_MANAGER.register(objectWithConfiguration);
+	}
 }

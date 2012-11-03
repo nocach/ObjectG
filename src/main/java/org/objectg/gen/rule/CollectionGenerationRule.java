@@ -1,11 +1,11 @@
 package org.objectg.gen.rule;
 
-import org.objectg.ObjectG;
+import java.util.Collection;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-
-import java.util.Collection;
+import org.objectg.gen.GeneratorRegistry;
 
 /**
  * User: __nocach
@@ -24,8 +24,9 @@ class CollectionGenerationRule<T> extends GenerationRule<T>{
     public T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
-        Collection collection = ObjectG.generate(collectionClass, configurationOfCollection);
-        collection.add(ObjectG.unique(classOfObjects));
+		configurationOfCollection.removeRule(this);
+        Collection collection = GeneratorRegistry.getInstance().generate(configurationOfCollection, context);
+        collection.add(GeneratorRegistry.getInstance().generate(currentConfiguration, context.push(classOfObjects)));
         return (T)collection;
     }
 }

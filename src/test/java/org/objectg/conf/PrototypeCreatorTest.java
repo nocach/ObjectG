@@ -2,6 +2,7 @@ package org.objectg.conf;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.conf.prototype.PrototypeCreator;
 
 import static org.junit.Assert.fail;
 

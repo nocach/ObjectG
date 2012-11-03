@@ -1,4 +1,4 @@
-package org.objectg.conf;
+package org.objectg.conf.prototype;
 
 /**
  * <p>

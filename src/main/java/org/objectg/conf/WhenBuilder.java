@@ -1,6 +1,7 @@
 package org.objectg.conf;
 
 import org.hamcrest.Matcher;
+import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;

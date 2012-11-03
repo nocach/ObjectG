@@ -1,11 +1,4 @@
-package org.objectg.conf;
-
-import com.google.common.collect.Sets;
-import javassist.*;
-import org.objectg.conf.exception.ConfigurationException;
-import org.objectg.gen.GenerationRule;
-import org.objectg.util.Types;
-import org.springframework.util.ReflectionUtils;
+package org.objectg.conf.prototype;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -15,6 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.google.common.collect.Sets;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.CtMethod;
+import javassist.Modifier;
+import javassist.NotFoundException;
+import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.gen.GenerationRule;
+import org.objectg.util.Types;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * <p>

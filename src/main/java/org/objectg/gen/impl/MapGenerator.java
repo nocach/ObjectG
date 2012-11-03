@@ -1,11 +1,11 @@
 package org.objectg.gen.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GeneratorRegistry;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * User: __nocach
@@ -22,7 +22,11 @@ class MapGenerator extends CollectionGenerator<Map>{
     protected void addNewObject(Map collection,
                                 GenerationConfiguration configuration, GenerationContext contextOfCollection) {
         GenerationContext contextForGeneratingKey = getContextForGeneratingKey(contextOfCollection);
-        if (!shouldAddObjectForContext(configuration, contextForGeneratingKey)) return;
+        if (!shouldAddObjectForContext(configuration, contextForGeneratingKey)) {
+			//we are not generating any value, but have pushed the context, so need to pop manually
+			contextForGeneratingKey.pop();
+			return;
+		}
         Object mapKey = GeneratorRegistry.getInstance()
                 .generate(configuration, contextForGeneratingKey);
         Object mapValue = GeneratorRegistry.getInstance()

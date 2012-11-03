@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.fixtures.ClassWithIPerson;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Tour;
@@ -122,18 +123,6 @@ public class ConfigBuilderTest {
     public void canInferPropertyTypeForExpressionMatchingCollection(){
         fail("when(employee2Addresses[0]) should work");
     }
-
-	public static class ClassWithIPerson{
-		private IPerson person;
-
-		public IPerson getPerson() {
-			return person;
-		}
-
-		public void setPerson(final IPerson person) {
-			this.person = person;
-		}
-	}
 
     public static class ClassWithMap{
         private Map map;

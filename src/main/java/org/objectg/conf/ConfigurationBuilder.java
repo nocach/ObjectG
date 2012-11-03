@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.hamcrest.Matchers;
+import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
@@ -117,5 +118,11 @@ public class ConfigurationBuilder {
 
 	public <T> WhenBuilder<T> when(final Class<T> clazz) {
 		return new WhenBuilder<T>(ContextMatchers.instancesOf(clazz), this);
+	}
+
+	public ConfigurationBuilder setObjectsInCollection(final int objectsInCollection) {
+		Assert.isTrue(objectsInCollection >= 0 , "objectsInCollection should be >= 0");
+		resultConfiguration.setObjectsInCollections(objectsInCollection);
+		return this;
 	}
 }

@@ -1,17 +1,18 @@
-package org.objectg.conf;
-
-import org.objectg.conf.exception.ConfigurationException;
-import org.objectg.conf.exception.PrototypeMisuseException;
-import org.objectg.gen.GenerationRule;
-import org.objectg.gen.RuleScope;
-import org.objectg.gen.rule.Rules;
-import org.springframework.util.Assert;
+package org.objectg.conf.prototype;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.objectg.conf.OngoingConfiguration;
+import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.conf.exception.PrototypeMisuseException;
+import org.objectg.gen.GenerationRule;
+import org.objectg.gen.RuleScope;
+import org.objectg.gen.rule.Rules;
+import org.springframework.util.Assert;
 
 /**
  * <p>

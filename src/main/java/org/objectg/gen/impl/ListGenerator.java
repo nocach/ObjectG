@@ -1,11 +1,11 @@
 package org.objectg.gen.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GeneratorRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: __nocach
@@ -23,7 +23,11 @@ class ListGenerator extends CollectionGenerator<List>{
     protected void addNewObject(List collection,
                                 GenerationConfiguration configuration, GenerationContext contextOfCollection) {
         GenerationContext contextForCollectionsObject = getContextForGeneratingObjectsOfCollection(contextOfCollection);
-        if (!shouldAddObjectForContext(configuration, contextForCollectionsObject)) return;
+        if (!shouldAddObjectForContext(configuration, contextForCollectionsObject)) {
+			//we are not generating any value, but have pushed the context, so need to pop manually
+			contextForCollectionsObject.pop();
+			return;
+		}
         Object generatedValue = GeneratorRegistry.getInstance().generate(configuration, contextForCollectionsObject);
         collection.add(generatedValue);
     }

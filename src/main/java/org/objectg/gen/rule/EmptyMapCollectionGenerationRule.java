@@ -1,11 +1,11 @@
 package org.objectg.gen.rule;
 
-import org.objectg.ObjectG;
+import java.util.Map;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-
-import java.util.Map;
+import org.objectg.gen.GeneratorRegistry;
 
 /**
  * User: __nocach
@@ -18,7 +18,7 @@ class EmptyMapCollectionGenerationRule extends GenerationRule<Map> {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         configurationOfCollection.removeRule(this);
-        Map collection = (Map) ObjectG.generate(context.getClassThatIsGenerated(), configurationOfCollection);
+        Map collection = (Map) GeneratorRegistry.getInstance().generate(configurationOfCollection, context);
         return collection;
     }
 }

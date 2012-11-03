@@ -1,5 +1,11 @@
 package org.objectg.conf;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
@@ -8,8 +14,6 @@ import org.objectg.gen.cycle.NullValueCycleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import java.util.*;
 
 /**
  * <p>
@@ -26,18 +30,22 @@ import java.util.*;
  */
 public class GenerationConfiguration implements Cloneable{
     private static final Logger logger = LoggerFactory.getLogger(GenerationConfiguration.class);
-    private CycleStrategy cycleStrategy = new NullValueCycleStrategy();
-    private boolean isUnique;
+
+	////////////////////////
+	//if you add property don't forget to modify the init and merge method
+	//on initializing null attributes to null
+	////////////////////////
+    private CycleStrategy cycleStrategy;
+    private Boolean isUnique;
     private Queue<GenerationRule> rules = new PriorityQueue();
     private List<PostProcessor> postProcessors = new LinkedList<PostProcessor>();
-
+	private boolean wasInit = false;
     /**
      * how many objects to generate into collections
      */
-    private int objectsInCollections = 1;
+    private Integer objectsInCollections;
 
-    public GenerationConfiguration(){
-    }
+
 
     public void addRule(GenerationRule rule) {
         rules.add(rule);
@@ -144,4 +152,44 @@ public class GenerationConfiguration implements Cloneable{
         }
         return result;
     }
+
+	/**
+	 * merge all information from passed configuration into this instance
+	 * @param configuration
+	 */
+	public void merge(final GenerationConfiguration configuration) {
+		//only those properties that are defined in passed configuration
+		//will be set
+		//This is need, because if some this.property isn't null and that.property is
+		//then in a result this.property will be null but DEFAULT will be used instead
+		if (configuration.cycleStrategy != null){
+			cycleStrategy = configuration.cycleStrategy;
+		}
+		if (configuration.isUnique != null){
+			isUnique = configuration.isUnique;
+		}
+		if (configuration.objectsInCollections != null){
+			objectsInCollections = configuration.objectsInCollections;
+		}
+		rules.addAll(configuration.rules);
+		postProcessors.addAll(configuration.postProcessors);
+	}
+
+	/**
+	 * call when GenerationConfiguration is about to be used.
+	 * This method will set defaults on all null attributes
+	 */
+	public void init() {
+		if (wasInit) return;
+		if (cycleStrategy == null){
+			cycleStrategy = new NullValueCycleStrategy();
+		}
+		if (isUnique == null){
+			isUnique = false;
+		}
+		if (objectsInCollections == null){
+			objectsInCollections = 1;
+		}
+		wasInit = true;
+	}
 }
