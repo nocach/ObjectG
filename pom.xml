@@ -80,6 +80,11 @@
             <artifactId>spring-core</artifactId>
             <version>3.0.7.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.8</version>
+        </dependency>
         <!-- targetPropertyExpression language -->
         <dependency>
             <groupId>de.odysseus.juel</groupId>

@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
  * User: __nocach
  * Date: 3.11.12
  */
-public class LocalConfTest {
+public class LocalConfigTest {
 	@ConfigurationProvider
 	private GenerationConfiguration setupConfiguration(){
 		return ObjectG
@@ -92,7 +92,13 @@ public class LocalConfTest {
 	@Test
 	@Ignore
 	public void multipleLocalConfigurationDefinitions(){
-		fail("think if to disallow or allow such behaviour");
+		fail("test that they are merged");
+	}
+
+	@Test
+	@Ignore
+	public void localConfigurationCanBeField(){
+		fail("TBD");
 	}
 
 }

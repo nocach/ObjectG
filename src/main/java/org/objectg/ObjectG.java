@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
 public class ObjectG {
     private static final Logger logger = LoggerFactory.getLogger(ObjectG.class);
     private static final PrototypeCreator PROTOTYPE_CREATOR = new PrototypeCreator();
-	private static final ConfigurationManager CONFIGURATION_MANAGER = new ConfigurationManager(2);
+	private static final ConfigurationManager CONFIGURATION_MANAGER = new ConfigurationManager(1, ObjectG.class);
 
     public static <T> T unique(T prototype){
         return (T)unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), prototype);
