@@ -131,6 +131,7 @@ public class PrototypeCreator {
 
     private void interceptGetter(CtMethod method) throws NotFoundException, CannotCompileException {
         boolean isVoidReturn = isVoidReturn(method);
+		if (isNotInterceptable(method)) return;
         if (!isVoidReturn){
             String propertyName = extractPropertyNameOfGetterSetter(method);
             /**
@@ -150,7 +151,12 @@ public class PrototypeCreator {
         }
     }
 
-    private boolean isGetterMethod(CtMethod each) {
+	private boolean isNotInterceptable(final CtMethod method) {
+		return Modifier.isFinal(method.getModifiers())
+				|| Modifier.isStatic(method.getModifiers());
+	}
+
+	private boolean isGetterMethod(CtMethod each) {
         String methodName = each.getName();
         return isGetterMethod(methodName);
     }
@@ -179,17 +185,18 @@ public class PrototypeCreator {
                 && paramLength == 1;
     }
 
-    private void setBodyToInvokeConfigurationHandler(CtMethod each) throws NotFoundException, CannotCompileException {
-        String propertyName = extractPropertyNameOfGetterSetter(each);
+    private void setBodyToInvokeConfigurationHandler(CtMethod method) throws NotFoundException, CannotCompileException {
+		if (isNotInterceptable(method)) return;
+        String propertyName = extractPropertyNameOfGetterSetter(method);
         //basically it looks like this:
         // {
         //   prototypeHandler.onSetter(this, $firstArg, propertyName);
         //   return;
         // }
-        each.insertBefore(
-                "{" +
-                        FIELD_NAME_OF_PROTOTYPE_HANDLER + ".onSetter(this, ($w)$1, \"" + propertyName + "\");" +
-                "}");
+        method.insertBefore(
+				"{" +
+						FIELD_NAME_OF_PROTOTYPE_HANDLER + ".onSetter(this, ($w)$1, \"" + propertyName + "\");" +
+						"}");
     }
 
     private boolean isVoidReturn(CtMethod each) throws NotFoundException {
@@ -221,6 +228,7 @@ public class PrototypeCreator {
         //set intercepted class as child of original class, so type check is valid
         CtClass originalClass = classPool.get(clazz.getName());
         interceptedClass.setSuperclass(originalClass);
+		removeNotInheritedMethods(interceptedClass);
 
         CtClass[] interfaces = new CtClass[interceptedClass.getInterfaces().length + 1];
         System.arraycopy(interceptedClass.getInterfaces(), 0, interfaces, 0, interceptedClass.getInterfaces().length);
@@ -231,7 +239,21 @@ public class PrototypeCreator {
         return interceptedClass;
     }
 
-    private <T> String getNameForInterceptedClass(Class<T> clazz) {
+	private void removeNotInheritedMethods(final CtClass originalClass){
+		for (CtMethod each : originalClass.getMethods()){
+			if (isNotInterceptable(each) && !Modifier.isNative(each.getModifiers())){
+				try{
+					originalClass.removeMethod(each);
+				}
+				catch (NotFoundException e){
+					//it's ok, method was some java default method like wait()
+				}
+			}
+		}
+
+	}
+
+	private <T> String getNameForInterceptedClass(Class<T> clazz) {
         return clazz.getName() + "Intercepted";
     }
 

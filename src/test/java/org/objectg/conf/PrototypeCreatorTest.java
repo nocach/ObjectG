@@ -19,11 +19,26 @@ public class PrototypeCreatorTest {
         prototypeCreator.newPrototype(ClassWithProperties.class);
     }
 
+	@Test
+	public void canCreatePrototypeForClassWithFinalsAndStatics(){
+		PrototypeCreator prototypeCreator = new PrototypeCreator();
+		prototypeCreator.newPrototype(ClassWithFinalAndStaticMethods.class);
+	}
+
     @Test
     @Ignore
     public void whatWillHappenWhenClassIsAbstract(){
         fail("think about it");
     }
+
+	public static class ClassWithFinalAndStaticMethods{
+		public final String getString(){
+			return null;
+		}
+		public static void setString(String arg){
+
+		}
+	}
 
     public static class ClassWithProperties{
         private String property1;
