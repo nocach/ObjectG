@@ -76,7 +76,7 @@ public class WhenBuilder<T> {
         return configurationBuilder;
     }
 
-    public ConfigurationBuilder usePrototype(Object prototype) {
+    public ConfigurationBuilder usePrototype(T prototype) {
         PrototypeCreator prototypeCreator = configurationBuilder.getPrototypeCreator();
         GenerationRule specificConfigurationRule = Rules.specificRules(prototypeCreator.getRules(prototype));
         specificConfigurationRule.setScope(RuleScope.PROPERTY);

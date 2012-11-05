@@ -1,15 +1,5 @@
 package org.objectg.gen.impl;
 
-import org.objectg.conf.GenerationConfiguration;
-import org.objectg.gen.ExtendedPropertyDescriptor;
-import org.objectg.gen.GenerationContext;
-import org.objectg.gen.Generator;
-import org.objectg.gen.GeneratorRegistry;
-import org.objectg.util.Types;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -22,6 +12,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.objectg.conf.GenerationConfiguration;
+import org.objectg.gen.ExtendedPropertyDescriptor;
+import org.objectg.gen.GenerationContext;
+import org.objectg.gen.GenerationException;
+import org.objectg.gen.Generator;
+import org.objectg.gen.GeneratorRegistry;
+import org.objectg.util.Types;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * <p>
@@ -44,16 +45,15 @@ class NotNativeClassGenerator extends Generator {
             setValuesOnFields(configuration, context, resultObj);
             return resultObj;
         } catch (InstantiationException e) {
-            throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
+            throw new GenerationException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
+            throw new GenerationException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
+            throw new GenerationException("can't create new instance of "+context.getClassThatIsGenerated().getName(), e);
         }
     }
 
     private void setValuesOnFields(final GenerationConfiguration configuration, final GenerationContext context, final Object resultObj) {
-        try {
             final List<Field> allFieldsToSetValues = getFieldForValueSetting(context);
             final Map<String, ExtendedPropertyDescriptor> propertyDescriptorMap = getPropertyDescriptorMap(context);
             for (Field each : allFieldsToSetValues){
@@ -62,14 +62,19 @@ class NotNativeClassGenerator extends Generator {
                 pushedContext.setField(each);
                 pushedContext.setFieldPropertyDescriptor(fieldPropertyDesc);
                 Object generatedValueForField = generateForHierarchy(configuration, pushedContext);
-                each.set(resultObj, generatedValueForField);
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+				tryToSetValueOnField(resultObj, each, generatedValueForField);
+			}
     }
 
-    private Class<?> getMostSpecificFieldType(Field each, ExtendedPropertyDescriptor fieldPropertyDesc) {
+	private void tryToSetValueOnField(final Object resultObj, final Field field, final Object generatedValueForField) {
+		try {
+			field.set(resultObj, generatedValueForField);
+		} catch (IllegalAccessException e) {
+			throw new GenerationException("could not set value on field="+field, e);
+		}
+	}
+
+	private Class<?> getMostSpecificFieldType(Field each, ExtendedPropertyDescriptor fieldPropertyDesc) {
         if (fieldPropertyDesc != null) return fieldPropertyDesc.getMostSpecificPropertyType();
         return each.getType();
     }

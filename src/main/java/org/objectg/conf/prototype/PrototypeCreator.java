@@ -53,23 +53,17 @@ public class PrototypeCreator {
         try {
             return createPrototypeForConcreteClass(clazz);
         } catch (NotFoundException e) {
-            //TODO: review exception throw
-            throw new RuntimeException(e);
+            throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
         } catch (CannotCompileException e) {
-            //TODO: review exception throw
-            throw new RuntimeException(e);
+			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
         } catch (InstantiationException e) {
-            //TODO: review exception throw
-            throw new RuntimeException(e);
+			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
         } catch (IllegalAccessException e) {
-            //TODO: review exception throw
-            throw new RuntimeException(e);
+			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
         } catch (NoSuchFieldException e) {
-            //TODO: review exception throw
-            throw new RuntimeException(e);
+			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
         } catch (ClassNotFoundException e) {
-            //TODO: review exception throw
-            throw new RuntimeException(e);
+			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
         }
     }
 

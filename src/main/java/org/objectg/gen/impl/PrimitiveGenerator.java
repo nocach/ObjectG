@@ -1,9 +1,5 @@
 package org.objectg.gen.impl;
 
-import org.objectg.conf.GenerationConfiguration;
-import org.objectg.gen.GenerationContext;
-import org.objectg.gen.Generator;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -12,6 +8,11 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.objectg.conf.GenerationConfiguration;
+import org.objectg.gen.GenerationContext;
+import org.objectg.gen.GenerationException;
+import org.objectg.gen.Generator;
 
 /**
  * <p>
@@ -55,7 +56,7 @@ class PrimitiveGenerator extends Generator {
             if (Object.class.equals(generatedClass)) return new Object();
             throw new IllegalArgumentException("can't generate value of type " + context);
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("can't generate value of type " + context, e);
+            throw new GenerationException("can't generate value of type " + context, e);
         }
     }
 

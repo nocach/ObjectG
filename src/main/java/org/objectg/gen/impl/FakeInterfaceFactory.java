@@ -1,10 +1,5 @@
 package org.objectg.gen.impl;
 
-import javassist.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -13,6 +8,17 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.CtMethod;
+import javassist.CtNewMethod;
+import javassist.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * User: __nocach
@@ -42,13 +48,13 @@ class FakeInterfaceFactory {
                 return (T) fakeImplementationClass.newInstance();
             }
         } catch (NotFoundException e) {
-            throw new RuntimeException(e);
+            throw new FakeInterfaceException("could not create fake interface for class="+interfaze.getName(), e);
         } catch (CannotCompileException e) {
-            throw new RuntimeException(e);
+			throw new FakeInterfaceException("could not create fake interface for class="+interfaze.getName(), e);
         } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+			throw new FakeInterfaceException("could not create fake interface for class="+interfaze.getName(), e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+			throw new FakeInterfaceException("could not create fake interface for class="+interfaze.getName(), e);
         }
     }
 

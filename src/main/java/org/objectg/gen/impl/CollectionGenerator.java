@@ -1,14 +1,14 @@
 package org.objectg.gen.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
 import org.objectg.gen.Generator;
 import org.objectg.util.Generics;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 
 /**
  * User: __nocach
@@ -73,10 +73,10 @@ abstract class CollectionGenerator<CollectionT> extends Generator {
             return (CollectionT)context.getClassThatIsGenerated().newInstance();
         } catch (InstantiationException e) {
             throw new GenerationException("could not generated instance of collection.type="
-                    +context.getClassThatIsGenerated(), e);
+                    +context.getClassThatIsGenerated(), context, e);
         } catch (IllegalAccessException e) {
             throw new GenerationException("could not generated instance of collection.type="
-                    +context.getClassThatIsGenerated(), e);
+                    +context.getClassThatIsGenerated(), context, e);
         }
     }
 

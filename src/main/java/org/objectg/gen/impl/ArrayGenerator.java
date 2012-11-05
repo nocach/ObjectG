@@ -1,15 +1,15 @@
 package org.objectg.gen.impl;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
 import org.objectg.gen.Generator;
 import org.objectg.gen.GeneratorRegistry;
-
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
 
 /**
  * User: __nocach
@@ -21,7 +21,7 @@ class ArrayGenerator extends Generator {
         try {
             return createArray(configuration, context);
         } catch (ClassNotFoundException e) {
-            throw new GenerationException(e);
+            throw new GenerationException(e, configuration, context);
         }
     }
 
