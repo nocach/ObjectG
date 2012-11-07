@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +17,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.CtNewMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
 import org.objectg.conf.exception.ConfigurationException;
@@ -53,23 +56,23 @@ public class PrototypeCreator {
         try {
             return createPrototypeForConcreteClass(clazz);
         } catch (NotFoundException e) {
-            throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
+            throw new PrototypeCreationException("could not create prototype for class="+clazz.getName(), e);
         } catch (CannotCompileException e) {
-			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
+			throw new PrototypeCreationException("could not create prototype for class="+clazz.getName(), e);
         } catch (InstantiationException e) {
-			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
+			throw new PrototypeCreationException("could not create prototype for class="+clazz.getName(), e);
         } catch (IllegalAccessException e) {
-			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
+			throw new PrototypeCreationException("could not create prototype for class="+clazz.getName(), e);
         } catch (NoSuchFieldException e) {
-			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
+			throw new PrototypeCreationException("could not create prototype for class="+clazz.getName(), e);
         } catch (ClassNotFoundException e) {
-			throw new PrototypeCreationException("could not creation prototype for class="+clazz.getName(), e);
+			throw new PrototypeCreationException("could not create prototype for class="+clazz.getName(), e);
         }
     }
 
     private <T> T createPrototypeForConcreteClass(Class<T> clazz) throws NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Class interceptedClass = interceptClass(clazz);
-        T modifiedInstance = (T)createdInterceptedClass(interceptedClass);
+        T modifiedInstance = (T) createInterceptedClassInstance(interceptedClass);
         configurationHandler.onInit(modifiedInstance);
         return modifiedInstance;
     }
@@ -86,7 +89,7 @@ public class PrototypeCreator {
         return resultPrototypeInterface;
     }
 
-    private <T> T createdInterceptedClass(Class interceptedClass) throws InstantiationException, IllegalAccessException, NoSuchFieldException {
+    private <T> T createInterceptedClassInstance(Class interceptedClass) throws InstantiationException, IllegalAccessException, NoSuchFieldException {
         T modifiedInstance = (T) interceptedClass.newInstance();
 
         Field handlerField = modifiedInstance.getClass().getDeclaredField(FIELD_NAME_OF_PROTOTYPE_HANDLER);
@@ -101,7 +104,7 @@ public class PrototypeCreator {
             //if we have already intercepted this class, then no need to create new one
             return Class.forName(getNameForInterceptedClass(originalClass));
         }
-        CtClass interceptedClass = createInterceptedClass(originalClass);
+        CtClass interceptedClass = createInterceptedCtClass(originalClass);
         addHandlerField(interceptedClass);
         interceptSetters(interceptedClass);
         interceptGetters(interceptedClass);
@@ -116,18 +119,30 @@ public class PrototypeCreator {
     }
 
     private void interceptGetters(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
-        for (CtMethod each : interceptedClass.getDeclaredMethods()){
+        for (CtMethod each : getAllDelcaredMethods(interceptedClass)){
             if (isGetterMethod(each) && !isVoidReturn(each)){
-                interceptGetter(each);
+                interceptGetter(interceptedClass, each);
             }
         }
     }
 
-    private void interceptGetter(CtMethod method) throws NotFoundException, CannotCompileException {
+	private Iterable<CtMethod> getAllDelcaredMethods(final CtClass interceptedClass) throws NotFoundException {
+		Set<CtMethod> result = new HashSet<CtMethod>();
+		CtClass objectClass = ClassPool.getDefault().get(Object.class.getName());
+		CtClass current = interceptedClass;
+		while(!current.equals(objectClass)){
+			result.addAll(Arrays.asList(current.getDeclaredMethods()));
+			current = current.getSuperclass();
+		}
+		return result;
+	}
+
+	private void interceptGetter(CtClass interceptedClass, CtMethod method) throws NotFoundException, CannotCompileException {
         boolean isVoidReturn = isVoidReturn(method);
 		if (isNotInterceptable(method)) return;
         if (!isVoidReturn){
             String propertyName = extractPropertyNameOfGetterSetter(method);
+			method = getMethodThatSeesObjectGFields(interceptedClass, method);
             /**
              * {
              *  return prototypeHandler.newPrototypeFromGetter(this, ReturnType.class, propertyName);
@@ -161,9 +176,9 @@ public class PrototypeCreator {
     }
 
     private void interceptSetters(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
-        for (CtMethod each : interceptedClass.getDeclaredMethods()){
+        for (CtMethod each : getAllDelcaredMethods(interceptedClass)){
             if (isSetterMethod(each)){
-                setBodyToInvokeConfigurationHandler(each);
+                setBodyToInvokeConfigurationHandler(interceptedClass, each);
             }
         }
 
@@ -179,21 +194,46 @@ public class PrototypeCreator {
                 && paramLength == 1;
     }
 
-    private void setBodyToInvokeConfigurationHandler(CtMethod method) throws NotFoundException, CannotCompileException {
+    private void setBodyToInvokeConfigurationHandler(final CtClass interceptedClass, CtMethod method) throws NotFoundException, CannotCompileException {
 		if (isNotInterceptable(method)) return;
         String propertyName = extractPropertyNameOfGetterSetter(method);
-        //basically it looks like this:
+		method = getMethodThatSeesObjectGFields(interceptedClass, method);
+		String returnStatement = isVoidReturn(method) ? "return;" : "return null;";
+		//basically it looks like this:
         // {
         //   prototypeHandler.onSetter(this, $firstArg, propertyName);
         //   return;
         // }
-        method.insertBefore(
+        method.setBody(
 				"{" +
 						FIELD_NAME_OF_PROTOTYPE_HANDLER + ".onSetter(this, ($w)$1, \"" + propertyName + "\");" +
+						returnStatement +
 						"}");
     }
 
-    private boolean isVoidReturn(CtMethod each) throws NotFoundException {
+	private CtMethod getMethodThatSeesObjectGFields(final CtClass interceptedClass, CtMethod method)
+			throws CannotCompileException {
+		if (!method.getDeclaringClass().equals(interceptedClass)){
+			//from javassist tutorial
+			//For example, if class Point declares method move() and a subclass ColorPoint of
+			// Point does not override move(), the two move() methods declared in Point and
+			// inherited in ColorPoint are represented by the identical CtMethod object.
+			// If the method definition represented by this CtMethod object is modified,
+			// the modification is reflected on both the methods. If you want to modify only
+			// the move() method in ColorPoint, you first have to add to ColorPoint a copy of
+			// the CtMethod object representing move() in Point. A copy of the the CtMethod
+			// object can be obtained by CtNewMethod.copy().
+
+			//need to do this, because we add our handler field to the intercepted class, and this
+			//field is NOT visible from methods that are inherited. So we copy method to the intercepted class
+			//so it can see and use our added handler field.
+			method = CtNewMethod.copy(method, interceptedClass, null);
+			interceptedClass.addMethod(method);
+		}
+		return method;
+	}
+
+	private boolean isVoidReturn(CtMethod each) throws NotFoundException {
         CtClass vVoidClass = ClassPool.getDefault().get(Void.class.getName());
         CtClass vvoidClass = ClassPool.getDefault().get(void.class.getName());
         return each.getReturnType().equals(vVoidClass) || each.getReturnType().equals(vvoidClass);
@@ -214,7 +254,7 @@ public class PrototypeCreator {
                 .toString();
     }
 
-    private <T> CtClass createInterceptedClass(Class<T> clazz) throws NotFoundException, CannotCompileException {
+    private <T> CtClass createInterceptedCtClass(Class<T> clazz) throws NotFoundException, CannotCompileException {
         ClassPool classPool = ClassPool.getDefault();
         CtClass interceptedClass = classPool.get(clazz.getName());
         interceptedClass.setName(getNameForInterceptedClass(clazz));
@@ -253,13 +293,13 @@ public class PrototypeCreator {
 
     private void addHandlerField(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
         CtClass configurationHandlerCtType = ClassPool.getDefault().get(
-                PrototypeSetterHandler.class.getName());
-        CtField ctField = new CtField(configurationHandlerCtType, FIELD_NAME_OF_PROTOTYPE_HANDLER, interceptedClass);
+				PrototypeSetterHandler.class.getName());
+		CtField ctField = new CtField(configurationHandlerCtType, FIELD_NAME_OF_PROTOTYPE_HANDLER, interceptedClass);
         ctField.setModifiers(Modifier.PUBLIC);
-        interceptedClass.addField(ctField);
+		interceptedClass.addField(ctField);
     }
 
-    public List<GenerationRule> getRules(Object prototype) {
+	public List<GenerationRule> getRules(Object prototype) {
         return configurationHandler.getRules(prototype);
     }
 

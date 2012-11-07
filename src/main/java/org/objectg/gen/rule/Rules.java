@@ -49,12 +49,12 @@ public class Rules {
         return setDefinition(clazzOfObjects, 1);
     }
 
-    public static GenerationRule setDefinition(Class<String> clazzOfObjects, int size) {
+    public static GenerationRule setDefinition(Class clazzOfObjects, int size) {
         Assert.isTrue(size >= 0, "size must be >= 0");
         return new GenericSetGenerationRule(clazzOfObjects, size);
     }
 
-    public static GenerationRule setDefinition(Class<String> clazzOfObjects, Object... values) {
+    public static GenerationRule setDefinition(Class clazzOfObjects, Object... values) {
         HashSet setWithValues = new HashSet();
         for (Object each: values){
             setWithValues.add(each);
@@ -82,5 +82,9 @@ public class Rules {
 
 	public static GenerationRule contextOverride(GenerationContextTransformer contextTransformer){
 		return new OverrideContextGenerationRule(contextTransformer);
+	}
+
+	public static GenerationRule generatedObject() {
+		return null;
 	}
 }

@@ -1,5 +1,9 @@
 package org.objectg.conf;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
@@ -7,10 +11,6 @@ import org.objectg.conf.exception.PrototypeMisuseException;
 import org.objectg.fixtures.DerivedInterface;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.ITour;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
@@ -262,6 +262,17 @@ public class PrototypeConfigTest {
         assertEquals("prototypedTour", generated.getTour().getName());
     }
 
+	@Test
+	public void prototypeWorksWithInheritedMethods(){
+		final PersonExtended prototype = ObjectG.prototype(PersonExtended.class);
+		prototype.getHomeAddress().setStreet("streetPrototyped");
+		prototype.setName("namePrototyped");
+
+		final PersonExtended generated = ObjectG.unique(prototype);
+		assertEquals("namePrototyped", generated.getName());
+		assertEquals("streetPrototyped", generated.getHomeAddress().getStreet());
+	}
+
     public static class ClassWithCollectionA{
         private ClassWithCollectionB classB;
         private List<String> stringList;
@@ -396,5 +407,17 @@ public class PrototypeConfigTest {
             this.property = property;
         }
     }
+
+	public static class PersonExtended extends Person{
+		private Address homeAddress;
+
+		public Address getHomeAddress() {
+			return homeAddress;
+		}
+
+		public void setHomeAddress(final Address homeAddress) {
+			this.homeAddress = homeAddress;
+		}
+	}
 
 }

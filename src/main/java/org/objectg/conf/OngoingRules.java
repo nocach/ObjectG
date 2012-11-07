@@ -47,22 +47,33 @@ public class OngoingRules {
         return null;
     }
 
-    public static Set setDefinition(Class clazzOfObjects) {
+    public static <T> Set<T> setDefinition(Class<T> clazzOfObjects) {
         return setDefinition(clazzOfObjects, 1);
     }
 
-    public static Set setDefinition(Class<String> clazzOfObjects, int size) {
+    public static <T> Set<T> setDefinition(Class<T> clazzOfObjects, int size) {
         Assert.isTrue(size >= 0, "size must be >= 0");
         OngoingConfiguration.plannedRule = Rules.setDefinition(clazzOfObjects, size);
         return null;
     }
 
-    public static Set setDefinition(Class<String> clazzOfObjects, Object... values) {
+    public static <T> Set<T> setDefinition(Class<T> clazzOfObjects, T... values) {
         HashSet setWithValues = new HashSet();
-        for (Object each: values){
+        for (T each: values){
             setWithValues.add(each);
         }
         OngoingConfiguration.plannedRule = Rules.setDefinition(clazzOfObjects, values);
         return null;
     }
+
+	/**
+	 * You need to explicitly type this method call. E.g. Person.setChild(OngoingRules.<Person>generatedObject()).
+	 * This is due to the fact, that Java can't infer type without any object passing as arg, that can help in type
+	 * determining. Must be typed by the expecting type of the setter, from which this OngoingRule was called
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> T generatedObject() {
+		return null;
+	}
 }
