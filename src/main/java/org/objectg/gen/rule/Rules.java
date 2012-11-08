@@ -37,7 +37,7 @@ public class Rules {
         return new GenericListGenerationRule(clazzOfObjects, size);
     }
 
-    public static GenerationRule listDefinition(Class clazzOfObjects, Object... values) {
+    public static GenerationRule listDefinition(Object... values) {
         return new SingleValueGenerationRule(Arrays.asList(values));
     }
 

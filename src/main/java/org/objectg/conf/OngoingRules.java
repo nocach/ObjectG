@@ -37,8 +37,8 @@ public class OngoingRules {
         return null;
     }
 
-    public static <T> List<T> listDefinition(Class clazzOfObjects, Object... values) {
-        OngoingConfiguration.plannedRule = Rules.listDefinition(clazzOfObjects, values);
+    public static <T> List<T> listDefinition(Object... values) {
+        OngoingConfiguration.plannedRule = Rules.listDefinition(values);
         return null;
     }
 

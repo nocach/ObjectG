@@ -145,7 +145,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void configurateClassForGenericListFieldCanDefineValues(){
         ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
-        prototype.setGenericList(OngoingRules.listDefinition(String.class, "one", "two"));
+        prototype.setGenericList(OngoingRules.listDefinition("one", "two"));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
