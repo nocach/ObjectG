@@ -57,12 +57,12 @@ public class OngoingRules {
         return null;
     }
 
-    public static <T> Set<T> setDefinition(Class<T> clazzOfObjects, T... values) {
+    public static <T> Set<T> setDefinition(T... values) {
         HashSet setWithValues = new HashSet();
         for (T each: values){
             setWithValues.add(each);
         }
-        OngoingConfiguration.plannedRule = Rules.setDefinition(clazzOfObjects, values);
+        OngoingConfiguration.plannedRule = Rules.setDefinition(values);
         return null;
     }
 

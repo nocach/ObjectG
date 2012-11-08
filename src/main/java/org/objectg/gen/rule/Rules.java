@@ -54,7 +54,7 @@ public class Rules {
         return new GenericSetGenerationRule(clazzOfObjects, size);
     }
 
-    public static GenerationRule setDefinition(Class clazzOfObjects, Object... values) {
+    public static <T> GenerationRule setDefinition(T... values) {
         HashSet setWithValues = new HashSet();
         for (Object each: values){
             setWithValues.add(each);

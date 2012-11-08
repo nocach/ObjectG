@@ -1,13 +1,21 @@
 package org.objectg.gen;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.OngoingRules;
 
-import java.util.*;
-
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * User: __nocach
@@ -149,7 +157,7 @@ public class CollectionsGeneratorTest {
     @Test
     public void configurateClassForGenericSetFieldCanDefineValues(){
         ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
-        prototype.setGenericSet(OngoingRules.setDefinition(String.class, "one", "two"));
+        prototype.setGenericSet(OngoingRules.setDefinition("one", "two"));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
