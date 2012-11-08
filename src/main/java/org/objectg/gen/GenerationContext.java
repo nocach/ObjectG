@@ -147,4 +147,8 @@ public class GenerationContext<T> {
     public void setParentObject(Object parentObject) {
         this.parentObject = parentObject;
     }
+
+	public Object getRootObject() {
+		return hierarchy.getRoot();
+	}
 }

@@ -85,6 +85,6 @@ public class Rules {
 	}
 
 	public static GenerationRule generatedObject() {
-		return null;
+		return new SetGeneratedObjectGenerationRule();
 	}
 }

@@ -74,6 +74,7 @@ public class OngoingRules {
 	 * @return
 	 */
 	public static <T> T generatedObject() {
+		OngoingConfiguration.plannedRule = Rules.generatedObject();
 		return null;
 	}
 }

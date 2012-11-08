@@ -67,4 +67,8 @@ class Hierarchy {
     public boolean isEmpty() {
         return hierarchyClass.isEmpty();
     }
+
+	public Object getRoot() {
+		return hierarchyObject.get(0);
+	}
 }
