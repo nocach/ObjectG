@@ -1,12 +1,12 @@
-package org.objectg.conf.local;
+package org.objectg.conf;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.objectg.conf.GenerationConfiguration;
 import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
 import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.conf.local.ConfigurationDiscover;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.springframework.util.Assert;
 
