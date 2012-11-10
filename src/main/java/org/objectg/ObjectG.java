@@ -84,13 +84,14 @@ public class ObjectG {
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
         addDefaultRules(configuration);
-		GenerationConfiguration finalConfiguration = CONFIGURATION_MANAGER.getFinalConfiguration(configuration);
+		GenerationConfiguration finalConfiguration = CONFIGURATION_MANAGER
+				.getFinalConfiguration(PROTOTYPE_CREATOR, configuration);
         T result = (T) GeneratorRegistry.getInstance().generate(finalConfiguration, GenerationContext.createRoot(clazz));
         configuration.postProcess(result);
         return result;
     }
 
-    private static void addDefaultRules(GenerationConfiguration configuration) {
+	private static void addDefaultRules(GenerationConfiguration configuration) {
         configuration.addAllRules(Rules.defaultRules());
     }
 
@@ -101,18 +102,7 @@ public class ObjectG {
     }
 
     private static List<GenerationRule> rulesFromPrototypes(Object... prototypes){
-        List<GenerationRule> result = new ArrayList<GenerationRule>();
-        for (Object each : prototypes){
-            List<GenerationRule> rules = PROTOTYPE_CREATOR.getRules(each);
-            if (rules == null){
-                logger.debug("no rules contained in configurationHanlder for object " + each
-                    +" was this object created using ObjectG.prototype(Class)?");
-            }
-            else {
-                result.addAll(rules);
-            }
-        }
-        return result;
+        return PROTOTYPE_CREATOR.getRulesFromPrototypes(prototypes);
     }
 
     /**

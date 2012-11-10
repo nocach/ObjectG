@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,8 @@ import javassist.NotFoundException;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.gen.GenerationRule;
 import org.objectg.util.Types;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -39,6 +42,8 @@ public class PrototypeCreator {
     public static final String FIELD_NAME_OF_PROTOTYPE_HANDLER = "$objectgPrototypeCreatorHandler";
     public static final int SETTER_PREFIX_LENGTH = 3;
     public static final int GETTER_PREFIX_LENGTH = 3;
+	private static Logger logger = LoggerFactory.getLogger(PrototypeCreator.class);
+
     private PrototypeSetterHandler configurationHandler;
     private Map<Object, Class> proxyToRealClass = new ConcurrentHashMap<Object, Class>();
 
@@ -302,6 +307,21 @@ public class PrototypeCreator {
 	public List<GenerationRule> getRules(Object prototype) {
         return configurationHandler.getRules(prototype);
     }
+
+	public List<GenerationRule> getRulesFromPrototypes(Object... prototypes){
+		List<GenerationRule> result = new ArrayList<GenerationRule>();
+		for (Object each : prototypes){
+			List<GenerationRule> rules = getRules(each);
+			if (rules == null){
+				logger.debug("no rules contained in configurationHandler for object " + each
+						+" was this object created using ObjectG.prototype(Class)?");
+			}
+			else {
+				result.addAll(rules);
+			}
+		}
+		return result;
+	}
 
     private static class CallSetterHandler implements InvocationHandler{
 

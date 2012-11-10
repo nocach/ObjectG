@@ -8,7 +8,7 @@ import org.objectg.gen.GenerationRule;
  * User: __nocach
  * Date: 8.11.12
  */
-public class SetGeneratedObjectGenerationRule extends GenerationRule {
+class SetGeneratedObjectGenerationRule extends GenerationRule {
 	@Override
 	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		return context.getRootObject();

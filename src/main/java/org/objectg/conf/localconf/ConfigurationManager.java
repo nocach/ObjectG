@@ -4,7 +4,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.objectg.conf.GenerationConfiguration;
+import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
+import org.objectg.conf.defaults.ObjectGConfiguration;
 import org.objectg.conf.exception.ConfigurationException;
+import org.objectg.conf.prototype.PrototypeCreator;
 import org.springframework.util.Assert;
 
 /**
@@ -39,6 +42,7 @@ public class ConfigurationManager {
 	public void register(Object objectWithConfiguration){
 		final GenerationConfiguration generationConfiguration = configurationDiscover.get(objectWithConfiguration);
 		if (generationConfiguration == null) return;
+		generationConfiguration.setLevel(GenerationConfiguration.LEVEL.LOCAL);
 		Class<?> classWithLocalConfiguration = getCallingClass();
 		classToConfiguration.put(classWithLocalConfiguration, generationConfiguration);
 	}
@@ -70,18 +74,22 @@ public class ConfigurationManager {
 		return classToConfiguration.get(getCallingClass());
 	}
 
-	public GenerationConfiguration getFinalConfiguration(final GenerationConfiguration userConfiguration) {
+	public GenerationConfiguration getFinalConfiguration(PrototypeCreator prototypeCreator
+			, GenerationConfiguration userConfiguration) {
 		GenerationConfiguration localConfiguration = get();
 		if (localConfiguration == null){
-			localConfiguration = new GenerationConfiguration();
+			localConfiguration = new GenerationConfiguration(GenerationConfiguration.LEVEL.LOCAL);
 		}
-		//local changes need to be cloned, so further invocation of getFinalConfiguration
-		// returns originally set localConfiguration
-		GenerationConfiguration finalConfiguration = localConfiguration.clone();
-		//override all changes that were set by user
-		finalConfiguration.merge(userConfiguration);
-		//init the defaults
-		finalConfiguration.init();
-		return finalConfiguration;
+		GenerationConfiguration finalLocalConfiguration = localConfiguration.clone();
+		finalLocalConfiguration = mergeDefaultConfiguration(prototypeCreator, finalLocalConfiguration);
+		userConfiguration.merge(finalLocalConfiguration);
+		userConfiguration.init();
+		return userConfiguration;
+	}
+
+	private GenerationConfiguration mergeDefaultConfiguration(PrototypeCreator prototypeCreator, GenerationConfiguration configuration) {
+		ObjectGConfiguration defaultConfiguration = DefaultConfigurationProviderHolder.get().getDefaultConfiguration();
+		configuration = (defaultConfiguration != null ? defaultConfiguration.merge(prototypeCreator, configuration) : configuration);
+		return configuration;
 	}
 }

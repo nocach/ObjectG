@@ -1,5 +1,6 @@
 package org.objectg.conf;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +45,16 @@ public class GenerationConfiguration implements Cloneable{
      * how many objects to generate into collections
      */
     private Integer objectsInCollections;
+	private LEVEL level;
 
+	public GenerationConfiguration(){
+		this(LEVEL.USER);
+	}
+
+	public GenerationConfiguration(LEVEL level){
+		Assert.notNull(level, "level");
+		this.level = level;
+	}
 
 
     public void addRule(GenerationRule rule) {
@@ -121,7 +131,7 @@ public class GenerationConfiguration implements Cloneable{
                 '}';
     }
 
-    public void addAllRules(List<GenerationRule> newRules) {
+    public void addAllRules(Collection<? extends GenerationRule> newRules) {
         this.rules.addAll(newRules);
     }
 
@@ -155,24 +165,33 @@ public class GenerationConfiguration implements Cloneable{
 
 	/**
 	 * merge all information from passed configuration into this instance
-	 * @param configuration
+	 * @param thatConfiguration
 	 */
-	public void merge(final GenerationConfiguration configuration) {
+	public void merge(final GenerationConfiguration thatConfiguration) {
+		//if some this.property is set then we can override it with that.property from
+		//configuration we merge, only if that.level configuration is bigger then this.level
+		//e.g. this.level=LOCAL and we merge that.level=USER.
+		//During this merge we WANT to override any property that is defined in both configurations
+		//but for reverse this is not true
+		boolean canOverride = thatConfiguration.level.compareTo(this.level) > 0;
 		//only those properties that are defined in passed configuration
 		//will be set
-		//This is need, because if some this.property isn't null and that.property is
-		//then in a result this.property will be null but DEFAULT will be used instead
-		if (configuration.cycleStrategy != null){
-			cycleStrategy = configuration.cycleStrategy;
+		//This is need, because if some this.property isn't null and that.property is null
+		//then in a result this.property will be set to null but DEFAULT will be used instead
+		if (thatConfiguration.cycleStrategy != null){
+			if (this.cycleStrategy == null || canOverride)
+				cycleStrategy = thatConfiguration.cycleStrategy;
 		}
-		if (configuration.isUnique != null){
-			isUnique = configuration.isUnique;
+		if (thatConfiguration.isUnique != null){
+			if (this.isUnique == null || canOverride)
+				isUnique = thatConfiguration.isUnique;
 		}
-		if (configuration.objectsInCollections != null){
-			objectsInCollections = configuration.objectsInCollections;
+		if (thatConfiguration.objectsInCollections != null){
+			if (this.objectsInCollections == null || canOverride)
+				objectsInCollections = thatConfiguration.objectsInCollections;
 		}
-		rules.addAll(configuration.rules);
-		postProcessors.addAll(configuration.postProcessors);
+		rules.addAll(thatConfiguration.rules);
+		postProcessors.addAll(thatConfiguration.postProcessors);
 	}
 
 	/**
@@ -191,5 +210,31 @@ public class GenerationConfiguration implements Cloneable{
 			objectsInCollections = 1;
 		}
 		wasInit = true;
+	}
+
+	public void addAllPostProcessors(final Collection<? extends PostProcessor> postProcessors) {
+		this.postProcessors.addAll(postProcessors);
+	}
+
+	public void setLevel(final LEVEL level) {
+		this.level = level;
+	}
+
+	/**
+	 * level on which this configuration should be applied
+	 */
+	public static enum LEVEL{
+		/**
+		 * configuration should be applied for every generation
+		 */
+		GLOBAL,
+		/**
+		 * configuration should be applied for single test case
+		 */
+		LOCAL,
+		/**
+		 * configuration should be applied for single generation
+		 */
+		USER
 	}
 }
