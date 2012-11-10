@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.objectg.ObjectG;
-import org.objectg.conf.defaults.ObjectGConfiguration;
+import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.fixtures.domain.Departure;
 import org.objectg.fixtures.domain.Guide;
 import org.objectg.fixtures.domain.Person;
@@ -25,7 +25,7 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 
 	@Test
 	public void emptyConfigurationWorks(){
-		fakeConfigurationProvider.defaultConfiguration = new ObjectGConfiguration(){
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration(){
 		};
 
 		final Person generated = ObjectG.unique(Person.class);
@@ -35,7 +35,7 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 	@Test
 	public void canDefineDefaultPrototypes(){
 		//setup
-		fakeConfigurationProvider.defaultConfiguration = new ObjectGConfiguration(){
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration(){
 			@Override
 			protected Collection<Object> getPrototypes() {
 				final Departure departure = ObjectG.prototype(Departure.class);
@@ -57,7 +57,7 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 
 	@Test
 	public void canDefineDefaultGenerationConfiguration(){
-		fakeConfigurationProvider.defaultConfiguration = new ObjectGConfiguration() {
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration() {
 			@Override
 			protected GenerationConfiguration getConfiguration() {
 				return ObjectG.config().setObjectsInCollection(2).done();
@@ -71,7 +71,7 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 
 	@Test
 	public void canDefineDefaultRules(){
-		fakeConfigurationProvider.defaultConfiguration = new ObjectGConfiguration() {
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration() {
 			@Override
 			protected Collection<GenerationRule> getRules() {
 				final GenerationRule firstNameRule = Rules.value("ruledFirstName");
@@ -87,7 +87,7 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 
 	@Test
 	public void canDefineDefaultPostProcessors(){
-		fakeConfigurationProvider.defaultConfiguration = new ObjectGConfiguration() {
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration() {
 			@Override
 			protected Collection<? extends PostProcessor> getPostProcessors() {
 				return asList(new PostProcessor() {

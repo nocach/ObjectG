@@ -8,10 +8,21 @@ import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
 
 /**
+ * <p>
+ *     To define global configuration create class with exact name ObjectGConfiguration in package
+ *     "org.objectg.conf". ObjectGConfiguration should extend AbstractObjectGConfiguration and define
+ *     any configuration that should be globally applied.
+ * </p>
+ * <p>
+ *     Configuration set by this way can be overriden by either local configuration
+ *     using {@link org.objectg.conf.localconf.ConfigurationProvider} or any test-specific configuration.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 8.11.12
+ * </p>
  */
-public abstract class ObjectGConfiguration {
+public abstract class AbstractObjectGConfiguration {
 	protected GenerationConfiguration getConfiguration(){
 		return null;
 	}

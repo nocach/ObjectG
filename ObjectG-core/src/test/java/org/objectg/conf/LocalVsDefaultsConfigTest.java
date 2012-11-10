@@ -2,7 +2,7 @@ package org.objectg.conf;
 
 import org.junit.Test;
 import org.objectg.ObjectG;
-import org.objectg.conf.defaults.ObjectGConfiguration;
+import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.conf.localconf.ConfigurationProvider;
 import org.objectg.fixtures.domain.Person;
 
@@ -29,7 +29,7 @@ public class LocalVsDefaultsConfigTest extends FakeConfigurationProviderBaseTest
 
 	@Test
 	public void localConfigurationOverridesDefaults(){
-		fakeConfigurationProvider.defaultConfiguration = new ObjectGConfiguration() {
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration() {
 			@Override
 			protected GenerationConfiguration getConfiguration() {
 				return ObjectG.config().setObjectsInCollection(3).done();

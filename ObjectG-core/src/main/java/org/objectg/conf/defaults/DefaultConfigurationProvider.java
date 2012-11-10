@@ -5,5 +5,5 @@ package org.objectg.conf.defaults;
  * Date: 8.11.12
  */
 public interface DefaultConfigurationProvider {
-	public ObjectGConfiguration getDefaultConfiguration();
+	public AbstractObjectGConfiguration getDefaultConfiguration();
 }

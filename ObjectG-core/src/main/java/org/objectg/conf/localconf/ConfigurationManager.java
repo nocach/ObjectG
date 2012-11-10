@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.objectg.conf.GenerationConfiguration;
+import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
-import org.objectg.conf.defaults.ObjectGConfiguration;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.springframework.util.Assert;
@@ -88,7 +88,7 @@ public class ConfigurationManager {
 	}
 
 	private GenerationConfiguration mergeDefaultConfiguration(PrototypeCreator prototypeCreator, GenerationConfiguration configuration) {
-		ObjectGConfiguration defaultConfiguration = DefaultConfigurationProviderHolder.get().getDefaultConfiguration();
+		AbstractObjectGConfiguration defaultConfiguration = DefaultConfigurationProviderHolder.get().getDefaultConfiguration();
 		configuration = (defaultConfiguration != null ? defaultConfiguration.merge(prototypeCreator, configuration) : configuration);
 		return configuration;
 	}

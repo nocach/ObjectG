@@ -11,5 +11,12 @@
 
     <artifactId>objectg-acceptance-test</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.nocach</groupId>
+            <artifactId>objectg</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

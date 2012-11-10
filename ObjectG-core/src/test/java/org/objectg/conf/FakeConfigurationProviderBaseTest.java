@@ -2,9 +2,9 @@ package org.objectg.conf;
 
 import org.junit.After;
 import org.junit.Before;
+import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.conf.defaults.DefaultConfigurationProvider;
 import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
-import org.objectg.conf.defaults.ObjectGConfiguration;
 
 /**
  * User: __nocach
@@ -27,10 +27,10 @@ public abstract class FakeConfigurationProviderBaseTest {
 
 	protected static class FakeConfigurationProvider implements DefaultConfigurationProvider{
 
-		protected ObjectGConfiguration defaultConfiguration;
+		protected AbstractObjectGConfiguration defaultConfiguration;
 
 		@Override
-		public ObjectGConfiguration getDefaultConfiguration() {
+		public AbstractObjectGConfiguration getDefaultConfiguration() {
 			return defaultConfiguration;
 		}
 	}
