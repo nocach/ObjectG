@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.ObjectG;
-import org.objectg.conf.localconf.ConfigurationProvider;
+import org.objectg.conf.local.ConfigurationProvider;
 import org.objectg.fixtures.ClassWithIPerson;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;

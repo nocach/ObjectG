@@ -9,7 +9,7 @@ import org.objectg.conf.ConfigurationBuilder;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.conf.OngoingConfiguration;
 import org.objectg.conf.exception.ConfigurationException;
-import org.objectg.conf.localconf.ConfigurationManager;
+import org.objectg.conf.local.ConfigurationManager;
 import org.objectg.conf.prototype.InterceptedByPrototypeCreator;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;

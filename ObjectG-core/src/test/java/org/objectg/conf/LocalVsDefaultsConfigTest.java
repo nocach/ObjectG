@@ -3,7 +3,7 @@ package org.objectg.conf;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.defaults.AbstractObjectGConfiguration;
-import org.objectg.conf.localconf.ConfigurationProvider;
+import org.objectg.conf.local.ConfigurationProvider;
 import org.objectg.fixtures.domain.Person;
 
 import static junit.framework.Assert.assertEquals;

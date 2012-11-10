@@ -15,7 +15,7 @@ import org.objectg.gen.PostProcessor;
  * </p>
  * <p>
  *     Configuration set by this way can be overriden by either local configuration
- *     using {@link org.objectg.conf.localconf.ConfigurationProvider} or any test-specific configuration.
+ *     using {@link org.objectg.conf.local.ConfigurationProvider} or any test-specific configuration.
  * </p>
  * <p>
  * User: __nocach

@@ -1,4 +1,4 @@
-package org.objectg.conf.localconf;
+package org.objectg.conf.local;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
