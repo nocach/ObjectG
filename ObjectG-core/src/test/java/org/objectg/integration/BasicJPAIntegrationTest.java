@@ -6,7 +6,8 @@ import org.objectg.fixtures.domain.Departure;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Person2Address;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * User: __nocach
@@ -20,10 +21,7 @@ public class BasicJPAIntegrationTest {
         Person2Address person2Address = generated.getEmployee2Addresses().get(0);
         Person person = person2Address.getPerson();
         assertEquals("should use mappedBy jpa hint", generated, person);
-        Person owner = person2Address.getOwner();
-        assertNull("owner should be null, because nullOnCycleStrategy must be used for it", owner);
         assertNotNull("dependentPersons should be set", person2Address.getDependentPersons());
-        assertEquals("dependentPersons should be empty", 0, person2Address.getDependentPersons().size());
     }
 
     @Test

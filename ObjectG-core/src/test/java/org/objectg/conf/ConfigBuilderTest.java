@@ -19,6 +19,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: __nocach
@@ -35,7 +36,7 @@ public class ConfigBuilderTest {
     @Test
     public void canConfigureRuleWithMatcher(){
         Person generated = ObjectG.unique(Person.class,
-                ObjectG.config().when(ContextMatchers.instancesOf(String.class)).rule(Rules.value("someValue")));
+                ObjectG.config().when(ContextMatchers.typeOf(String.class)).rule(Rules.value("someValue")));
 
         assertEquals("someValue", generated.getFirstName());
         assertEquals("someValue", generated.getMiddleName());
@@ -78,10 +79,11 @@ public class ConfigBuilderTest {
     @Test
     public void canUsePropertyExpressionToSetValue(){
         Person unique = ObjectG.unique(Person.class
-                , ObjectG.config()
-                .backReferenceCycle()
-                .when("employee2Addresses[0].owner.firstName")
-                .value("setByExpression"));
+				, ObjectG.config()
+				.onCycle()
+					.backReference()
+				.when("employee2Addresses[0].owner.firstName")
+				.value("setByExpression"));
 
         assertEquals("setByExpression", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
     }
@@ -118,11 +120,58 @@ public class ConfigBuilderTest {
 		assertThat(classWithIPerson.getPerson(), IsInstanceOf.instanceOf(Person.class));
 	}
 
+	@Test
+	public void specifiedImplementationIsUsedDuringWholeGeneration(){
+		final Book generated = ObjectG.unique(Book.class, ObjectG.config()
+				.onCycle().goDeeper(1)
+				.when(BasePage.class).useClass(TextPage.class));
+
+		assertTrue(generated.page instanceof TextPage);
+		assertTrue(generated.page.page2Paragraph.page instanceof TextPage);
+	}
+
     @Test
     @Ignore
     public void canInferPropertyTypeForExpressionMatchingCollection(){
         fail("when(employee2Addresses[0]) should work");
     }
+
+	public static class Book{
+		BasePage page;
+	}
+
+	public abstract static class BasePage{
+		private Page2Paragraph page2Paragraph;
+	}
+
+	public static class PicturePage extends BasePage{
+
+	}
+
+	public static class TextPage extends BasePage{
+
+	}
+
+	public static class Page2Paragraph{
+		private BasePage page;
+		private String paragraph;
+
+		public BasePage getPage() {
+			return page;
+		}
+
+		public void setPage(final BasePage page) {
+			this.page = page;
+		}
+
+		public String getParagraph() {
+			return paragraph;
+		}
+
+		public void setParagraph(final String paragraph) {
+			this.paragraph = paragraph;
+		}
+	}
 
     public static class ClassWithMap{
         private Map map;

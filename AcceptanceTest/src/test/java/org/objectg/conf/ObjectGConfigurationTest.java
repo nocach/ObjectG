@@ -8,8 +8,13 @@ import org.objectg.ObjectG;
 import static junit.framework.Assert.assertEquals;
 
 /**
+ * <p>
+ *     Test showing how ObjectGConfiguration definition works (see {@link ObjectGConfiguration}
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 10.11.12
+ * </p>
  */
 public class ObjectGConfigurationTest {
 

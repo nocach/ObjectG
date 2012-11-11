@@ -24,8 +24,8 @@ class Hierarchy {
         hierarchyObject.add(object);
     }
 
-    public boolean isCycle(Class nextClass) {
-        return hierarchyClass.contains(nextClass);
+    public boolean isCycle(Class clazz) {
+        return hierarchyClass.contains(clazz);
     }
 
     public void pop() {
@@ -70,5 +70,13 @@ class Hierarchy {
 
 	public Object getRoot() {
 		return hierarchyObject.get(0);
+	}
+
+	public int getCycleDepth(final Class clazz) {
+		int result = 0;
+		for (Class each : hierarchyClass){
+			if (each.equals(clazz)) result++;
+		}
+		return result;
 	}
 }

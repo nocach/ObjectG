@@ -18,12 +18,12 @@ import static org.hamcrest.Matchers.is;
  * </p>
  */
 public class ContextMatchers {
-    public static <U> ValueTypeHintMatcher<GenerationContext, U> instancesOf(Class<? extends U>... classes){
+    public static <U> ValueTypeHintMatcher<GenerationContext, U> typeOf(Class<? extends U>... classes){
         Assert.notEmpty(classes, "at least one class object should be provided");
         Assert.noNullElements(classes, "no null elements allowed");
         Matcher[] classMatchers = new Matcher[classes.length];
         for (int i = 0; i < classes.length; i++){
-            classMatchers[i] = Matchers.typeCompatibleWith(classes[i]);
+            classMatchers[i] = Matchers.equalTo(classes[i]);
         }
         return GenerationContextFeatures.forClass(Matchers.anyOf(classMatchers));
     }

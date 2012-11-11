@@ -8,8 +8,7 @@ import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
-import org.objectg.gen.cycle.BackReferenceCycleStrategy;
-import org.objectg.gen.cycle.NullValueCycleStrategy;
+import org.objectg.gen.cycle.CycleStrategy;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 import org.objectg.matcher.ValueTypeHintMatcher;
@@ -60,18 +59,8 @@ public class ConfigurationBuilder {
         return this;
     }
 
-    public ConfigurationBuilder backReferenceCycle() {
-        resultConfiguration.setCycleStrategy(new BackReferenceCycleStrategy());
-        return this;
-    }
-
     public GenerationConfiguration done() {
         return resultConfiguration;
-    }
-
-    public ConfigurationBuilder nullCycle() {
-        resultConfiguration.setCycleStrategy(new NullValueCycleStrategy());
-        return this;
     }
 
     /**
@@ -87,7 +76,7 @@ public class ConfigurationBuilder {
     public <T> WhenBuilder<T> forClass(Class<? extends T>... classes){
         Assert.isTrue(classes.length > 0, "should be at least one class");
         Assert.noNullElements(classes, "should not contain null elements");
-        return new WhenBuilder(ContextMatchers.instancesOf(classes), this);
+        return new WhenBuilder(ContextMatchers.typeOf(classes), this);
     }
 
     void addRule(GenerationRule rule) {
@@ -117,12 +106,21 @@ public class ConfigurationBuilder {
     }
 
 	public <T> WhenBuilder<T> when(final Class<T> clazz) {
-		return new WhenBuilder<T>(ContextMatchers.instancesOf(clazz), this);
+		return new WhenBuilder<T>(ContextMatchers.typeOf(clazz), this);
 	}
 
 	public ConfigurationBuilder setObjectsInCollection(final int objectsInCollection) {
 		Assert.isTrue(objectsInCollection >= 0 , "objectsInCollection should be >= 0");
 		resultConfiguration.setObjectsInCollections(objectsInCollection);
+		return this;
+	}
+
+	public CycleBuilder onCycle() {
+		return new CycleBuilder(this);
+	}
+
+	public ConfigurationBuilder setCycleStrategy(final CycleStrategy strategy) {
+		resultConfiguration.setCycleStrategy(strategy);
 		return this;
 	}
 }

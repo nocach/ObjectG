@@ -12,15 +12,17 @@ import org.springframework.util.Assert;
  */
 class OverrideContextGenerationRule extends GenerationRule {
 	private GenerationContextTransformer transformer;
+	private boolean permanent;
 
-	public OverrideContextGenerationRule(GenerationContextTransformer transformer){
+	public OverrideContextGenerationRule(GenerationContextTransformer transformer, final boolean permanent){
 		Assert.notNull(transformer, "transformer");
+		this.permanent = permanent;
 		this.transformer = transformer;
 	}
 	@Override
 	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		transformer.transform(context);
-		currentConfiguration.removeRule(this);
+		if (!permanent) currentConfiguration.removeRule(this);
 		return GeneratorRegistry.getInstance().generate(currentConfiguration, context);
 	}
 

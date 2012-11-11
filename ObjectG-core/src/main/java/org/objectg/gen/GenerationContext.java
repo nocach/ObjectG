@@ -151,4 +151,11 @@ public class GenerationContext<T> {
 	public Object getRootObject() {
 		return hierarchy.getRoot();
 	}
+
+	public int getCycleDepth() {
+		if (!isCycle()) {
+			throw new IllegalStateException("no cycle present");
+		}
+		return hierarchy.getCycleDepth(classThatIsGenerated);
+	}
 }

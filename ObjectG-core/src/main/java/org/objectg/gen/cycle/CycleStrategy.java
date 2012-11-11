@@ -8,7 +8,14 @@ import org.objectg.gen.GenerationContext;
  * Date: 30.9.12
  */
 public interface CycleStrategy {
-    public Object generateForCycle(GenerationConfiguration configuration, GenerationContext context);
+	/**
+	 *
+	 * @param configuration
+	 * @param context
+	 * @return
+	 * @throws MustIgnoreCycleException can be thrown if this cycle should be ignored
+	 */
+    public Object generateForCycle(GenerationConfiguration configuration, GenerationContext context) throws MustIgnoreCycleException;
 
     /**
      *

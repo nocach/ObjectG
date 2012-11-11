@@ -1,12 +1,13 @@
 package org.objectg.gen;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.objectg.ObjectG;
 
-import java.util.List;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -18,9 +19,10 @@ public class CyclicStrategyTests {
     @Test
     public void backReferenceStrategyBasic(){
         ClassA classA = ObjectG.unique(ClassA.class, ObjectG
-                .config()
-                .backReferenceCycle()
-                .done());
+				.config()
+				.onCycle()
+				.backReference()
+		);
 
         assertNotNull(classA.getClassB());
         assertEquals("classB must have classA set as first generated ClassA",
@@ -30,7 +32,7 @@ public class CyclicStrategyTests {
     @Test
     public void backReferenceStrategyCollection(){
         ClassARefCollectionB instance = ObjectG.unique(ClassARefCollectionB.class,
-                ObjectG.config().backReferenceCycle().done());
+                ObjectG.config().onCycle().backReference());
 
         assertNotNull("list must be set", instance.getClassBList());
         assertEquals("generated list be not empty", 1, instance.getClassBList().size());
@@ -45,25 +47,35 @@ public class CyclicStrategyTests {
         prototypeClassA.setClassB(ObjectG.prototype(ClassB.class));
 
         ClassA generatedA = ObjectG.unique(ClassA.class, ObjectG
-                .config()
-                .backReferenceCycle()
-                .done(), prototypeClassA);
+				.config()
+				.onCycle()
+				.backReference()
+				, prototypeClassA);
 
         assertEquals(generatedA, generatedA.getClassB().getClassA());
     }
 
     @Test
     public void nullCyclicStrategy(){
-        ClassA classA = ObjectG.unique(ClassA.class, ObjectG.config().nullCycle().done());
+        ClassA classA = ObjectG.unique(ClassA.class, ObjectG.config().onCycle().setNull());
         assertNotNull("classB should be generated", classA.getClassB());
         assertNull("classA referenced in ClassB should be null, because of cycle", classA.getClassB().getClassA());
     }
 
     @Test
     public void nullCyclicStrategyLeavesCollectionAsEmpty(){
-        ClassB classB = ObjectG.unique(ClassB.class, ObjectG.config().nullCycle().done());
+        ClassB classB = ObjectG.unique(ClassB.class, ObjectG.config().onCycle().setNull().done());
         assertEquals(0, classB.getClassARefCollectionB().getClassBList().size());
     }
+
+	@Test
+	public void generateUntilCyclicStrategy(){
+		final A generated = ObjectG.unique(A.class, ObjectG.config().onCycle().goDeeper(2));
+
+		assertNotSame(generated, generated.b.a);
+		assertNotSame(generated.b.a, generated.b.a.b.a);
+		assertNull(generated.b.a.b.a.b.a);
+	}
 
     public static class ClassA{
         private ClassB classB;
@@ -107,4 +119,11 @@ public class CyclicStrategyTests {
             this.classARefCollectionB = classARefCollectionB;
         }
     }
+
+	public static class A{
+		private B b;
+	}
+	public static class B{
+		private A a;
+	}
 }

@@ -11,7 +11,7 @@ import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
 import org.objectg.gen.cycle.CycleStrategy;
-import org.objectg.gen.cycle.NullValueCycleStrategy;
+import org.objectg.gen.cycle.GoDeeperCycleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -201,7 +201,7 @@ public class GenerationConfiguration implements Cloneable{
 	public void init() {
 		if (wasInit) return;
 		if (cycleStrategy == null){
-			cycleStrategy = new NullValueCycleStrategy();
+			cycleStrategy = new GoDeeperCycleStrategy(1);
 		}
 		if (isUnique == null){
 			isUnique = false;

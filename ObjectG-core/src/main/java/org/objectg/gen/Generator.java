@@ -1,6 +1,7 @@
 package org.objectg.gen;
 
 import org.objectg.conf.GenerationConfiguration;
+import org.objectg.gen.cycle.MustIgnoreCycleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,12 @@ public abstract class Generator {
             }
 
             if (context.isCycle()) {
-                return returnFromCycle(configuration, context);
+				try{
+                	return returnFromCycle(configuration, context);
+				}
+				catch (MustIgnoreCycleException e){
+					//as it says, ignore
+				}
             }
 
             T result = generateValue(configuration, context);

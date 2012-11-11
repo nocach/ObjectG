@@ -80,8 +80,25 @@ public class Rules {
         return new EmptyMapCollectionGenerationRule();
     }
 
+	/**
+	 *
+	 * @param contextTransformer not null
+	 * @return permanent contextOverride rule
+	 */
 	public static GenerationRule contextOverride(GenerationContextTransformer contextTransformer){
-		return new OverrideContextGenerationRule(contextTransformer);
+		boolean permanent = true;
+		return contextOverride(contextTransformer, permanent);
+	}
+
+	/**
+	 *
+	 * @param contextTransformer not null
+	 * @param permanent if this rule should be permanent (will be present during whole generation)
+	 * @return
+	 */
+	public static GenerationRule contextOverride(GenerationContextTransformer contextTransformer
+		, boolean permanent){
+		return new OverrideContextGenerationRule(contextTransformer, permanent);
 	}
 
 	public static GenerationRule generatedObject() {
