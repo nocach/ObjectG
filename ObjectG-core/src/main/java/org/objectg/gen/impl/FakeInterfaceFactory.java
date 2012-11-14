@@ -120,6 +120,7 @@ class FakeInterfaceFactory {
         BeanInfo beanInfo = Introspector.getBeanInfo(eachInterface);
         for (PropertyDescriptor each : beanInfo.getPropertyDescriptors()){
             if (doneProperties.contains(each.getName())) continue;
+			if (classHaveField(fakeImplementationCtClass, each.getName())) continue;
             CtField propertyField = addPropertyField(classPool, fakeImplementationCtClass, each);
             addPropertyGetter(fakeImplementationCtClass, each, propertyField);
             addPropertySetter(fakeImplementationCtClass, each, propertyField);
@@ -127,7 +128,17 @@ class FakeInterfaceFactory {
         }
     }
 
-    private void addPropertySetter(CtClass fakeImplementationCtClass, PropertyDescriptor each, CtField propertyField) throws CannotCompileException {
+	private boolean classHaveField(final CtClass ctClass, final String name) {
+		try{
+			ctClass.getField(name);
+		}
+		catch (NotFoundException e){
+			return false;
+		}
+		return true;
+	}
+
+	private void addPropertySetter(CtClass fakeImplementationCtClass, PropertyDescriptor each, CtField propertyField) throws CannotCompileException {
         if (each.getWriteMethod() != null){
             CtMethod fieldSetter = CtNewMethod.setter(each.getWriteMethod().getName(), propertyField);
             fakeImplementationCtClass.addMethod(fieldSetter);

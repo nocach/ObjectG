@@ -58,7 +58,6 @@ public abstract class Generator {
     }
 
     private <T> T returnFromRule(GenerationConfiguration configuration, GenerationContext<T> context, GenerationRule rule) {
-        logger.debug("found rule for conf="+configuration+" context="+context);
         return (T)rule.getValue(configuration, context);
     }
 

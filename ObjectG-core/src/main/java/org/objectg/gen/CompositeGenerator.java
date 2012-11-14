@@ -20,7 +20,7 @@ public class CompositeGenerator extends Generator{
         for (Generator each : generators){
             if (each.supportsType(context.getClassThatIsGenerated())){
                 logger.debug("found generator=" +each.getClass().getSimpleName()
-                        +" for conf="+configuration + " context="+context);
+                        +" \nconf="+configuration + " \ncontext="+context);
                 return each.generateValue(configuration, context);
             }
         }

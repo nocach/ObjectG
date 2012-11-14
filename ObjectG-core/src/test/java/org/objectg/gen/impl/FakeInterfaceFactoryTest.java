@@ -1,11 +1,11 @@
 package org.objectg.gen.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.objectg.fixtures.IMethods;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -123,6 +123,11 @@ public class FakeInterfaceFactoryTest {
         beanInterface.oneArg(1);
     }
 
+	@Test
+	public void willWorkWithOverriddenMethods(){
+		final SamePropertyDerived samePropertyDerived = factory.create(SamePropertyDerived.class);
+	}
+
     public static interface EmptyInterface{
     }
 
@@ -136,4 +141,16 @@ public class FakeInterfaceFactoryTest {
 
     public static interface BeanInterface extends BeanPropertiesInterface, NotBeanPropertiesInterface {
     }
+
+	public static interface SamePropertyBase{
+		public Long getId();
+		public void setId(Long id);
+	}
+
+	public static interface SamePropertyDerived extends SamePropertyBase{
+		@Override
+		Long getId();
+		@Override
+		void setId(Long id);
+	}
 }

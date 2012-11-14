@@ -24,11 +24,14 @@ public class GenerationException extends RuntimeException {
 
 	public GenerationException(final Throwable e, final GenerationConfiguration configuration,
 			final GenerationContext context) {
-		super("configuraiton="+configuration+", context="+context);
+		super("configuraiton="+configuration
+				+", context="+context
+				+", hierarchy=" + context.dumpHierarchy());
 	}
 
 	public GenerationException(final String message, final GenerationContext<?> context,
 			final Throwable e) {
-		super(message + " for context="+ context, e);
+		super(message + " for context="+ context
+				+", hierarchy=" + context.dumpHierarchy(), e);
 	}
 }

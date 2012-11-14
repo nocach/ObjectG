@@ -106,6 +106,7 @@ public class GenerationContext<T> {
     }
 
     public String dumpHierarchy() {
+		if (hierarchy == null) return null;
         return hierarchy.dump();
     }
 

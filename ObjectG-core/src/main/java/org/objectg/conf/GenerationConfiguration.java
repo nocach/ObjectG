@@ -80,7 +80,7 @@ public class GenerationConfiguration implements Cloneable{
 
         for(GenerationRule eachRule : rules){
             if (eachRule.matches(context)) {
-                logger.debug("rule=" +eachRule + " matched for context="+context);
+                logger.debug("rule=" +eachRule + " \nmatched context="+context);
                 return eachRule;
             }
         }
