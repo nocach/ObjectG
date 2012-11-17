@@ -42,6 +42,10 @@ public class ConfigurationManager {
 	public void register(Object objectWithConfiguration){
 		final GenerationConfiguration generationConfiguration = configurationDiscover.get(objectWithConfiguration);
 		if (generationConfiguration == null) return;
+		bindConfigurationToCallClass(generationConfiguration);
+	}
+
+	private void bindConfigurationToCallClass(final GenerationConfiguration generationConfiguration) {
 		generationConfiguration.setLevel(GenerationConfiguration.LEVEL.LOCAL);
 		Class<?> classWithLocalConfiguration = getCallingClass();
 		classToConfiguration.put(classWithLocalConfiguration, generationConfiguration);
@@ -91,5 +95,10 @@ public class ConfigurationManager {
 		AbstractObjectGConfiguration defaultConfiguration = DefaultConfigurationProviderHolder.get().getDefaultConfiguration();
 		configuration = (defaultConfiguration != null ? defaultConfiguration.merge(prototypeCreator, configuration) : configuration);
 		return configuration;
+	}
+
+	public void setLocalConfiguration(final GenerationConfiguration configuration) {
+		Assert.notNull(configuration, "configuration");
+		bindConfigurationToCallClass(configuration);
 	}
 }

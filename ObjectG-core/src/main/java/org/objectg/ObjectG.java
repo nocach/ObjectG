@@ -246,7 +246,29 @@ public class ObjectG {
         return new ConfigurationBuilder(PROTOTYPE_CREATOR);
     }
 
+	/**
+	 *
+	 * @param objectWithConfiguration e.g. TestCase having method with
+	 *                                   annotation {@link org.objectg.conf.local.ConfigurationProvider}
+	 */
 	public static void setupConfig(final Object objectWithConfiguration) {
 		CONFIGURATION_MANAGER.register(objectWithConfiguration);
+	}
+
+	/**
+	 * @param configurationBuilder not null configuration to use for all subsequent generations
+	 *                             in class that called this method
+	 */
+	public static void setupConfig(final ConfigurationBuilder configurationBuilder) {
+		setupConfig(configurationBuilder.done());
+	}
+
+	/**
+	 *
+	 * @param configuration not null configuration to use for all subsequent generations
+	 *                             in class that called this method
+	 */
+	public static void setupConfig(GenerationConfiguration configuration){
+		CONFIGURATION_MANAGER.setLocalConfiguration(configuration);
 	}
 }
