@@ -37,12 +37,12 @@ public class CollectionsGeneratorTest {
         assertEquals("HashSet<String>.size", 1, collections.getHashSetString().size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = GenerationException.class)
     public void throwsIfGenericListGenerationNotConfigured(){
         ObjectG.unique(List.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = GenerationException.class)
     public void throwsIfGenericSetGenerationNotConfigured(){
         ObjectG.unique(Set.class);
     }

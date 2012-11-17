@@ -87,9 +87,16 @@ public class GenerationContext<T> {
 
     @Override
     public String toString() {
+		String parentObjectAsString = "";
+		try{
+			parentObjectAsString = ""+parentObject;
+		}
+		catch (Exception e){
+			parentObjectAsString = "parentObject.toString threw exception";
+		}
         return "GenerationContext{" +
                 "classGenerated=" + classThatIsGenerated.getName() +
-                ", parentObject=" + parentObject +
+                ", parentObject=" + parentObjectAsString +
                 ", field=" + field +
                 ", hierarchy.size=" + (hierarchy == null ? null : hierarchy.size()) +
                 '}';

@@ -25,4 +25,19 @@ public class GenerationContextTest {
 
         assertFalse(pushed.isRoot());
     }
+
+	@Test
+	public void willNotFallWhenParentObjectToStringThrewException(){
+		final GenerationContext root = GenerationContext.createRoot(Object.class);
+		root.setParentObject(new ParentObjectThrows());
+
+		root.toString();
+	}
+
+	private static class ParentObjectThrows{
+		@Override
+		public String toString() {
+			throw new RuntimeException();
+		}
+	}
 }
