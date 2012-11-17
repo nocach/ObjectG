@@ -136,22 +136,24 @@ class NotNativeClassGenerator extends Generator {
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		try{
 			Constructor constructor = getConstructorWithMostArgs(context.getClassThatIsGenerated());
+			constructor.setAccessible(true);
 			return constructor.newInstance(createUniqueConstructorArgs(configuration, context, constructor));
 		}
 		//ok, most args constructor was not ok
 		catch (InvocationTargetException e){
 			logger.debug("most arg constructor did not work, trying other constructors");
-			return createInstanceFromFirstSuccessfullConstructor(configuration, context);
+			return createInstanceFromFirstSuccessfulConstructor(configuration, context);
 
 		}
 	}
 
-	private Object createInstanceFromFirstSuccessfullConstructor(final GenerationConfiguration configuration,
+	private Object createInstanceFromFirstSuccessfulConstructor(final GenerationConfiguration configuration,
 			final GenerationContext context) throws InstantiationException, IllegalAccessException {
 		//then we will try ALL constructors if any will work
-		final Constructor[] allConstructors = context.getClassThatIsGenerated().getConstructors();
+		final Constructor[] allConstructors = context.getClassThatIsGenerated().getDeclaredConstructors();
 		for (Constructor each : allConstructors){
 			try{
+				each.setAccessible(true);
 				return each.newInstance(createUniqueConstructorArgs(configuration, context, each));
 			}
 			catch (InvocationTargetException ignore){
@@ -182,7 +184,7 @@ class NotNativeClassGenerator extends Generator {
     private Constructor getConstructorWithMostArgs(Class type) {
         int maxArgs = 0;
         Constructor maxArgsConstructor = null;
-        for (Constructor each : type.getConstructors()) {
+        for (Constructor each : type.getDeclaredConstructors()) {
             if (each.getParameterTypes().length >= maxArgs){
                 maxArgs = each.getParameterTypes().length;
                 maxArgsConstructor = each;

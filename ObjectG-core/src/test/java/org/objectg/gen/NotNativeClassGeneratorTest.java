@@ -160,11 +160,21 @@ public class NotNativeClassGeneratorTest extends Assert{
 		ObjectG.unique(AllFailingConstructorsClass.class);
 	}
 
+	@Test
+	public void willWorkWithNotPublicConstructor(){
+		final PrivateConstructorClass generated = ObjectG.unique(PrivateConstructorClass.class);
+		assertNotNull(generated);
+	}
+
     @Test
     @Ignore
     public void canConstructAbstractClasses(){
         fail("field AbstractPerson");
     }
+
+	public static class PrivateConstructorClass{
+		private PrivateConstructorClass(){}
+	}
 
 	public static class AllFailingConstructorsClass{
 		public AllFailingConstructorsClass(){
