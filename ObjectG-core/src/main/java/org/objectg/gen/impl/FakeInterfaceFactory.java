@@ -160,6 +160,6 @@ class FakeInterfaceFactory {
     }
 
     private <T> String getFakeImplementationName(Class<T> interfaze) {
-        return interfaze.getName() + "objectgFakeInterface";
+        return interfaze.getName() + "ObjectgFakeInterface";
     }
 }
