@@ -43,6 +43,9 @@ public abstract class Generator {
             T result = generateValue(configuration, context);
             return result;
         }
+		catch (Exception e){
+			throw new GenerationException("exception occuried while generating value", context, e);
+		}
         finally {
             if (context.isPushed()) context.pop();
         }
