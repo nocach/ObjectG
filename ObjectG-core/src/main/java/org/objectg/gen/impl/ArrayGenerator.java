@@ -21,7 +21,7 @@ class ArrayGenerator extends Generator {
         try {
             return createArray(configuration, context);
         } catch (ClassNotFoundException e) {
-            throw new GenerationException(e, configuration, context);
+            throw new GenerationException(configuration, context, e);
         }
     }
 

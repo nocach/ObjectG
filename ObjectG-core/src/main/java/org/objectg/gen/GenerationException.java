@@ -17,21 +17,26 @@ public class GenerationException extends RuntimeException {
     public GenerationException(String message, Throwable cause) {
         super(message, cause);
     }
+    public GenerationException(String message, GenerationContext context) {
+		super(message
+				+ " context=" + context
+				+ ", hierarchy=" + context.dumpHierarchy());
+    }
 
     public GenerationException(Throwable cause) {
         super(cause);
     }
 
-	public GenerationException(final Throwable e, final GenerationConfiguration configuration,
-			final GenerationContext context) {
-		super("configuraiton="+configuration
-				+", context="+context
-				+", hierarchy=" + context.dumpHierarchy());
-	}
-
 	public GenerationException(final String message, final GenerationContext<?> context,
 			final Throwable e) {
 		super(message + " for context="+ context
 				+", hierarchy=" + context.dumpHierarchy(), e);
+	}
+
+	public GenerationException(final GenerationConfiguration configuration, final GenerationContext context,
+			final ClassNotFoundException e) {
+		super("configuraiton="+configuration
+				+", context="+context
+				+", hierarchy=" + context.dumpHierarchy());
 	}
 }

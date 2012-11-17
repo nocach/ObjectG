@@ -129,11 +129,38 @@ class NotNativeClassGenerator extends Generator {
             context.setClassThatIsGenerated(instance.getClass());
             return instance;
         }
-        Constructor constructor = getConstructorWithMostArgs(context.getClassThatIsGenerated());
-        return constructor.newInstance(createUniqueConstructorArgs(configuration, context, constructor));
+		return createClassInstance(configuration, context);
     }
 
-    private Object[] createUniqueConstructorArgs(GenerationConfiguration configuration, GenerationContext context, Constructor constructor) {
+	private Object createClassInstance(final GenerationConfiguration configuration, final GenerationContext context)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		try{
+			Constructor constructor = getConstructorWithMostArgs(context.getClassThatIsGenerated());
+			return constructor.newInstance(createUniqueConstructorArgs(configuration, context, constructor));
+		}
+		//ok, most args constructor was not ok
+		catch (InvocationTargetException e){
+			logger.debug("most arg constructor did not work, trying other constructors");
+			return createInstanceFromFirstSuccessfullConstructor(configuration, context);
+
+		}
+	}
+
+	private Object createInstanceFromFirstSuccessfullConstructor(final GenerationConfiguration configuration,
+			final GenerationContext context) throws InstantiationException, IllegalAccessException {
+		//then we will try ALL constructors if any will work
+		final Constructor[] allConstructors = context.getClassThatIsGenerated().getConstructors();
+		for (Constructor each : allConstructors){
+			try{
+				return each.newInstance(createUniqueConstructorArgs(configuration, context, each));
+			}
+			catch (InvocationTargetException ignore){
+			}
+		}
+		throw new GenerationException("no workable constructor found", context);
+	}
+
+	private Object[] createUniqueConstructorArgs(GenerationConfiguration configuration, GenerationContext context, Constructor constructor) {
         Object []constructorParams = new Object[constructor.getParameterTypes().length];
         for (int i = 0; i < constructor.getParameterTypes().length; i++){
             Class paramType = constructor.getParameterTypes()[i];

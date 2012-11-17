@@ -1,13 +1,13 @@
 package org.objectg.gen;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.IPerson;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * User: __nocach
@@ -148,11 +148,43 @@ public class NotNativeClassGeneratorTest extends Assert{
         assertNotNull(unique.getMap().keySet().iterator().next());
     }
 
+	@Test
+	public void willTryAnotherConstructorIfUsedThrewException(){
+		final OneFailingConstructorClass generated = ObjectG.unique(OneFailingConstructorClass.class);
+
+		assertNotNull(generated);
+	}
+
+	@Test(expected = GenerationException.class)
+	public void failIfNoWorkingConstructor(){
+		ObjectG.unique(AllFailingConstructorsClass.class);
+	}
+
     @Test
     @Ignore
     public void canConstructAbstractClasses(){
         fail("field AbstractPerson");
     }
+
+	public static class AllFailingConstructorsClass{
+		public AllFailingConstructorsClass(){
+			throw new RuntimeException();
+		}
+		public AllFailingConstructorsClass(String arg){
+			throw new RuntimeException();
+		}
+	}
+
+	public static class OneFailingConstructorClass{
+		public OneFailingConstructorClass(){
+			//ok constructor
+		}
+
+		public OneFailingConstructorClass(String arg){
+			//failing
+			throw new RuntimeException();
+		}
+	}
 
     public static class CollectionSetterType{
         private List list;
