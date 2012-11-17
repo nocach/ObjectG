@@ -171,7 +171,7 @@ public class GenerationConfiguration implements Cloneable{
 	 * merge all information from passed configuration into this instance
 	 * @param thatConfiguration
 	 */
-	public void merge(final GenerationConfiguration thatConfiguration) {
+	public GenerationConfiguration merge(final GenerationConfiguration thatConfiguration) {
 		//if some this.property is set then we can override it with that.property from
 		//configuration we merge, only if that.level configuration is bigger then this.level
 		//e.g. this.level=LOCAL and we merge that.level=USER.
@@ -201,6 +201,7 @@ public class GenerationConfiguration implements Cloneable{
 		}
 		rules.addAll(thatConfiguration.rules);
 		postProcessors.addAll(thatConfiguration.postProcessors);
+		return this;
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class GenerationConfiguration implements Cloneable{
 		this.depth = depth;
 	}
 
-	public int getDepth() {
+	public Integer getDepth() {
 		return depth;
 	}
 

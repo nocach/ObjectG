@@ -9,11 +9,15 @@ import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.conf.exception.PrototypeMisuseException;
 import org.objectg.fixtures.DerivedInterface;
+import org.objectg.fixtures.domain.Departure;
+import org.objectg.fixtures.domain.GuideAssignment;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.ITour;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertNull;
 import static org.objectg.conf.OngoingRules.fromList;
 import static org.objectg.conf.OngoingRules.value;
 
@@ -271,6 +275,17 @@ public class PrototypeConfigTest {
 		final PersonExtended generated = ObjectG.unique(prototype);
 		assertEquals("namePrototyped", generated.getName());
 		assertEquals("streetPrototyped", generated.getHomeAddress().getStreet());
+	}
+
+	@Test
+	public void canOverrideConfiguration(){
+		final GuideAssignment prototype = ObjectG.prototype(GuideAssignment.class);
+		prototype.setDeparture(OngoingRules.<Departure>overrideConfiguration(ObjectG.config().depth(1)));
+
+		final GuideAssignment unique = ObjectG.unique(prototype);
+		assertNotNull(unique.getDeparture().getTour());
+		//depth on Tour is 1
+		assertNull(unique.getDeparture().getTour().getSeason());
 	}
 
     public static class ClassWithCollectionA{

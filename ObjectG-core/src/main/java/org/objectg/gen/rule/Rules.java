@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.RuleScope;
 import org.springframework.util.Assert;
@@ -103,5 +104,9 @@ public class Rules {
 
 	public static GenerationRule generatedObject() {
 		return new SetGeneratedObjectGenerationRule();
+	}
+
+	public static GenerationRule configurationOverride(final GenerationConfiguration configuration) {
+		return new ConfigurationOverrideGenerationRule(configuration);
 	}
 }

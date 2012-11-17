@@ -77,4 +77,13 @@ public class OngoingRules {
 		OngoingConfiguration.plannedRule = Rules.generatedObject();
 		return null;
 	}
+
+	public static <T> T overrideConfiguration(final ConfigurationBuilder configurationBuilder) {
+		return (T)overrideConfiguration(configurationBuilder.done());
+	}
+
+	public static <T> T overrideConfiguration(final GenerationConfiguration configuration){
+		OngoingConfiguration.plannedRule = Rules.configurationOverride(configuration);
+		return null;
+	}
 }
