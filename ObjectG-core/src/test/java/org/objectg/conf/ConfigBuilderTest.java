@@ -16,6 +16,7 @@ import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertThat;
@@ -130,11 +131,36 @@ public class ConfigBuilderTest {
 		assertTrue(generated.page.page2Paragraph.page instanceof TextPage);
 	}
 
+	@Test
+	public void canSpecifyGenerationDepth(){
+		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(1));
+
+		assertNotNull(generated.classB);
+		assertNull(generated.classB.classC);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void depthMustBeMoreThanOne(){
+		ObjectG.unique(ClassA.class, ObjectG.config().depth(0));
+	}
+
     @Test
     @Ignore
     public void canInferPropertyTypeForExpressionMatchingCollection(){
         fail("when(employee2Addresses[0]) should work");
     }
+
+	public static class ClassA{
+		private ClassB classB;
+	}
+	public static class ClassB{
+		private ClassC classC;
+	}
+	public static class ClassC{
+		private ClassD classD;
+	}
+	public static class ClassD{
+	}
 
 	public static class Book{
 		BasePage page;

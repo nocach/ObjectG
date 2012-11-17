@@ -123,4 +123,10 @@ public class ConfigurationBuilder {
 		resultConfiguration.setCycleStrategy(strategy);
 		return this;
 	}
+
+	public ConfigurationBuilder depth(final int depth) {
+		Assert.isTrue(depth > 0, "depth must be > 0");
+		resultConfiguration.setDepth(depth);
+		return this;
+	}
 }

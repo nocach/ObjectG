@@ -46,6 +46,10 @@ public class GenerationConfiguration implements Cloneable{
      */
     private Integer objectsInCollections;
 	private LEVEL level;
+	/**
+	 * -1 means no depth
+	 */
+	private Integer depth;
 
 	public GenerationConfiguration(){
 		this(LEVEL.USER);
@@ -190,6 +194,11 @@ public class GenerationConfiguration implements Cloneable{
 			if (this.objectsInCollections == null || canOverride)
 				objectsInCollections = thatConfiguration.objectsInCollections;
 		}
+		if (thatConfiguration.depth != null){
+			if (this.depth == null || canOverride){
+				this.depth = thatConfiguration.depth;
+			}
+		}
 		rules.addAll(thatConfiguration.rules);
 		postProcessors.addAll(thatConfiguration.postProcessors);
 	}
@@ -209,6 +218,9 @@ public class GenerationConfiguration implements Cloneable{
 		if (objectsInCollections == null){
 			objectsInCollections = 1;
 		}
+		if (depth == null){
+			depth = -1;
+		}
 		wasInit = true;
 	}
 
@@ -218,6 +230,19 @@ public class GenerationConfiguration implements Cloneable{
 
 	public void setLevel(final LEVEL level) {
 		this.level = level;
+	}
+
+	public void setDepth(final int depth) {
+		this.depth = depth;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public <T> boolean shouldGenerate(final GenerationContext<T> context) {
+		if (getDepth() == -1) return true;
+		return context.getGenerationDepth() <= getDepth();
 	}
 
 	/**

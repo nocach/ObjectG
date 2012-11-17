@@ -26,6 +26,8 @@ public abstract class Generator {
     public final <T> T generate(GenerationConfiguration configuration, GenerationContext<T> context){
         try{
 			configuration.init();
+			if (!configuration.shouldGenerate(context)) return null;
+
             final GenerationRule rule = configuration.getRule(context);
             if (rule != null){
                 return returnFromRule(configuration, context, rule);

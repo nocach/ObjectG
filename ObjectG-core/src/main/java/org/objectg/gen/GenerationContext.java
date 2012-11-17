@@ -173,4 +173,9 @@ public class GenerationContext<T> {
 		}
 		return hierarchy.getCycleDepth(classThatIsGenerated);
 	}
+
+	public int getGenerationDepth() {
+		if (hierarchy == null) return 0;
+		return hierarchy.size();
+	}
 }
