@@ -85,22 +85,29 @@ public class GenerationContext<T> {
         }
     }
 
-    @Override
-    public String toString() {
-		String parentObjectAsString = "";
+	@Override
+	public String toString() {
+		return "GenerationContext{" +
+				"classGenerated=" + classThatIsGenerated.getName() +
+				", parentObject=" + getSafeParentObjectString() +
+				", field=" + field +
+				", hierarchy.size=" + (hierarchy == null ? null : hierarchy.size()) +
+				'}';
+	}
+
+	private String getSafeParentObjectString(){
+		if (parentObject == null){
+			return null;
+		}
+		//because parentObject can be still generated, it's toString can throw exceptions
 		try{
-			parentObjectAsString = ""+parentObject;
+			return parentObject.toString();
 		}
 		catch (Exception e){
-			parentObjectAsString = "parentObject.toString threw exception";
+			//ok, toString threw - record this
+			return " parentObject.toString threw exception, parentObject.class="+parentObject.getClass().getSimpleName();
 		}
-        return "GenerationContext{" +
-                "classGenerated=" + classThatIsGenerated.getName() +
-                ", parentObject=" + parentObjectAsString +
-                ", field=" + field +
-                ", hierarchy.size=" + (hierarchy == null ? null : hierarchy.size()) +
-                '}';
-    }
+	}
 
     /**
      *
