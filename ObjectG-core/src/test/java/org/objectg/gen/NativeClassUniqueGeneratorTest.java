@@ -1,14 +1,15 @@
 package org.objectg.gen;
 
-import junit.framework.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.objectg.ObjectG;
-
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.Date;
+
+import junit.framework.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.objectg.ObjectG;
 
 /**
  * User: __nocach
@@ -68,7 +69,16 @@ public class NativeClassUniqueGeneratorTest extends Assert{
         assertUnique(Object[].class);
         assertUnique(URL.class);
         assertUnique(URL[].class);
+		assertUnique(InputStream.class);
     }
+
+	@Test
+	public void forProviderSpecificTypesNullIsGenerated(){
+		assertNull(ObjectG.unique(java.sql.Blob.class));
+		assertNull(ObjectG.unique(java.sql.Array.class));
+		assertNull(ObjectG.unique(java.sql.Clob.class));
+		assertNull(ObjectG.unique(java.sql.ResultSet.class));
+	}
 
     @Test
     public void generatedPrimitivesCanBeAssigned(){

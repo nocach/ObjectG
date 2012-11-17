@@ -1,9 +1,13 @@
 package org.objectg.gen.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.sql.Array;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +32,7 @@ import org.objectg.gen.Generator;
  * </p>
  */
 class PrimitiveGenerator extends Generator {
+	//optimization
 	static final Set<Class> supportingClasses = new HashSet<Class>(){{
 		add(short.class);
 		add(Short.class);
@@ -55,7 +60,14 @@ class PrimitiveGenerator extends Generator {
 		add(Void.class);
 		add(Object.class);
 		add(URL.class);
+		add(Array.class);
+		add(java.sql.Array.class);
+		add(java.sql.Blob.class);
+		add(java.sql.Clob.class);
+		add(java.sql.ResultSet.class);
+		add(InputStream.class);
 	}};
+	//optimization
 	private static final Map<Class, Sequence> classToSequence = new HashMap<Class, Sequence>(){{
 		final ShortSequence shortSequence = new ShortSequence();
 		put(short.class, shortSequence);
@@ -91,6 +103,11 @@ class PrimitiveGenerator extends Generator {
 		put(Void.class, new VoidSequence());
 		put(Object.class, new ObjectSequence());
 		put(URL.class, new URLSequence());
+		put(java.sql.Array.class, new NullSequence());
+		put(java.sql.Blob.class, new NullSequence());
+		put(java.sql.Clob.class, new NullSequence());
+		put(java.sql.ResultSet.class, new NullSequence());
+		put(InputStream.class, new InputStreamSequence());
 	}};
     //TODO: allow resetting of this sequences? E.g. this reset can be performed before any new TestCase is about to
     //be started
@@ -258,6 +275,21 @@ class PrimitiveGenerator extends Generator {
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+	private static class NullSequence implements Sequence<Object>{
+		private final AtomicLong longSequence = new AtomicLong();
+		@Override
+		public Object getNext() {
+			return null;
+		}
+	}
+	private static class InputStreamSequence implements Sequence<InputStream>{
+		private final AtomicLong longSequence = new AtomicLong();
+		@Override
+		public InputStream getNext() {
+			long uniqueLong = longSequence.incrementAndGet();
+			return new ByteArrayInputStream(ByteBuffer.allocate(8).putLong(uniqueLong).array());
 		}
 	}
 }
