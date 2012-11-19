@@ -8,7 +8,8 @@ public class Types {
     public static boolean isJavaType(Class clazz){
         return clazz.getPackage() == null
                 || clazz.getPackage().getName().startsWith("java.")
-                || clazz.getPackage().getName().startsWith("javax.");
+                || clazz.getPackage().getName().startsWith("javax.")
+				|| Enum.class.isAssignableFrom(clazz);
     }
 
     /**

@@ -40,6 +40,7 @@ public class GeneratorRegistry {
 
         T result = (T) generatorChain.generate(configuration, context);
         logger.info("generated value=" + result);
+		logger.debug("for context="+context);
         return result;
     }
 

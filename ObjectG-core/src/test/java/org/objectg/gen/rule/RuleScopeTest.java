@@ -18,9 +18,9 @@ public class RuleScopeTest {
     public void propertyScopeVersusGlobal(){
         Person generated = ObjectG.unique(Person.class, ObjectG.config()
                 .when(ContextMatchers.typeOf(String.class))
-                    .rule(Rules.value("propertyScope"), RuleScope.PROPERTY)
+                    .useRule(Rules.value("propertyScope"), RuleScope.PROPERTY)
                 .when(ContextMatchers.typeOf(String.class))
-                    .rule(Rules.value("globalScope"), RuleScope.GLOBAL));
+                    .useRule(Rules.value("globalScope"), RuleScope.GLOBAL));
 
         assertEquals("PROPERTY scoped is respected more than GLOBAL", "propertyScope", generated.getFirstName());
     }
@@ -29,9 +29,9 @@ public class RuleScopeTest {
     public void defaultScopeVersusGlobal(){
         Person generated = ObjectG.unique(Person.class, ObjectG.config()
                 .when(ContextMatchers.typeOf(String.class))
-                    .rule(Rules.value("globalScope"), RuleScope.GLOBAL)
+                    .useRule(Rules.value("globalScope"), RuleScope.GLOBAL)
                 .when(ContextMatchers.typeOf(String.class))
-                    .rule(Rules.value("innerDefaultScope"), RuleScope.INTERNAL_DEFAULT));
+                    .useRule(Rules.value("innerDefaultScope"), RuleScope.INTERNAL_DEFAULT));
 
         assertEquals("GLOBAL scope is respected more than INTERNAL_DEFAULT", "globalScope", generated.getFirstName());
     }

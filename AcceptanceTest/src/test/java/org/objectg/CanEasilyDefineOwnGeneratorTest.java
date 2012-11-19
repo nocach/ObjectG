@@ -18,7 +18,7 @@ public class CanEasilyDefineOwnGeneratorTest {
 	public void setup(){
 		ObjectG.setupConfig(ObjectG.config()
 				.when(SpecificClass.class)
-				.rule(new SpecificClassGenerationRule()));
+				.useRule(new SpecificClassGenerationRule()));
 	}
 
 	@Test

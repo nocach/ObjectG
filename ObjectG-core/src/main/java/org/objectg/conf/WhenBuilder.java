@@ -37,7 +37,7 @@ public class WhenBuilder<T> {
         this.configurationBuilder = configurationBuilder;
     }
 
-    public ConfigurationBuilder rule(GenerationRule rule){
+    public ConfigurationBuilder useRule(GenerationRule rule){
         addRule(rule);
         return configurationBuilder;
     }
@@ -59,12 +59,12 @@ public class WhenBuilder<T> {
         configurationBuilder.addRule(rule);
     }
 
-    public ConfigurationBuilder rule(GenerationRule rule, RuleScope scope){
+    public ConfigurationBuilder useRule(GenerationRule rule, RuleScope scope){
         addRuleForMatcher(rule, scope);
         return configurationBuilder;
     }
 
-    public ConfigurationBuilder value(T value){
+    public ConfigurationBuilder setValue(T value){
         GenerationRule setValueRule = Rules.value(value);
         addRule(setValueRule);
         return configurationBuilder;
@@ -92,6 +92,10 @@ public class WhenBuilder<T> {
 				context.setClassThatIsGenerated(classHint);
 			}
 		});
-		return rule(overrideClassRule, RuleScope.GLOBAL);
+		return useRule(overrideClassRule, RuleScope.GLOBAL);
+	}
+
+	public ConfigurationBuilder setValues(final T... values) {
+		return useRule(Rules.fromList(values));
 	}
 }

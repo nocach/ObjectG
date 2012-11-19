@@ -1,7 +1,9 @@
 package org.objectg.conf;
 
+import java.util.List;
 import java.util.Map;
 
+import junit.framework.Assert;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Tour;
 import org.objectg.fixtures.domain.TourSeason;
+import org.objectg.fixtures.domain.TourType;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 
@@ -37,7 +40,7 @@ public class ConfigBuilderTest {
     @Test
     public void canConfigureRuleWithMatcher(){
         Person generated = ObjectG.unique(Person.class,
-                ObjectG.config().when(ContextMatchers.typeOf(String.class)).rule(Rules.value("someValue")));
+                ObjectG.config().when(ContextMatchers.typeOf(String.class)).useRule(Rules.value("someValue")));
 
         assertEquals("someValue", generated.getFirstName());
         assertEquals("someValue", generated.getMiddleName());
@@ -46,12 +49,31 @@ public class ConfigBuilderTest {
     }
 
     @Test
-    public void canConfigureNullObjects(){
+    public void canConfigureNoObjects(){
         Tour tour = ObjectG.unique(Tour.class, ObjectG.config().noObjects());
 
         assertNull("not primitive should be null", tour.getSeason());
         assertEquals("collections should be empty", 0, tour.getStops().size());
     }
+
+	@Test
+	public void noObjectsGeneratesEmptyArrays(){
+		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().noObjects());
+
+		assertEquals(0, tour.getBarcode().length);
+	}
+
+	@Test
+	public void noObjectsWillSetEnums(){
+		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().noObjects());
+
+		assertNotNull("enum is considered primitive", tour.getTourType());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void cantChangeObjectsInCollectionsAfterNoObjectsCall(){
+		ObjectG.config().noObjects().setObjectsInCollection(1);
+	}
 
     @Test
     public void canConfigureNullObjectsClassWithMap(){
@@ -64,7 +86,7 @@ public class ConfigBuilderTest {
     public void canSimplyConfigValueForClass(){
         TourSeason expectedSeason = new TourSeason();
         Tour generated = ObjectG.unique(Tour.class,
-                ObjectG.config().forClass(TourSeason.class).value(expectedSeason));
+                ObjectG.config().forClass(TourSeason.class).setValue(expectedSeason));
 
         assertEquals(expectedSeason, generated.getSeason());
     }
@@ -84,7 +106,7 @@ public class ConfigBuilderTest {
 				.onCycle()
 					.backReference()
 				.when("employee2Addresses[0].owner.firstName")
-				.value("setByExpression"));
+				.setValue("setByExpression"));
 
         assertEquals("setByExpression", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
     }
@@ -108,7 +130,7 @@ public class ConfigBuilderTest {
         Person unique = ObjectG.unique(Person.class
                 , ObjectG.config()
                 .when("employee2Addresses")
-                .rule(Rules.emptyCollection()));
+                .useRule(Rules.emptyCollection()));
 
         assertEquals(0, unique.getEmployee2Addresses().size());
     }
@@ -139,9 +161,30 @@ public class ConfigBuilderTest {
 		assertNull(generated.classB.classC);
 	}
 
+	@Test
+	public void generationDepthGeneratesNativeTypesOnBottom(){
+		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(1));
+
+		assertNotNull("arrayPrimitive", generated.classB.arrayPrimitive);
+		assertNotNull("enumPrimitive", generated.classB.enumPrimitive);
+		assertNotNull("intPrimitive", generated.classB.intPrimitive);
+		assertNotNull("longRefPrimitive", generated.classB.longRefPrimitive);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void depthMustBeMoreThanOne(){
 		ObjectG.unique(ClassA.class, ObjectG.config().depth(0));
+	}
+
+	@Test
+	public void canConfigureValues(){
+		List<Tour> tours = ObjectG.uniqueList(Tour.class, ObjectG.config()
+				.when(TourType.class)
+				.setValues(TourType.ECONOMIC, TourType.ENTERPRISE)
+		, 2);
+
+		Assert.assertEquals(TourType.ECONOMIC, tours.get(0).getTourType());
+		Assert.assertEquals(TourType.ENTERPRISE, tours.get(1).getTourType());
 	}
 
     @Test
@@ -155,6 +198,10 @@ public class ConfigBuilderTest {
 	}
 	public static class ClassB{
 		private ClassC classC;
+		private int intPrimitive;
+		private TourType enumPrimitive;
+		private byte[] arrayPrimitive;
+		private Long longRefPrimitive;
 	}
 	public static class ClassC{
 		private ClassD classD;

@@ -57,14 +57,25 @@ class Hierarchy {
             int paddingSize = i * 4;
             for (int j = 0; j < paddingSize; j++) dump.append(' ');
             dump.append("class="+hierarchyClass.get(i).getSimpleName());
-            Integer objectHashCode = hierarchyObject.get(i) != null ? hierarchyObject.hashCode() : null;
-            dump.append(", object.hashCode="+ objectHashCode);
+			String objectHashCode = getSafeHierarchyObjectHashCode(i);
+			dump.append(", object.hashCode="+ objectHashCode);
             dump.append("\n");
         }
         return dump.toString();
     }
 
-    public boolean isEmpty() {
+	private String getSafeHierarchyObjectHashCode(final int i) {
+		try{
+			return hierarchyObject.get(i) != null
+					? Integer.toString(hierarchyObject.get(i).hashCode())
+					: null;
+		}
+		catch (Exception e){
+			return "exception thrown for hashCode()";
+		}
+	}
+
+	public boolean isEmpty() {
         return hierarchyClass.isEmpty();
     }
 

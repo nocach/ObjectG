@@ -1,7 +1,12 @@
 package org.objectg.fixtures.domain;
 
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * User: __nocach
@@ -21,6 +26,7 @@ public class Tour implements ITour {
     @ManyToOne
     private TourSeason season;
     private TourType tourType;
+	private byte[] barcode;
 
     @Override
     public Long getId() {
@@ -101,4 +107,12 @@ public class Tour implements ITour {
     public void setSeason(TourSeason season) {
         this.season = season;
     }
+
+	public byte[] getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(final byte[] barcode) {
+		this.barcode = barcode;
+	}
 }

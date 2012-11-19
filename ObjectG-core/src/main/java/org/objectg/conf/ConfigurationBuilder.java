@@ -1,8 +1,5 @@
 package org.objectg.conf;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.hamcrest.Matchers;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
@@ -16,7 +13,6 @@ import org.objectg.matcher.impl.GenerationContextFeatures;
 import org.objectg.matcher.impl.JavaNativeTypeMatcher;
 import org.springframework.util.Assert;
 
-import static org.hamcrest.Matchers.typeCompatibleWith;
 import static org.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
 
 /**
@@ -26,6 +22,7 @@ import static org.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
 public class ConfigurationBuilder {
     private GenerationConfiguration resultConfiguration;
     private PrototypeCreator prototypeCreator;
+	boolean notAllowSetInObjectChange = false;
 
     public ConfigurationBuilder(PrototypeCreator prototypeCreator){
         Assert.notNull(prototypeCreator, "prototypeCreator");
@@ -40,6 +37,8 @@ public class ConfigurationBuilder {
      */
     public ConfigurationBuilder noObjects() {
         GenerationRule nullForNotRootObjects = Rules.onlyNull();
+		//for not native types set null
+		//except the generated object
         nullForNotRootObjects.when(
                 Matchers.<GenerationContext>allOf(
                         Matchers.not(GenerationContextFeatures.forClass(JavaNativeTypeMatcher.INSTANCE))
@@ -48,13 +47,8 @@ public class ConfigurationBuilder {
         );
         resultConfiguration.addRule(nullForNotRootObjects);
 
-        GenerationRule emptyCollectionRule = Rules.emptyCollection();
-        emptyCollectionRule.when(GenerationContextFeatures.forClass(Matchers.typeCompatibleWith(Collection.class)));
-        resultConfiguration.addRule(emptyCollectionRule);
-
-        GenerationRule emptyMapRule = Rules.emptyMap();
-        emptyMapRule.when(GenerationContextFeatures.forClass(typeCompatibleWith(Map.class)));
-        resultConfiguration.addRule(emptyMapRule);
+		resultConfiguration.setObjectsInCollections(0);
+		notAllowSetInObjectChange = true;
 
         return this;
     }
@@ -111,6 +105,8 @@ public class ConfigurationBuilder {
 
 	public ConfigurationBuilder setObjectsInCollection(final int objectsInCollection) {
 		Assert.isTrue(objectsInCollection >= 0 , "objectsInCollection should be >= 0");
+		Assert.isTrue(!notAllowSetInObjectChange, "can't change ObjectsInCollection after noObjects() was called");
+
 		resultConfiguration.setObjectsInCollections(objectsInCollection);
 		return this;
 	}

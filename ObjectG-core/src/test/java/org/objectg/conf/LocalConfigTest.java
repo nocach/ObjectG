@@ -50,7 +50,7 @@ public class LocalConfigTest {
 	@Test
 	public void testConfigurationWillBeMerged(){
 		final ClassWithIPerson classWithPerson = ObjectG.unique(ClassWithIPerson.class
-			,ObjectG.config().when(Tour.class).value(null));
+			,ObjectG.config().when(Tour.class).setValue(null));
 
 		assertLocalConfigurationWasApplied(classWithPerson);
 		assertNull(classWithPerson.getTour());

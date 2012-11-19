@@ -12,6 +12,7 @@ import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
 import org.objectg.gen.cycle.CycleStrategy;
 import org.objectg.gen.cycle.GoDeeperCycleStrategy;
+import org.objectg.util.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -243,7 +244,8 @@ public class GenerationConfiguration implements Cloneable{
 
 	public <T> boolean shouldGenerate(final GenerationContext<T> context) {
 		if (getDepth() == -1) return true;
-		return context.getGenerationDepth() <= getDepth();
+		return context.getGenerationDepth() <= getDepth()
+				|| Types.isJavaType(context.getClassThatIsGenerated());
 	}
 
 	/**

@@ -116,11 +116,11 @@ public class PrototypeCreator {
         return interceptedClass.toClass();
     }
 
-    public Class<?> getRealObjectClass(Object prototype) {
+    public <T> Class<T> getRealObjectClass(T prototype) {
         if (prototype.getClass().getSuperclass().equals(java.lang.reflect.Proxy.class)){
             return proxyToRealClass.get(prototype);
         }
-        return prototype.getClass().getSuperclass();
+        return (Class<T>)prototype.getClass().getSuperclass();
     }
 
     private void interceptGetters(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
