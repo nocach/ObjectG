@@ -16,8 +16,6 @@ import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.GeneratorRegistry;
 import org.objectg.gen.rule.Rules;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -30,7 +28,6 @@ import org.springframework.util.Assert;
  * </p>
  */
 public class ObjectG {
-    private static final Logger logger = LoggerFactory.getLogger(ObjectG.class);
     private static final PrototypeCreator PROTOTYPE_CREATOR = new PrototypeCreator();
 	private static final ConfigurationManager CONFIGURATION_MANAGER = new ConfigurationManager(1, ObjectG.class);
 

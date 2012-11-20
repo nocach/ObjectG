@@ -39,12 +39,22 @@ public class GeneratorRegistry {
         Assert.notNull(context, "context");
 
         T result = (T) generatorChain.generate(configuration, context);
-        logger.info("generated value=" + result);
+        logger.info("generated value=" + getSafeObjectToString(result));
 		logger.debug("for context="+context);
         return result;
     }
 
-    public static final GeneratorRegistry getInstance(){
+	private String getSafeObjectToString(final Object result) {
+		if (result == null) return null;
+		try{
+			return result.toString();
+		}
+		catch (Exception e){
+			return "result.toString threw exception";
+		}
+	}
+
+	public static final GeneratorRegistry getInstance(){
         return instance;
     }
 }
