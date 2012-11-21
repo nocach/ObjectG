@@ -16,9 +16,13 @@ public class ObjectGTest {
         Person prototype = ObjectG.prototype(Person.class);
 		final Tour anotherPrototype = ObjectG.prototype(Tour.class);
 		ObjectG.unique(prototype);
+		ObjectG.unique(Tour.class);
         ObjectG.unique(prototype, new GenerationConfiguration());
+        ObjectG.unique(Tour.class, new GenerationConfiguration());
         ObjectG.unique(prototype, ObjectG.config());
+        ObjectG.unique(Tour.class, ObjectG.config());
         ObjectG.unique(prototype, ObjectG.config(), anotherPrototype);
+        ObjectG.unique(Tour.class, ObjectG.config(), anotherPrototype);
         ObjectG.unique(prototype, new GenerationConfiguration(), anotherPrototype);
     }
 
@@ -29,7 +33,8 @@ public class ObjectGTest {
 
         ObjectG.uniqueList(Person.class);
         ObjectG.uniqueList(prototype);
-        ObjectG.uniqueList(Person.class, 1);
+		ObjectG.uniqueList(Person.class, prototype);
+		ObjectG.uniqueList(Person.class, 1);
         ObjectG.uniqueList(prototype, 1);
         ObjectG.uniqueList(Person.class, 1, prototype);
         ObjectG.uniqueList(prototype, 1, prototype);

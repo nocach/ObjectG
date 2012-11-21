@@ -16,8 +16,13 @@ import org.springframework.util.Assert;
 import static org.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
 
 /**
+ * <p>
+ *     call {@link #done()} to create configuration itself
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 29.9.12
+ * </p>
  */
 public class ConfigurationBuilder {
     private GenerationConfiguration resultConfiguration;

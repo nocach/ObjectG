@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import org.objectg.conf.ConfigurationBuilder;
 import org.objectg.conf.ConfigurationManager;
 import org.objectg.conf.GenerationConfiguration;
@@ -44,25 +45,32 @@ public class ObjectG {
         return generate(clazz, configuration);
     }
     public static <T> T unique(T prototype, GenerationConfiguration configuration){
-        configuration.setUnique(true);
-        return generate(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration);
+		return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration, prototype);
     }
 
     public static <T> T unique(Class<T> clazz, ConfigurationBuilder configurationBuilder){
         return unique(clazz, configurationBuilder.done());
     }
     public static <T> T unique(T prototype, ConfigurationBuilder configurationBuilder){
-        return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configurationBuilder.done());
+        return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configurationBuilder.done(), prototype);
     }
 
     public static <T> T unique(Class<T> clazz, ConfigurationBuilder configurationBuilder, Object... prototypes){
         return unique(clazz, configurationBuilder.done(), prototypes);
     }
     public static <T> T unique(T prototype, ConfigurationBuilder configurationBuilder, Object... prototypes){
-        return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configurationBuilder.done(), prototypes);
+		final Object[] allPrototypesArray = merge(prototype, prototypes);
+		return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configurationBuilder.done(),
+				allPrototypesArray);
     }
 
-    public static <T> T unique(Class<T> clazz, Object... prototypes){
+	private static <T> Object[] merge(final T prototype, final Object[] prototypes) {
+		final ArrayList<Object> allPrototypes = Lists.newArrayList(prototypes);
+		allPrototypes.add(prototype);
+		return allPrototypes.toArray();
+	}
+
+	public static <T> T unique(Class<T> clazz, Object... prototypes){
         assertPrototypesAreValid(prototypes);
         return unique(clazz, new GenerationConfiguration(), prototypes);
     }
@@ -92,9 +100,7 @@ public class ObjectG {
      * will create GenerationConfiguration from {@code prototypes} for this generation
      */
     public static <T> T unique(T prototype, GenerationConfiguration configuration, Object... prototypes){
-        configuration.setUnique(true);
-        configuration.addAllRules(rulesFromPrototypes(prototypes));
-        return generate(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration);
+		return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration, merge(prototype, prototypes));
     }
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
@@ -136,14 +142,14 @@ public class ObjectG {
      * @return
      */
     public static <T> List<T> uniqueList(T prototype) {
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), 1);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), 1, prototype);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, int size, Object... prototypes){
         return uniqueList(clazz, new GenerationConfiguration(), size, prototypes);
     }
     public static <T> List<T> uniqueList(T prototype, int size, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), size, prototypes);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), size, merge(prototype, prototypes));
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, Object... prototypes){
@@ -155,42 +161,42 @@ public class ObjectG {
         return uniqueList(clazz, generationConfiguration, 1);
     }
     public static <T> List<T> uniqueList(T prototype, GenerationConfiguration generationConfiguration){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, prototype);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration generationConfiguration, int size){
         return uniqueList(clazz, generationConfiguration, size, new Object[]{});
     }
     public static <T> List<T> uniqueList(T prototype, GenerationConfiguration generationConfiguration, int size){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size, new Object[]{});
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size, prototype);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder){
         return uniqueList(clazz, generationBuilder.done(), 1);
     }
     public static <T> List<T> uniqueList(T prototype, ConfigurationBuilder generationBuilder){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, prototype);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, int size){
         return uniqueList(clazz, generationBuilder.done(), size);
     }
     public static <T> List<T> uniqueList(T prototype, ConfigurationBuilder generationBuilder, int size){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, prototype);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration generationConfiguration, Object... prototypes){
         return uniqueList(clazz, generationConfiguration, 1, prototypes);
     }
     public static <T> List<T> uniqueList(T prototype, GenerationConfiguration generationConfiguration, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, prototypes);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, merge(prototype, prototypes));
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, Object... prototypes){
         return uniqueList(clazz, generationBuilder.done(), 1, prototypes);
     }
     public static <T> List<T> uniqueList(T prototype, ConfigurationBuilder generationBuilder, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, prototypes);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, merge(prototype, prototypes));
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, int size, Object... prototypes){
@@ -198,7 +204,7 @@ public class ObjectG {
     }
 
     public static <T> List<T> uniqueList(T prototype, ConfigurationBuilder generationBuilder, int size, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, prototypes);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, merge(prototype, prototypes));
     }
 
     /**
@@ -221,7 +227,7 @@ public class ObjectG {
      */
     public static <T> List<T> uniqueList(T prototype, int size) {
         GenerationConfiguration generationConfiguration = new GenerationConfiguration();
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size, prototype);
     }
 
     public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration configuration, int size, Object... prototypes){
@@ -236,7 +242,7 @@ public class ObjectG {
     }
 
     public static <T> List<T> uniqueList(T prototype, GenerationConfiguration configuration, int size, Object... prototypes){
-		return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration, size, prototypes);
+		return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration, size, merge(prototype, prototypes));
     }
 
     /**
@@ -255,7 +261,7 @@ public class ObjectG {
      * @return
      */
     public static <T> Set<T> uniqueSet(T prototype) {
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), 1);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), 1, prototype);
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, Object... prototypes){
@@ -267,49 +273,49 @@ public class ObjectG {
         return uniqueSet(clazz, generationConfiguration, 1);
     }
     public static <T> Set<T> uniqueSet(T prototype, GenerationConfiguration generationConfiguration){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, prototype);
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration generationConfiguration, int size){
         return uniqueSet(clazz, generationConfiguration, size, new Object[]{});
     }
     public static <T> Set<T> uniqueSet(T prototype, GenerationConfiguration generationConfiguration, int size){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size, new Object[]{});
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size, prototype);
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder){
         return uniqueSet(clazz, generationBuilder.done(), 1);
     }
     public static <T> Set<T> uniqueSet(T prototype, ConfigurationBuilder generationBuilder){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, prototype);
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, int size){
         return uniqueSet(clazz, generationBuilder.done(), size);
     }
     public static <T> Set<T> uniqueSet(T prototype, ConfigurationBuilder generationBuilder, int size){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, prototype);
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration generationConfiguration, Object... prototypes){
         return uniqueSet(clazz, generationConfiguration, 1, prototypes);
     }
     public static <T> Set<T> uniqueSet(T prototype, GenerationConfiguration generationConfiguration, Object... prototypes){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, prototypes);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, merge(prototype, prototypes));
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, Object... prototypes){
         return uniqueSet(clazz, generationBuilder.done(), 1, prototypes);
     }
     public static <T> Set<T> uniqueSet(T prototype, ConfigurationBuilder generationBuilder, Object... prototypes){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, prototypes);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, merge(prototype, prototypes));
     }
 
     public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, int size, Object... prototypes){
         return uniqueSet(clazz, generationBuilder.done(), size, prototypes);
     }
     public static <T> Set<T> uniqueSet(T prototype, ConfigurationBuilder generationBuilder, int size, Object... prototypes){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, prototypes);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, merge(prototype, prototypes));
     }
 
     /**
@@ -333,7 +339,7 @@ public class ObjectG {
      */
     public static <T> Set<T> uniqueSet(T prototype, int size) {
         GenerationConfiguration generationConfiguration = new GenerationConfiguration();
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, size, prototype);
     }
 
 
@@ -349,7 +355,7 @@ public class ObjectG {
     }
 
 	public static <T> Set<T> uniqueSet(T prototype, GenerationConfiguration configuration, int size, Object... prototypes){
-		return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration, size, prototypes);
+		return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), configuration, size, merge(prototype, prototypes));
 	}
 
     public static ConfigurationBuilder config() {
