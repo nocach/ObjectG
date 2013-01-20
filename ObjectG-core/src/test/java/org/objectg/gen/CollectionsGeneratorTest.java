@@ -177,21 +177,9 @@ public class CollectionsGeneratorTest {
     }
 
     @Test
-    @Ignore
-    public void canGenerateListOfInterface(){
-        fail("not written");
-    }
-
-    @Test
-    @Ignore
-    public void canGenerateSetOfInterface(){
-        fail("not written");
-    }
-
-    @Test
     public void canConfigurateCollectionOfConcreteType(){
         ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
-        prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class));
+		prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class));
 
         ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
 
@@ -200,15 +188,28 @@ public class CollectionsGeneratorTest {
     }
 
     @Test
-    @Ignore
     public void canConfigurateCollectionOfConcreteTypeAndCanDefineSize(){
-        fail("not implemented");
+		ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
+		prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class, 2));
+
+		ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
+
+		assertEquals(2, generated.getArrayListString().size());
+		assertNotNull(generated.getArrayListString().get(0));
+		assertNotNull(generated.getArrayListString().get(1));
     }
 
     @Test
-    @Ignore
-    public void canConfigurateCollectionOfConcreteTypeAndCanValues(){
-        fail("not implemented");
+    public void canConfigurateCollectionOfConcreteTypeAndCanDefineValues(){
+		ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
+		prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, "value1", "value2", "value3"));
+
+		ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
+
+		assertEquals(3, generated.getArrayListString().size());
+		assertTrue(generated.getArrayListString().contains("value1"));
+		assertTrue(generated.getArrayListString().contains("value2"));
+		assertTrue(generated.getArrayListString().contains("value3"));
     }
 
 

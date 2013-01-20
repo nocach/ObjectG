@@ -2,6 +2,7 @@ package org.objectg.gen.rule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -45,6 +46,15 @@ public class Rules {
     public static GenerationRule collectionDefinition(Class collectionType, Class clazzOfObjects){
         return new CollectionGenerationRule(collectionType, clazzOfObjects);
     }
+
+    public static GenerationRule collectionDefinition(Class collectionType, Class clazzOfObjects, int objectsInCollection){
+		Assert.isTrue(objectsInCollection >= 0, "objectsInCollection >= 0");
+        return new CollectionGenerationRule(collectionType, clazzOfObjects, objectsInCollection);
+    }
+
+	public static GenerationRule collectionDefinition(Class collectionType, final Object... values) {
+		return new CollectionGenerationRule(collectionType, values);
+	}
 
     public static GenerationRule setDefinition(Class clazzOfObjects) {
         return setDefinition(clazzOfObjects, 1);
@@ -109,4 +119,5 @@ public class Rules {
 	public static GenerationRule configurationOverride(final GenerationConfiguration configuration) {
 		return new ConfigurationOverrideGenerationRule(configuration);
 	}
+
 }

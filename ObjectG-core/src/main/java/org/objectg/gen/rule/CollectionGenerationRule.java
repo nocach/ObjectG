@@ -13,20 +13,36 @@ import org.objectg.gen.GeneratorRegistry;
  */
 class CollectionGenerationRule<T> extends GenerationRule<T>{
     private final Class<? extends Collection> collectionClass;
-    private final Class classOfObjects;
+	private Object[] values;
+	private Class classOfObjects;
+	private int objectsInCollection;
 
-    public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects){
+    public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects,
+			final int objectsInCollection){
         this.collectionClass = collectionClass;
         this.classOfObjects = classOfObjects;
-    }
+		this.objectsInCollection = objectsInCollection;
+	}
 
-    @Override
+    public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects){
+		this(collectionClass, classOfObjects, 1);
+	}
+
+	public CollectionGenerationRule(final Class<? extends Collection> collectionClass, final Object[] values) {
+		this.collectionClass = collectionClass;
+		this.values = values;
+		this.objectsInCollection = 0;
+	}
+
+	@Override
     public T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
-        configurationOfCollection.setObjectsInCollections(0);
+        configurationOfCollection.setObjectsInCollections(objectsInCollection);
 		configurationOfCollection.removeRule(this);
         Collection collection = GeneratorRegistry.getInstance().generate(configurationOfCollection, context);
-        collection.add(GeneratorRegistry.getInstance().generate(currentConfiguration, context.push(classOfObjects)));
+		if (values != null){
+			for (Object each : values) collection.add(each);
+		}
         return (T)collection;
     }
 }

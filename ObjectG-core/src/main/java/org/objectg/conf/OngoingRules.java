@@ -42,8 +42,19 @@ public class OngoingRules {
         return null;
     }
 
-    public static <ListT extends Collection<?>> ListT collectionDefinition(Class<ListT> collectionType, Class clazzOfObjects){
+    public static <ItemT, CollT extends Collection<ItemT>> CollT collectionDefinition(Class<CollT> collectionType, Class<ItemT> clazzOfObjects){
         OngoingConfiguration.plannedRule = Rules.collectionDefinition(collectionType, clazzOfObjects);
+        return null;
+    }
+
+    public static <ItemT, CollT extends Collection<ItemT>> CollT collectionDefinition(Class<CollT> collectionType, ItemT... values){
+        OngoingConfiguration.plannedRule = Rules.collectionDefinition(collectionType, values);
+        return null;
+    }
+
+    public static <ItemT, CollT extends Collection<ItemT>> CollT collectionDefinition(Class<CollT> collectionType,
+			Class<ItemT> clazzOfObjects, int objectsInCollection){
+        OngoingConfiguration.plannedRule = Rules.collectionDefinition(collectionType, clazzOfObjects, objectsInCollection);
         return null;
     }
 
