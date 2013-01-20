@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  */
 public class ObjectG {
     private static final PrototypeCreator PROTOTYPE_CREATOR = new PrototypeCreator();
-	private static final ConfigurationManager CONFIGURATION_MANAGER = new ConfigurationManager(1, ObjectG.class);
+	private static final ConfigurationManager CONFIGURATION_MANAGER = new ConfigurationManager(ObjectG.class);
 
     public static <T> T unique(T prototype){
         return unique(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), prototype);
@@ -363,12 +363,38 @@ public class ObjectG {
     }
 
 	/**
+	 * @param configuration configuration that will be used during all generations that will be called
+	 *                      from the class which invoked this method. E.g. if TestCaseA invoked in setup phase
+	 *                      <pre>
+	 *                      public void setup(){
+	 *                      	ObjectG.configLocal(configuration);
+	 *                      }
+	 *                      </pre>
+	 *                      then all generations in this class will have their local configuration taken
+	 *                      from {@code configuration} object
+	 *                      so e.g.
+	 *                      <pre>
+	 *                      public void someTest(){
+	 *                      	...
+	 *                      	ObjectG.unique(Person.class);
+	 *                      }
+	 *                      </pre>
+	 *                      will use provided local configuration.
 	 *
-	 * @param objectWithConfiguration e.g. TestCase having method with
-	 *                                   annotation {@link org.objectg.conf.local.ConfigurationProvider}
+	 *                      Local configuration is preserved during deriving classes, so if TestCaseB extends TestCaseA,
+	 *                      then generating objects in TestCaseB will use local configuration of TestCaseA. If another
+	 *                      local configuration is defined in TestCaseB, then those changes will be merged in
+	 *                      local configuration of TestCaseA. Merging of configuration is done in the order of
+	 *                      test case class hierarchy. This means that more specific class local configuration is more
+	 *                      respected (in our case local configuration of TestCaseB is preffered over local configuration
+	 *                      of TestCaseA).
 	 */
-	public static void setupConfig(final Object objectWithConfiguration) {
-		CONFIGURATION_MANAGER.register(objectWithConfiguration);
+	public static void configLocal(final GenerationConfiguration configuration) {
+		CONFIGURATION_MANAGER.register(configuration);
+	}
+
+	public static void configLocal(final ConfigurationBuilder configurationBuilder){
+		configLocal(configurationBuilder.done());
 	}
 
 	/**

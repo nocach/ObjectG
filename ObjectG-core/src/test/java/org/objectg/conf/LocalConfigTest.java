@@ -3,8 +3,8 @@ package org.objectg.conf;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
-import org.objectg.conf.local.ConfigurationProvider;
 import org.objectg.fixtures.ClassWithIPerson;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;
@@ -21,18 +21,14 @@ import static org.junit.Assert.fail;
  * Date: 3.11.12
  */
 public class LocalConfigTest {
-	@ConfigurationProvider
-	private GenerationConfiguration setupConfiguration(){
-		return ObjectG
-				.config()
-				.when(IPerson.class).useClass(Person.class)
-				.setObjectsInCollection(2)
-				.done();
-	}
 
 	@Before
 	public void setup(){
-		ObjectG.setupConfig(this);
+		ObjectG.configLocal(ObjectG
+				.config()
+				.when(IPerson.class).useClass(Person.class)
+				.setObjectsInCollection(2)
+				.done());
 	}
 
 	//testOne and testTwo show that configuration is applied to all test methods
@@ -84,21 +80,59 @@ public class LocalConfigTest {
 	}
 
 	@Test
-	@Ignore
-	public void localConfigurationIsPresentInDerivedClass(){
-		fail("TestCase.A has localConfiguration, TestCase.B extending A will also have localConfiguration from A");
+	public void localConfigurationWillWorkInDerivedClass(){
+		final TestCaseChild testCase = new TestCaseChild();
+		//setupParent is in parent
+		testCase.setupParent();
+
+		final Tour generatedTourParent = testCase.generateParent();
+		assertEquals("generated from parent: parent configuration should be applied",
+				TestCaseParent.OBJECTS_IN_COLLECTION, generatedTourParent.getStops().size());
+		final Tour generatedTourChild = testCase.generateChild();
+		assertEquals("generated from child: parent configuration should be applied",
+				TestCaseParent.OBJECTS_IN_COLLECTION, generatedTourChild.getStops().size());
 	}
 
 	@Test
-	@Ignore
-	public void multipleLocalConfigurationDefinitions(){
-		fail("test that they are merged");
+	public void localConfigurationCanBeOverridenInDerivedClass(){
+		final TestCaseChild testCase = new TestCaseChild();
+		testCase.setupParent();
+		testCase.setupChild();
+
+		final Tour generatedTourParent = testCase.generateParent();
+		assertEquals("generated from parent: child configuration should have no effect on how parent's generation is done",
+				TestCaseParent.OBJECTS_IN_COLLECTION, generatedTourParent.getStops().size());
+		final Tour generatedTourChild = testCase.generateChild();
+		assertEquals("generated from child: child configuration should override parent's configuration",
+				TestCaseChild.OBJECTS_IN_COLLECTION, generatedTourChild.getStops().size());
 	}
 
-	@Test
-	@Ignore
-	public void localConfigurationCanBeField(){
-		fail("TBD");
+
+	public static class TestCaseParent{
+
+		public static final int OBJECTS_IN_COLLECTION = 0;
+
+		public void setupParent(){
+			ObjectG.configLocal(ObjectG.config().setObjectsInCollection(OBJECTS_IN_COLLECTION));
+		}
+
+		public Tour generateParent(){
+			return ObjectG.unique(Tour.class);
+		}
+
+	}
+
+	public static class TestCaseChild extends TestCaseParent{
+
+		public static final int OBJECTS_IN_COLLECTION = 2;
+
+		public void setupChild(){
+			ObjectG.configLocal(ObjectG.config().setObjectsInCollection(OBJECTS_IN_COLLECTION));
+		}
+
+		public Tour generateChild(){
+			return ObjectG.unique(Tour.class);
+		}
 	}
 
 }

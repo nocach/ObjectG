@@ -6,6 +6,8 @@ import org.objectg.conf.GenerationConfiguration;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -23,6 +25,9 @@ import org.objectg.gen.PostProcessor;
  * </p>
  */
 public abstract class AbstractObjectGConfiguration {
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractObjectGConfiguration.class);
+
 	protected GenerationConfiguration getConfiguration(){
 		return null;
 	}
@@ -45,6 +50,7 @@ public abstract class AbstractObjectGConfiguration {
 	 * @return
 	 */
 	public final GenerationConfiguration merge(PrototypeCreator prototypeCreator, final GenerationConfiguration configuration) {
+		logger.debug("merging default configuration into supplied configuration="+configuration);
 		final Collection<Object> prototypes = getPrototypes();
 		if (prototypes != null){
 			configuration.addAllRules(prototypeCreator.getRulesFromPrototypes(prototypes.toArray()));
@@ -62,6 +68,7 @@ public abstract class AbstractObjectGConfiguration {
 		if (postProcessors != null){
 			configuration.addAllPostProcessors(postProcessors);
 		}
+		logger.info("configuration after merging default settings is " +configuration);
 		return configuration;
 	}
 }

@@ -132,6 +132,10 @@ public class GenerationConfiguration implements Cloneable{
     public String toString() {
         return "GenerationConfiguration{" +
                 "isUnique=" + isUnique +
+				", objectsInCollection=" + objectsInCollections +
+				", postProcessors.size=" + postProcessors.size() +
+				", depth=" + depth +
+				", cycleStrategy=" + cycleStrategy +
                 ", rules.size=" + rules.size() +
                 '}';
     }
@@ -169,7 +173,8 @@ public class GenerationConfiguration implements Cloneable{
     }
 
 	/**
-	 * merge all information from passed configuration into this instance
+	 * merge all information from passed configuration into this instance.
+	 * Will override DEFINED values only if thatConfiguration's level is higher then this configuration's level
 	 * @param thatConfiguration
 	 */
 	public GenerationConfiguration merge(final GenerationConfiguration thatConfiguration) {
@@ -179,6 +184,17 @@ public class GenerationConfiguration implements Cloneable{
 		//During this merge we WANT to override any property that is defined in both configurations
 		//but for reverse this is not true
 		boolean canOverride = thatConfiguration.level.compareTo(this.level) > 0;
+		merge(thatConfiguration, canOverride);
+
+		return this;
+	}
+
+	/**
+	 * merge all information from passed configuration into this instance
+	 * @param thatConfiguration
+	 * @param canOverride if thatConfiguration can override DEFINED values
+	 */
+	public void merge(final GenerationConfiguration thatConfiguration, final boolean canOverride) {
 		//only those properties that are defined in passed configuration
 		//will be set
 		//This is need, because if some this.property isn't null and that.property is null
@@ -202,7 +218,6 @@ public class GenerationConfiguration implements Cloneable{
 		}
 		rules.addAll(thatConfiguration.rules);
 		postProcessors.addAll(thatConfiguration.postProcessors);
-		return this;
 	}
 
 	/**

@@ -3,7 +3,6 @@ package org.objectg.conf;
 import org.junit.Test;
 import org.objectg.ObjectG;
 import org.objectg.conf.defaults.AbstractObjectGConfiguration;
-import org.objectg.conf.local.ConfigurationProvider;
 import org.objectg.fixtures.domain.Person;
 
 import static junit.framework.Assert.assertEquals;
@@ -13,18 +12,14 @@ import static junit.framework.Assert.assertEquals;
  * Date: 10.11.12
  */
 public class LocalVsDefaultsConfigTest extends FakeConfigurationProviderBaseTest {
-	@ConfigurationProvider
-	private GenerationConfiguration setupConfiguration(){
-		return ObjectG
-				.config()
-				.setObjectsInCollection(2)
-				.done();
-	}
 
 	@Override
 	public void setup() {
 		super.setup();
-		ObjectG.setupConfig(this);
+		ObjectG.configLocal(ObjectG
+				.config()
+				.setObjectsInCollection(2)
+				.done());
 	}
 
 	@Test

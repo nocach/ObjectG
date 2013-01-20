@@ -1,13 +1,17 @@
 package org.objectg.conf;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
 import org.objectg.conf.exception.ConfigurationException;
-import org.objectg.conf.local.ConfigurationDiscover;
 import org.objectg.conf.prototype.PrototypeCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -15,34 +19,24 @@ import org.springframework.util.Assert;
  * Date: 3.11.12
  */
 public class ConfigurationManager {
+	private static final Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
 
-	private static final int INNER_STACK_TRACE_OFFSET = 3;
-
-	private int stackTraceOffset;
 	private Class<?> mainApiClass;
-	private ConfigurationDiscover configurationDiscover;
 	private Map<Class, GenerationConfiguration> classToConfiguration = new ConcurrentHashMap<Class, GenerationConfiguration>();
 	/**
-	 * @param stackTraceOffset offset defining how much stack trace elements should be
-	 *                         skipped to get to the Class for which local configuration
-	 *                         should be applied
 	 * @param mainApiClass class from which this ConfigurationManager will be used
 	 */
-	public ConfigurationManager(final int stackTraceOffset, final Class<?> mainApiClass) {
+	public ConfigurationManager(final Class<?> mainApiClass) {
 		Assert.notNull(mainApiClass, "mainApiClass");
-		this.stackTraceOffset = stackTraceOffset;
 		this.mainApiClass = mainApiClass;
-		configurationDiscover = new ConfigurationDiscover();
 	}
 
 	/**
 	 *
-	 * @param objectWithConfiguration object that have local configuration
+	 * @param configuration configuration to be bind to the call class
 	 */
-	public void register(Object objectWithConfiguration){
-		final GenerationConfiguration generationConfiguration = configurationDiscover.get(objectWithConfiguration);
-		if (generationConfiguration == null) return;
-		bindConfigurationToCallClass(generationConfiguration);
+	public void register(GenerationConfiguration configuration){
+		bindConfigurationToCallClass(configuration);
 	}
 
 	private void bindConfigurationToCallClass(final GenerationConfiguration generationConfiguration) {
@@ -70,17 +64,64 @@ public class ConfigurationManager {
 			}
 			throw new ConfigurationException("could not determine called class from stack trace ");
 		} catch (ClassNotFoundException e) {
-			throw new ConfigurationException("could not determine class from which setupConfig was called", e);
+			throw new ConfigurationException("could not determine class from which configLocal was called", e);
 		}
 	}
 
-	private GenerationConfiguration get(){
-		return classToConfiguration.get(getCallingClass());
+	private GenerationConfiguration getLocalConf(){
+		List<Class> callingClassHierarchy = getCallingClassHierarchy();
+		GenerationConfiguration resultConfiguration = getConfigurationForClassHierarchy(callingClassHierarchy);
+		return resultConfiguration;
+	}
+
+	/**
+	 * traverses callingClassHierarchy from the most generic class to most specific. Most specific configuration
+	 * overrides more generic configuration
+	 * @param callingClassHierarchy
+	 * @return
+	 */
+	private GenerationConfiguration getConfigurationForClassHierarchy(final List<Class> callingClassHierarchy) {
+		GenerationConfiguration resultConfiguration = null;
+		for (Class each : callingClassHierarchy){
+			final GenerationConfiguration classConfig = classToConfiguration.get(each);
+			if (classConfig != null){
+				if (resultConfiguration != null){
+					logger.debug("merging local configuration="+classConfig+" found for class="+each.getName());
+					//we WANT to override defined values, because local configurations have same level,
+					//but localConfiguration in more specific class (deeper in class hierarchy) is
+					//considered to have higher level.
+					boolean canOverride = true;
+					resultConfiguration.merge(classConfig, canOverride);
+				}
+				else {
+					logger.debug("found local configuration="+classConfig+" for class="+each.getName());
+					resultConfiguration = classConfig.clone();
+				}
+			}
+		}
+		logger.info("using local configuration="+resultConfiguration);
+		return resultConfiguration;
+	}
+
+	/**
+	 *
+	 * @return list of Class in the order from most superclass to the calling class
+	 */
+	private List<Class> getCallingClassHierarchy() {
+		final Class<?> callingClass = getCallingClass();
+		List<Class> callingClassHierarchy = new LinkedList<Class>();
+		Class current = callingClass;
+		while (current != Object.class){
+			callingClassHierarchy.add(current);
+			current = current.getSuperclass();
+		}
+		Collections.reverse(callingClassHierarchy);
+		return callingClassHierarchy;
 	}
 
 	public GenerationConfiguration getFinalConfiguration(PrototypeCreator prototypeCreator
 			, GenerationConfiguration userConfiguration) {
-		GenerationConfiguration localConfiguration = get();
+		GenerationConfiguration localConfiguration = getLocalConf();
 		if (localConfiguration == null){
 			localConfiguration = new GenerationConfiguration(GenerationConfiguration.LEVEL.LOCAL);
 		}
@@ -93,8 +134,13 @@ public class ConfigurationManager {
 
 	private GenerationConfiguration mergeDefaultConfiguration(PrototypeCreator prototypeCreator, GenerationConfiguration configuration) {
 		AbstractObjectGConfiguration defaultConfiguration = DefaultConfigurationProviderHolder.get().getDefaultConfiguration();
-		configuration = (defaultConfiguration != null ? defaultConfiguration.merge(prototypeCreator, configuration) : configuration);
-		return configuration;
+		if (defaultConfiguration != null) {
+			return defaultConfiguration.merge(prototypeCreator, configuration);
+		}
+		else {
+			logger.debug("no default configuration found");
+			return configuration;
+		}
 	}
 
 	public void setLocalConfiguration(final GenerationConfiguration configuration) {
