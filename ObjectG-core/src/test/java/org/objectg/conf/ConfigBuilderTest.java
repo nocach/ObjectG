@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.fixtures.ClassWithIPerson;
@@ -14,6 +15,7 @@ import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Tour;
 import org.objectg.fixtures.domain.TourSeason;
+import org.objectg.fixtures.domain.TourStop;
 import org.objectg.fixtures.domain.TourType;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
@@ -187,10 +189,46 @@ public class ConfigBuilderTest {
 		Assert.assertEquals(TourType.ENTERPRISE, tours.get(1).getTourType());
 	}
 
+	@Test
+	public void canRewriteValueInCollectionUsingPropertyExpression(){
+		final TourStop expectedTourStop = new TourStop();
+		Tour unique = ObjectG.unique(Tour.class
+				, ObjectG.config()
+				.when("stops[0]")
+				.setValue(expectedTourStop));
+
+
+		assertEquals("first stop should be set by expression", expectedTourStop, unique.getStops().get(0));
+	}
+
+	@Test
+	@Ignore
+	@GoodToHave
+	public void canCreateMissingObjectsInPropertyExpression(){
+		Tour tour = ObjectG.unique(Tour.class, ObjectG.config()
+				.noObjects()
+				.when("season.name").setValue("setByExpression"));
+
+		assertNotNull("season should be generated when property expression was evaluated", tour.getSeason());
+		assertEquals("season.name should be configurated with property expression",
+				"setByExpression", tour.getSeason().getName());
+	}
+
     @Test
-    @Ignore
+	@Ignore
+	@GoodToHave
     public void canInferPropertyTypeForExpressionMatchingCollection(){
-        fail("when(employee2Addresses[0]) should work");
+		final TourStop expectedTourStop = new TourStop();
+		Tour unique = ObjectG.unique(Tour.class
+				, ObjectG.config()
+				//when property expression is evaluated object "stops[0]" is null, so we must to find
+				//another way how to "get" the type of those stops. This test tests this functionality.
+				.setObjectsInCollection(0)
+				.when("stops[0]")
+				.setValue(expectedTourStop));
+
+
+		assertEquals("first stop should be set by expression", expectedTourStop, unique.getStops().get(0));
     }
 
 	public static class ClassA{

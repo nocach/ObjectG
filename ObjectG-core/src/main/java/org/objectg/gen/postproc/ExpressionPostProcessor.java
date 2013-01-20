@@ -5,6 +5,7 @@ import de.odysseus.el.util.SimpleResolver;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.ExtendedPropertyDescriptor;
 import org.objectg.gen.GenerationContext;
+import org.objectg.gen.GenerationException;
 import org.objectg.gen.PostProcessor;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
@@ -37,36 +38,65 @@ public class ExpressionPostProcessor implements PostProcessor {
         //TODO: add logging here on how we make things
         SimpleContext context = new SimpleContext(new SimpleResolver());
 
-        factory.createValueExpression(context, "#{root}", Object.class).setValue(context, generatedObject);
-        ValueExpression targetValueExpression = factory.createValueExpression(context
-                , "#{root" + "." + targetPropertyExpression + "}", Object.class);
+		setRootObject(generatedObject, context);
+		ValueExpression targetValueExpression = createTargetExpression(context);
         Object targetObject = targetValueExpression.getValue(context);
 
         Object targetParentObject = getTargetParentObject(context);
         Assert.notNull(targetParentObject, "target's parent object can't be null");
 
         final String targetPropertyName = getTargetPropertyName();
+		final Object handledPropertyValue;
+		//expression resulted into some attribute of object (e.g. person.name)
+		if (targetPropertyName != null){
+			handledPropertyValue = createValueForTargetProperty(configuration, generatedObject, targetObject,
+					targetParentObject, targetPropertyName);
+		}
+		else {
+			//expression resulted in object itself (e.g. persons[0] - we generate instance of Person)
+			if (targetObject != null){
+				final GenerationContext targetObjectGenContext = GenerationContext.createRoot(targetObject.getClass());
+				handledPropertyValue = handler.handle(configuration, generatedObject, targetObjectGenContext);
+			}
+			else {
+				throw new GenerationException("could not infer type for expression: "+targetPropertyExpression);
+			}
+		}
 
-        PropertyDescriptor targetPropertyDesc = getTargetPropertyDescription(targetParentObject, targetPropertyName);
-
-        Field targetField = ReflectionUtils.findField(targetParentObject.getClass(), targetPropertyName);
-
-        Class targetType = getTargetPropertyType(targetObject, targetPropertyDesc, targetField);
-
-        if (targetType == null){
-            throw new IllegalArgumentException("could not infer target expression type " +
-                    "for propertyExpression="+targetPropertyExpression);
-        }
-
-        GenerationContext generationContext = createGenerationContext(targetParentObject, targetPropertyDesc, targetField, targetType);
-
-        Object handledPropertyValue = handler.handle(configuration, generatedObject, generationContext);
         targetValueExpression.setValue(context, handledPropertyValue);
 
         return generatedObject;
     }
 
-    private String targetParentExpression() {
+	private <T> Object createValueForTargetProperty(final GenerationConfiguration configuration,
+			final T generatedObject,
+			final Object targetObject, final Object targetParentObject, final String targetPropertyName) {
+		PropertyDescriptor targetPropertyDesc = getTargetPropertyDescription(targetParentObject, targetPropertyName);
+
+		Field targetField = ReflectionUtils.findField(targetParentObject.getClass(), targetPropertyName);
+
+		Class targetType = getTargetPropertyType(targetObject, targetPropertyDesc, targetField);
+
+		if (targetType == null){
+			throw new IllegalArgumentException("could not infer target expression type " +
+					"for propertyExpression="+targetPropertyExpression);
+		}
+
+		GenerationContext generationContext = createGenerationContext(targetParentObject, targetPropertyDesc, targetField, targetType);
+
+		return handler.handle(configuration, generatedObject, generationContext);
+	}
+
+	private ValueExpression createTargetExpression(final SimpleContext context) {
+		return factory.createValueExpression(context
+                , "#{root" + "." + targetPropertyExpression + "}", Object.class);
+	}
+
+	private <T> void setRootObject(final T generatedObject, final SimpleContext context) {
+		factory.createValueExpression(context, "#{root}", Object.class).setValue(context, generatedObject);
+	}
+
+	private String targetParentExpression() {
         return getTargetPropertyExpression();
     }
 
