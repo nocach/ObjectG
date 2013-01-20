@@ -103,16 +103,6 @@ public class NativeClassUniqueGeneratorTest extends Assert{
     }
 
     @Test
-    @Ignore
-    public void mustThrowWhenNoNextUniqueByteIsAvailable(){
-        //TODO: same tests must exist for long, int, etc
-        //must allow in generation configuration if to use strict mode (throwing exception)
-        //or to revert sequence to the start and continue in generating
-        fail("not implemented");
-
-    }
-
-    @Test
     public void forVoidOnlyNullIsGenerated(){
         assertNull("first value", ObjectG.unique(Void.class));
         assertNull("second value", ObjectG.unique(Void.class));

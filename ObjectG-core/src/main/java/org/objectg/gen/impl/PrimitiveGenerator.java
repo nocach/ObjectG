@@ -207,8 +207,9 @@ class PrimitiveGenerator extends Generator {
 				int charCode = charSequence.incrementAndGet();
 				if (Character.isDefined(charCode)) return Character.toChars(charCode)[0];
 			}
-			throw new IllegalStateException("could not generate new unique char, char sequence is at "
-					+ charSequence.get());
+			//reset sequence
+			charSequence.set(0);
+			return returnNextCharOrThrow();
 		}
 	}
 	private static class BigDecimalSequence implements Sequence<BigDecimal>{
