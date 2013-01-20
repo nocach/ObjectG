@@ -2,6 +2,7 @@ package org.objectg.conf;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.GoodToHave;
 import org.objectg.conf.prototype.PrototypeCreator;
 
 import static org.junit.Assert.fail;
@@ -27,7 +28,8 @@ public class PrototypeCreatorTest {
 
     @Test
     @Ignore
-    public void whatWillHappenWhenClassIsAbstract(){
+	@GoodToHave
+    public void canCreatePrototypeForAbstractClass(){
         fail("think about it");
     }
 

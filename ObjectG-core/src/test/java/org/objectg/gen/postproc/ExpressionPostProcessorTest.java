@@ -38,9 +38,22 @@ public class ExpressionPostProcessorTest implements ExpressionPostProcessor.Hand
         assertNotNull("expressionGenerationContext", handleContextForExpression);
     }
 
-    @Test
-    @Ignore
-    public void boundConditions(){
-        fail("think about empty expression and invalid expressions");
+    @Test(expected = PostProcessingException.class)
+    public void throwsWhenNotExistingProperty(){
+		ExpressionPostProcessor expressionPostProcessor = new ExpressionPostProcessor(
+				"notExistingProperty", this);
+
+		Person person = ObjectG.unique(Person.class);
+		expressionPostProcessor.process(new GenerationConfiguration(), person);
     }
+
+	@Test(expected = PostProcessingException.class)
+	public void throwsWhenEmptyPropertyExpression(){
+		ExpressionPostProcessor expressionPostProcessor = new ExpressionPostProcessor(
+				"", this);
+		Person person = ObjectG.unique(Person.class);
+		expressionPostProcessor.process(new GenerationConfiguration(), person);
+	}
+
+
 }

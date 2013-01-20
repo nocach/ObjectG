@@ -6,6 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.IPerson;
 
@@ -168,6 +169,7 @@ public class NotNativeClassGeneratorTest extends Assert{
 
     @Test
     @Ignore
+	@GoodToHave
     public void canConstructAbstractClasses(){
         fail("field AbstractPerson");
     }

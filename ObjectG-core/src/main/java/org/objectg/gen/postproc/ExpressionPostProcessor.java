@@ -35,37 +35,45 @@ public class ExpressionPostProcessor implements PostProcessor {
         this.handler = handler;
     }
     public <T> T process(GenerationConfiguration configuration, T generatedObject){
-        //TODO: add logging here on how we make things
-        SimpleContext context = new SimpleContext(new SimpleResolver());
+		try{
+			Assert.isTrue(!targetPropertyExpression.trim().isEmpty(), "targetPropertyExpression should not be empty");
+			//TODO: add logging here on how we make things
+			SimpleContext context = new SimpleContext(new SimpleResolver());
 
-		setRootObject(generatedObject, context);
-		ValueExpression targetValueExpression = createTargetExpression(context);
-        Object targetObject = targetValueExpression.getValue(context);
+			setRootObject(generatedObject, context);
+			ValueExpression targetValueExpression = createTargetExpression(context);
+			Object targetObject = targetValueExpression.getValue(context);
 
-        Object targetParentObject = getTargetParentObject(context);
-        Assert.notNull(targetParentObject, "target's parent object can't be null");
+			Object targetParentObject = getTargetParentObject(context);
+			Assert.notNull(targetParentObject, "target's parent object can't be null");
 
-        final String targetPropertyName = getTargetPropertyName();
-		final Object handledPropertyValue;
-		//expression resulted into some attribute of object (e.g. person.name)
-		if (targetPropertyName != null){
-			handledPropertyValue = createValueForTargetProperty(configuration, generatedObject, targetObject,
-					targetParentObject, targetPropertyName);
-		}
-		else {
-			//expression resulted in object itself (e.g. persons[0] - we generate instance of Person)
-			if (targetObject != null){
-				final GenerationContext targetObjectGenContext = GenerationContext.createRoot(targetObject.getClass());
-				handledPropertyValue = handler.handle(configuration, generatedObject, targetObjectGenContext);
+			final String targetPropertyName = getTargetPropertyName();
+			final Object handledPropertyValue;
+			//expression resulted into some attribute of object (e.g. person.name)
+			if (targetPropertyName != null){
+				handledPropertyValue = createValueForTargetProperty(configuration, generatedObject, targetObject,
+						targetParentObject, targetPropertyName);
 			}
 			else {
-				throw new GenerationException("could not infer type for expression: "+targetPropertyExpression);
+				//expression resulted in object itself (e.g. persons[0] - we generate instance of Person)
+				if (targetObject != null){
+					final GenerationContext targetObjectGenContext = GenerationContext.createRoot(targetObject.getClass());
+					handledPropertyValue = handler.handle(configuration, generatedObject, targetObjectGenContext);
+				}
+				else {
+					throw new GenerationException("could not infer type for expression: "+targetPropertyExpression);
+				}
 			}
+
+			targetValueExpression.setValue(context, handledPropertyValue);
+
+			return generatedObject;
 		}
-
-        targetValueExpression.setValue(context, handledPropertyValue);
-
-        return generatedObject;
+		catch (Exception e){
+			throw new PostProcessingException("could not post process " +
+					"generatedObject="+generatedObject+
+					", configuration="+configuration, e);
+		}
     }
 
 	private <T> Object createValueForTargetProperty(final GenerationConfiguration configuration,

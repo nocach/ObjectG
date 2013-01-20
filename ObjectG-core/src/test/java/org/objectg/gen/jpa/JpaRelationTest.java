@@ -7,6 +7,7 @@ import org.hibernate.mapping.PersistentClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.GoodToHave;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -122,6 +123,7 @@ public class JpaRelationTest {
 
     @Test
     @Ignore
+	@GoodToHave
     public void shouldWorkWithGenericCollectionUsingTargetClassValue(){
         Map<Class, List<Relation>>  relationsFromOrganization = relationInspector.fromEntity(OrganizationUnitWithoutCollectionType.class);
 

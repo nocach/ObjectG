@@ -30,12 +30,6 @@ public class InterfacesGenerationTest {
         assertThat(unique.getBaseClass(), Matchers.instanceOf(DerivedDerivedClass.class));
     }
 
-    @Test
-    @Ignore
-    public void canSpecifyImplementationForClass(){
-        fail("not implemented yet");
-    }
-
     public static interface NoMethodsInterface{
     }
 
