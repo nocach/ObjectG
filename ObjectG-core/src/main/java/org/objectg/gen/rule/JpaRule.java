@@ -1,14 +1,14 @@
 package org.objectg.gen.rule;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.RuleScope;
 import org.objectg.gen.jpa.Relation;
 import org.objectg.gen.jpa.RelationValueProvider;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * User: __nocach

@@ -2,6 +2,7 @@ package org.objectg.gen;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertTrue;
  * User: __nocach
  * Date: 30.9.12
  */
-public class HierarchyTest {
+public class HierarchyTest extends BaseObjectGTest {
 
     private Hierarchy hierarchy;
 

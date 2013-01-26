@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * User: __nocach
@@ -20,7 +20,7 @@ class SetGenerator extends CollectionGenerator<Set> {
 			contextForGenertingSetObj.pop();
 			return;
 		}
-        Object objectForCollection = GeneratorRegistry.getInstance().generate(configuration, contextForGenertingSetObj);
+        Object objectForCollection = GenerationSession.get().generate(configuration, contextForGenertingSetObj);
         collection.add(objectForCollection);
     }
 

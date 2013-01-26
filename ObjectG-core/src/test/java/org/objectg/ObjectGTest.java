@@ -1,5 +1,6 @@
 package org.objectg;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.fixtures.domain.Person;
@@ -9,7 +10,12 @@ import org.objectg.fixtures.domain.Tour;
  * User: __nocach
  * Date: 21.10.12
  */
-public class ObjectGTest {
+public class ObjectGTest extends BaseObjectGTest{
+
+	@Before
+	public void canGenerateInBefore(){
+		ObjectG.unique(Person.class);
+	}
 
     @Test
     public void canGenerateFromPrototype(){

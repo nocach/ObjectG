@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
  *     Interface used to generate values for specific types.
  * </p>
  * <p>
+ *     Generator CAN BE not thread-safe. Generators are used on per-thread basis, so no explicit concurrency management
+ *     is required.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 26.8.12
  * </p>

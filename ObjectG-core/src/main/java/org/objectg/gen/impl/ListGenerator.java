@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * User: __nocach
@@ -28,7 +28,7 @@ class ListGenerator extends CollectionGenerator<List>{
 			contextForCollectionsObject.pop();
 			return;
 		}
-        Object generatedValue = GeneratorRegistry.getInstance().generate(configuration, contextForCollectionsObject);
+        Object generatedValue = GenerationSession.get().generate(configuration, contextForCollectionsObject);
         collection.add(generatedValue);
     }
 

@@ -2,7 +2,6 @@ package org.objectg.gen.rule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -120,4 +119,7 @@ public class Rules {
 		return new ConfigurationOverrideGenerationRule(configuration);
 	}
 
+	public static GenerationRule range(final int from, final int to) {
+		return new RangeGenerationRule(from, to);
+	}
 }

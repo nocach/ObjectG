@@ -3,6 +3,7 @@ package org.objectg.conf;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.ClassWithIPerson;
@@ -20,7 +21,7 @@ import static org.junit.Assert.fail;
  * User: __nocach
  * Date: 3.11.12
  */
-public class LocalConfigTest {
+public class LocalConfigTest extends BaseObjectGTest {
 
 	@Before
 	public void setup(){

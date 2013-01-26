@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * User: __nocach
@@ -39,7 +39,7 @@ class CollectionGenerationRule<T> extends GenerationRule<T>{
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(objectsInCollection);
 		configurationOfCollection.removeRule(this);
-        Collection collection = GeneratorRegistry.getInstance().generate(configurationOfCollection, context);
+        Collection collection = GenerationSession.get().generate(configurationOfCollection, context);
 		if (values != null){
 			for (Object each : values) collection.add(each);
 		}

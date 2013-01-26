@@ -1,5 +1,13 @@
 package org.objectg.gen.postproc;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+
+import javax.el.ValueExpression;
+
 import de.odysseus.el.util.SimpleContext;
 import de.odysseus.el.util.SimpleResolver;
 import org.objectg.conf.GenerationConfiguration;
@@ -9,13 +17,6 @@ import org.objectg.gen.GenerationException;
 import org.objectg.gen.PostProcessor;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
-
-import javax.el.ValueExpression;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 
 /**
  * User: __nocach

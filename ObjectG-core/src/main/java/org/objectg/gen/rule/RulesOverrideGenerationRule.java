@@ -1,11 +1,11 @@
 package org.objectg.gen.rule;
 
+import java.util.List;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.GeneratorRegistry;
-
-import java.util.List;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ class RulesOverrideGenerationRule extends GenerationRule<Object> {
         GenerationConfiguration overridenConfiguration = currentConfiguration.newWithMoreRules(rulesToOverride);
         //prevent cycling applying of this rule
         overridenConfiguration.removeRule(this);
-        return GeneratorRegistry.getInstance().generate(overridenConfiguration, context);
+        return GenerationSession.get().generate(overridenConfiguration, context);
     }
 
 }

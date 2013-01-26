@@ -15,7 +15,7 @@ import org.objectg.conf.prototype.InterceptedByPrototypeCreator;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.rule.Rules;
 import org.springframework.util.Assert;
 
@@ -104,10 +104,11 @@ public class ObjectG {
     }
 
     public static <T> T generate(Class<T> clazz, GenerationConfiguration configuration) {
+		GenerationSession.get().assertReady();
         addDefaultRules(configuration);
 		GenerationConfiguration finalConfiguration = CONFIGURATION_MANAGER
 				.getFinalConfiguration(PROTOTYPE_CREATOR, configuration);
-        T result = (T) GeneratorRegistry.getInstance().generate(finalConfiguration, GenerationContext.createRoot(clazz));
+        T result = (T) GenerationSession.get().generate(finalConfiguration, GenerationContext.createRoot(clazz));
         configuration.postProcess(result);
         return result;
     }
@@ -412,5 +413,13 @@ public class ObjectG {
 	 */
 	public static void setupConfig(GenerationConfiguration configuration){
 		CONFIGURATION_MANAGER.setLocalConfiguration(configuration);
+	}
+
+	public static void setup() {
+		GenerationSession.get().begin();
+	}
+
+	public static void teardown() {
+		GenerationSession.get().end();
 	}
 }

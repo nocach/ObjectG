@@ -1,6 +1,7 @@
 package org.objectg.gen.rule;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 
@@ -12,7 +13,7 @@ import static junit.framework.Assert.assertTrue;
  * User: __nocach
  * Date: 1.9.12
  */
-public class FromListGenerationRuleTest {
+public class FromListGenerationRuleTest extends BaseObjectGTest {
 
     @Test
     public void canGenerateByRule(){

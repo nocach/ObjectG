@@ -1,6 +1,7 @@
 package org.objectg.gen;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.Person;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertNull;
  * User: __nocach
  * Date: 21.10.12
  */
-public class StaticFieldsGenerationTest {
+public class StaticFieldsGenerationTest extends BaseObjectGTest {
 
     @Test
     public void staticFieldsAreSkipped(){

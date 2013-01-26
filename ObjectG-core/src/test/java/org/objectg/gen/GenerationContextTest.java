@@ -1,6 +1,7 @@
 package org.objectg.gen;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -9,7 +10,7 @@ import static junit.framework.Assert.assertTrue;
  * User: __nocach
  * Date: 14.10.12
  */
-public class GenerationContextTest {
+public class GenerationContextTest extends BaseObjectGTest {
 
     @Test
     public void canDefineRoot(){

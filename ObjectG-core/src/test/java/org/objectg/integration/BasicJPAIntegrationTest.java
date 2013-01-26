@@ -1,6 +1,7 @@
 package org.objectg.integration;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.Departure;
 import org.objectg.fixtures.domain.Person;
@@ -13,7 +14,7 @@ import static junit.framework.Assert.assertNotNull;
  * User: __nocach
  * Date: 12.10.12
  */
-public class BasicJPAIntegrationTest {
+public class BasicJPAIntegrationTest extends BaseObjectGTest {
 
     @Test
     public void basic(){

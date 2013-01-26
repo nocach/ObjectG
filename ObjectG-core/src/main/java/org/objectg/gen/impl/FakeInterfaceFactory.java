@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
  * Date: 18.10.12
  */
 class FakeInterfaceFactory {
-    private Logger logger = LoggerFactory.getLogger(FakeInterfaceFactory.class);
+    private static Logger logger = LoggerFactory.getLogger(FakeInterfaceFactory.class);
     public <T> T create(Class<T> interfaze) {
         try {
             Assert.notNull(interfaze);

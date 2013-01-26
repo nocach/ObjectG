@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * User: __nocach
@@ -27,9 +27,9 @@ class MapGenerator extends CollectionGenerator<Map>{
 			contextForGeneratingKey.pop();
 			return;
 		}
-        Object mapKey = GeneratorRegistry.getInstance()
+        Object mapKey = GenerationSession.get()
                 .generate(configuration, contextForGeneratingKey);
-        Object mapValue = GeneratorRegistry.getInstance()
+        Object mapValue = GenerationSession.get()
                 .generate(configuration, getContextForGeneratingValue(contextOfCollection));
         collection.put(mapKey, mapValue);
     }

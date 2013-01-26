@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.OngoingRules;
 
@@ -21,7 +22,7 @@ import static junit.framework.Assert.fail;
  * User: __nocach
  * Date: 22.9.12
  */
-public class CollectionsGeneratorTest {
+public class CollectionsGeneratorTest extends BaseObjectGTest {
 
     @Test
     public void canGenerateCollection(){

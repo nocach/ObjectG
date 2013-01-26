@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.conf.exception.PrototypeMisuseException;
@@ -25,7 +26,7 @@ import static org.objectg.conf.OngoingRules.value;
  * User: __nocach
  * Date: 15.9.12
  */
-public class PrototypeConfigTest {
+public class PrototypeConfigTest extends BaseObjectGTest {
 
     @Test
     public void valueSetOnPrototypeIsTheSameForEveryGeneratedObject(){

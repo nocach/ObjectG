@@ -1,6 +1,7 @@
 package org.objectg.gen;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 
 import static org.junit.Assert.assertEquals;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertNotNull;
  * User: __nocach
  * Date: 21.10.12
  */
-public class FinalFieldsGenerationTest {
+public class FinalFieldsGenerationTest extends BaseObjectGTest {
 
     @Test
     public void finalFieldsAreSkipped(){

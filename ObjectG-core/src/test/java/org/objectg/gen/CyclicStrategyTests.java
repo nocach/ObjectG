@@ -3,6 +3,7 @@ package org.objectg.gen;
 import java.util.List;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 
 import static junit.framework.Assert.assertEquals;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertNull;
  * User: __nocach
  * Date: 2.10.12
  */
-public class CyclicStrategyTests {
+public class CyclicStrategyTests extends BaseObjectGTest {
 
     @Test
     public void backReferenceStrategyBasic(){

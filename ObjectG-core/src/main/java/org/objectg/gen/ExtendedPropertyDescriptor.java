@@ -1,14 +1,18 @@
 package org.objectg.gen;
 
-import org.objectg.util.Generics;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.objectg.util.Generics;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>

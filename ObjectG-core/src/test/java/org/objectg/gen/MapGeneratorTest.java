@@ -1,6 +1,7 @@
 package org.objectg.gen;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
  * User: __nocach
  * Date: 23.9.12
  */
-public class MapGeneratorTest {
+public class MapGeneratorTest extends BaseObjectGTest {
 
     @Test
     public void canGenerateConcreteImplMap(){

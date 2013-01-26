@@ -7,6 +7,7 @@ import org.hibernate.mapping.PersistentClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.GoodToHave;
 
 import javax.persistence.*;
@@ -22,7 +23,7 @@ import static junit.framework.Assert.assertTrue;
  * User: __nocach
  * Date: 13.10.12
  */
-public class JpaRelationTest {
+public class JpaRelationTest extends BaseObjectGTest {
 
     private RelationInspector relationInspector;
 

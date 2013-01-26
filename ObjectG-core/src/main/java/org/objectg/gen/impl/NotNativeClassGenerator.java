@@ -17,8 +17,8 @@ import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.ExtendedPropertyDescriptor;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
+import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.Generator;
-import org.objectg.gen.GeneratorRegistry;
 import org.objectg.util.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +177,7 @@ class NotNativeClassGenerator extends Generator {
     }
 
     private Object generateForHierarchy(GenerationConfiguration configuration, GenerationContext pushedContext) {
-        Object result = GeneratorRegistry.getInstance().generate(configuration, pushedContext);
+        Object result = GenerationSession.get().generate(configuration, pushedContext);
         return result;
     }
 

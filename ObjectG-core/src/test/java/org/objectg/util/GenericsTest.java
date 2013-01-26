@@ -3,6 +3,7 @@ package org.objectg.util;
 import java.util.List;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -10,7 +11,7 @@ import static junit.framework.Assert.assertEquals;
  * User: __nocach
  * Date: 17.11.12
  */
-public class GenericsTest {
+public class GenericsTest extends BaseObjectGTest {
 
 	@Test
 	public void simpleGeneric() throws NoSuchFieldException {

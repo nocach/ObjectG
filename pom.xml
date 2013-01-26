@@ -102,7 +102,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
-            <scope>test</scope>
+            <!-- not test because we supply our own runner -->
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

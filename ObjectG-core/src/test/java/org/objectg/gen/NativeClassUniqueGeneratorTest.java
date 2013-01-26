@@ -9,13 +9,14 @@ import java.util.Date;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 
 /**
  * User: __nocach
  * Date: 26.8.12
  */
-public class NativeClassUniqueGeneratorTest extends Assert{
+public class NativeClassUniqueGeneratorTest extends BaseObjectGTest {
 
     @Test
     public void primitivesAreUnique(){

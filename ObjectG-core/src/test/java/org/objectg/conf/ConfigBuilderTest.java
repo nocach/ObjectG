@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertTrue;
  * User: __nocach
  * Date: 12.10.12
  */
-public class ConfigBuilderTest {
+public class ConfigBuilderTest extends BaseObjectGTest {
 
     @Test(expected = ConfigurationException.class)
     public void throwsWhenTryingToPassNotPrototypeObject(){

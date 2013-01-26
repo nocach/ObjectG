@@ -97,4 +97,9 @@ public class OngoingRules {
 		OngoingConfiguration.plannedRule = Rules.configurationOverride(configuration);
 		return null;
 	}
+
+	public static int range(final int from, final int to) {
+		OngoingConfiguration.plannedRule = Rules.range(from, to);
+		return 0;
+	}
 }

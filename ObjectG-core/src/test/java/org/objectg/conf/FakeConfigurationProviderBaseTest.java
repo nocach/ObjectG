@@ -2,6 +2,7 @@ package org.objectg.conf;
 
 import org.junit.After;
 import org.junit.Before;
+import org.objectg.BaseObjectGTest;
 import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.conf.defaults.DefaultConfigurationProvider;
 import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
@@ -10,7 +11,7 @@ import org.objectg.conf.defaults.DefaultConfigurationProviderHolder;
  * User: __nocach
  * Date: 10.11.12
  */
-public abstract class FakeConfigurationProviderBaseTest {
+public abstract class FakeConfigurationProviderBaseTest extends BaseObjectGTest {
 	private DefaultConfigurationProvider previous;
 	protected FakeConfigurationProvider fakeConfigurationProvider;
 	@Before

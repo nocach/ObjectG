@@ -3,6 +3,7 @@ package org.objectg.gen.impl;
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;
 import org.junit.runner.JUnitCore;
+import org.objectg.BaseObjectGTest;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.CompositeGenerator;
 import org.objectg.gen.GenerationContext;
@@ -14,7 +15,7 @@ import static junit.framework.Assert.assertNotSame;
  * User: __nocach
  * Date: 26.8.12
  */
-public class CompositeGeneratorTest {
+public class CompositeGeneratorTest extends BaseObjectGTest {
     private static final CompositeGenerator generator = new CompositeGenerator(
             new DummyGenerator(),
             new PrimitiveGenerator());

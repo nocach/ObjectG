@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.fixtures.IMethods;
 
 import static junit.framework.Assert.assertEquals;
@@ -14,7 +15,7 @@ import static junit.framework.Assert.assertNotNull;
  * User: __nocach
  * Date: 18.10.12
  */
-public class FakeInterfaceFactoryTest {
+public class FakeInterfaceFactoryTest extends BaseObjectGTest {
 
     private FakeInterfaceFactory factory;
 

@@ -1,6 +1,7 @@
 package org.objectg.gen.rule;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.OngoingRules;
 import org.objectg.fixtures.domain.FixedPrice;
@@ -11,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
  * User: __nocach
  * Date: 5.11.12
  */
-public class RulesTest {
+public class RulesTest extends BaseObjectGTest {
 	@Test
 	public void setGeneratedObjectRule(){
 		//TODO: add comment why or when to use this?

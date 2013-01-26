@@ -3,7 +3,7 @@ package org.objectg.gen.rule;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 import org.springframework.util.Assert;
 
 /**
@@ -23,7 +23,7 @@ class OverrideContextGenerationRule extends GenerationRule {
 	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		transformer.transform(context);
 		if (!permanent) currentConfiguration.removeRule(this);
-		return GeneratorRegistry.getInstance().generate(currentConfiguration, context);
+		return GenerationSession.get().generate(currentConfiguration, context);
 	}
 
 }

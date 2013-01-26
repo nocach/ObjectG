@@ -1,11 +1,11 @@
 package org.objectg.gen.impl;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.Generator;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: __nocach
@@ -24,7 +24,6 @@ class EnumerationGenerator extends Generator {
     }
 
     private void cycleIncrement(Class<Enum> enumClass) {
-        //TODO: NOT THREAD SAFE
         Integer currentIndex = enumConstantIndexes.get(enumClass);
         Integer newIndex = currentIndex + 1;
         if (newIndex > enumClass.getEnumConstants().length - 1){

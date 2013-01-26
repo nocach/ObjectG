@@ -1,6 +1,7 @@
 package org.objectg.gen;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.Tour;
 import org.objectg.fixtures.domain.TourType;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
  * User: __nocach
  * Date: 9.10.12
  */
-public class EnumerationGenerationTest {
+public class EnumerationGenerationTest extends BaseObjectGTest {
 
     @Test
     public void canGenerateEnumeration(){

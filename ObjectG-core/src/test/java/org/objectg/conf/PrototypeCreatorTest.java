@@ -2,6 +2,7 @@ package org.objectg.conf;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.GoodToHave;
 import org.objectg.conf.prototype.PrototypeCreator;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.fail;
  * User: __nocach
  * Date: 15.9.12
  */
-public class PrototypeCreatorTest {
+public class PrototypeCreatorTest extends BaseObjectGTest {
 
     @Test
     public void canCreateTwoPrototypes(){

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.IPerson;
@@ -14,7 +15,7 @@ import org.objectg.fixtures.domain.IPerson;
  * User: __nocach
  * Date: 29.8.12
  */
-public class NotNativeClassGeneratorTest extends Assert{
+public class NotNativeClassGeneratorTest extends BaseObjectGTest {
 
 
     @Test

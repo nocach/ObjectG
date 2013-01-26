@@ -8,8 +8,8 @@ import java.util.Date;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
+import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.Generator;
-import org.objectg.gen.GeneratorRegistry;
 
 /**
  * User: __nocach
@@ -46,56 +46,56 @@ class ArrayGenerator extends Generator {
         if (arrayType.equals(int[].class))  {
             int[] result = new int[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Integer>generate(configuration, context.push(int.class));
+                result[i] = GenerationSession.get().<Integer>generate(configuration, context.push(int.class));
             }
             return (T)result;
         }
         if (arrayType.equals(double[].class)) {
             double[] result = new double[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Double>generate(configuration, context.push(double.class));
+                result[i] = GenerationSession.get().<Double>generate(configuration, context.push(double.class));
             }
             return (T)result;
         }
         if (arrayType.equals(long[].class)) {
             long[] result = new long[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Long>generate(configuration, context.push(long.class));
+                result[i] = GenerationSession.get().<Long>generate(configuration, context.push(long.class));
             }
             return (T)result;
         }
         if (arrayType.equals(float[].class)) {
             float[] result = new float[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Float>generate(configuration, context.push(float.class));
+                result[i] = GenerationSession.get().<Float>generate(configuration, context.push(float.class));
             }
             return (T)result;
         }
         if (arrayType.equals(byte[].class)) {
             byte[] result = new byte[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Byte>generate(configuration, context.push(byte.class));
+                result[i] = GenerationSession.get().<Byte>generate(configuration, context.push(byte.class));
             }
             return (T)result;
         }
         if (arrayType.equals(char[].class)) {
             char[] result = new char[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Character>generate(configuration, context.push(char.class));
+                result[i] = GenerationSession.get().<Character>generate(configuration, context.push(char.class));
             }
             return (T)result;
         }
         if (arrayType.equals(boolean[].class)) {
             boolean[] result = new boolean[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Boolean>generate(configuration, context.push(boolean.class));
+                result[i] = GenerationSession.get().<Boolean>generate(configuration, context.push(boolean.class));
             }
             return (T)result;
         }
         if (arrayType.equals(short[].class)) {
             short[] result = new short[configuration.getObjectsInCollections()];
             for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-                result[i] = GeneratorRegistry.getInstance().<Short>generate(configuration, context.push(short.class));
+                result[i] = GenerationSession.get().<Short>generate(configuration, context.push(short.class));
             }
             return (T)result;
         }
@@ -103,7 +103,7 @@ class ArrayGenerator extends Generator {
         Class<U> arrayObjectClass = (Class<U>)Class.forName(arrayType.getName().substring(2, arrayType.getName().length() - 1));
         U[] array = (U[])Array.newInstance(arrayObjectClass, configuration.getObjectsInCollections());
         for (int i = 0; i < configuration.getObjectsInCollections(); i++){
-            array[i] = GeneratorRegistry.getInstance().<U>generate(configuration, context.push(getArrayObjectClass(arrayType)));
+            array[i] = GenerationSession.get().<U>generate(configuration, context.push(getArrayObjectClass(arrayType)));
         }
         return (T)array;
     }

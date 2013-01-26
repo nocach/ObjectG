@@ -1,6 +1,7 @@
 package org.objectg.gen.rule;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.gen.RuleScope;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * User: __nocach
  * Date: 28.9.12
  */
-public class RuleScopeTest {
+public class RuleScopeTest extends BaseObjectGTest {
 
     @Test
     public void propertyScopeVersusGlobal(){

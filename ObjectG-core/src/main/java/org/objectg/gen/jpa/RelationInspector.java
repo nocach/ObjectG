@@ -1,20 +1,27 @@
 package org.objectg.gen.jpa;
 
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.Entity;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Collection;
-import org.hibernate.mapping.*;
+import org.hibernate.mapping.Column;
+import org.hibernate.mapping.KeyValue;
+import org.hibernate.mapping.PersistentClass;
+import org.hibernate.mapping.Property;
 import org.objectg.util.Generics;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
-
-import javax.persistence.Entity;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: __nocach

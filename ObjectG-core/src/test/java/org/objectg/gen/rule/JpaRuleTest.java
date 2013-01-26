@@ -2,6 +2,7 @@ package org.objectg.gen.rule;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.RuleScope;
@@ -18,7 +19,7 @@ import static junit.framework.Assert.*;
  * User: __nocach
  * Date: 13.10.12
  */
-public class JpaRuleTest {
+public class JpaRuleTest extends BaseObjectGTest {
 
     private JpaRule rule;
 

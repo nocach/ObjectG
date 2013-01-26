@@ -2,6 +2,7 @@ package org.objectg.gen.postproc;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.fixtures.domain.Person;
@@ -13,7 +14,7 @@ import static junit.framework.Assert.*;
  * User: __nocach
  * Date: 27.10.12
  */
-public class ExpressionPostProcessorTest implements ExpressionPostProcessor.Handler{
+public class ExpressionPostProcessorTest extends BaseObjectGTest implements ExpressionPostProcessor.Handler {
     private GenerationConfiguration handleConfiguration;
     private Object handleGeneratedObject;
     private Object handleContextForExpression;

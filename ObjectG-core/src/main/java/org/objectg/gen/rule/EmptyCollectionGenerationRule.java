@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * User: __nocach
@@ -18,7 +18,7 @@ class EmptyCollectionGenerationRule extends GenerationRule<Collection> {
         GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
         configurationOfCollection.setObjectsInCollections(0);
         configurationOfCollection.removeRule(this);
-        Collection collection = (Collection) GeneratorRegistry.getInstance().generate(configurationOfCollection, context);
+        Collection collection = (Collection) GenerationSession.get().generate(configurationOfCollection, context);
         return collection;
     }
 }

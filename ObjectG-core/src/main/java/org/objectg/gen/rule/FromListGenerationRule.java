@@ -1,12 +1,15 @@
 package org.objectg.gen.rule;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
+import org.objectg.gen.session.GenerationSession;
+import org.objectg.gen.session.SessionState;
+import org.objectg.gen.session.SessionStateDescription;
 import org.springframework.util.Assert;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>
@@ -39,19 +42,27 @@ class FromListGenerationRule<T> extends GenerationRule<T> {
 
     private static class FromListGenerator {
         private List values;
-        private int currentIndex = 0;
+		final SessionState<Integer> valueIndexState;
 
         private FromListGenerator(List values) {
             Assert.isTrue(!values.isEmpty());
             this.values = values;
-        }
+			valueIndexState = GenerationSession.createManagedState(this, Integer.class, new SessionStateDescription<Integer>() {
+						@Override
+						public Integer getInitValue() {
+							return 0;
+						}
+					});
+		}
 
         public <T> T generateValue() {
+			int currentIndex = valueIndexState.get();
             T result = (T)values.get(currentIndex);
             currentIndex++;
             if (currentIndex > values.size() - 1){
                 currentIndex = 0;
             }
+			valueIndexState.set(currentIndex);
             return result;
         }
 

@@ -3,6 +3,7 @@ package org.objectg.gen;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 
 import static junit.framework.Assert.assertNotNull;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertThat;
  * User: __nocach
  * Date: 17.10.12
  */
-public class InterfacesGenerationTest {
+public class InterfacesGenerationTest extends BaseObjectGTest {
 
     @Test
     public void canInstantiateNoMethodsInterface(){

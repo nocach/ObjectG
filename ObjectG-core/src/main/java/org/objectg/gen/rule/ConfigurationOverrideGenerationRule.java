@@ -3,7 +3,7 @@ package org.objectg.gen.rule;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.GeneratorRegistry;
+import org.objectg.gen.session.GenerationSession;
 import org.springframework.util.Assert;
 
 /**
@@ -23,7 +23,7 @@ public class ConfigurationOverrideGenerationRule extends GenerationRule {
 		makeDepthRelativeToContext(context);
 		final GenerationConfiguration mergedConfiguration = overrideConfiguration.merge(currentConfiguration);
 		mergedConfiguration.removeRule(this);
-		return GeneratorRegistry.getInstance().generate(mergedConfiguration, context);
+		return GenerationSession.get().generate(mergedConfiguration, context);
 	}
 
 	private void makeDepthRelativeToContext(final GenerationContext context) {
