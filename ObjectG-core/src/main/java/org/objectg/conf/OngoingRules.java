@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.objectg.gen.rule.Rules;
+import org.objectg.gen.rule.range.Range;
 import org.springframework.util.Assert;
 
 /**
@@ -22,10 +23,66 @@ public class OngoingRules {
     public static <T> T value(T value){
         return fromList(value);
     }
+	public static byte value(byte value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+		return 0;
+	}
+	public static char value(char value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+		return 0;
+	}
+	public static short value(short value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+		return 0;
+	}
+	public static int value(int value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+        return 0;
+    }
+	public static long value(long value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+        return 0;
+    }
+	public static float value(float value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+        return 0;
+    }
+	public static double value(double value){
+		OngoingConfiguration.plannedRule = Rules.fromList(value);
+        return 0;
+    }
 
     public static  <T> T fromList(T... values){
         OngoingConfiguration.plannedRule = Rules.fromList(values);
         return null;
+    }
+    public static  byte fromList(byte... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0;
+    }
+    public static char fromList(char... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0;
+    }
+    public static short fromList(short... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0;
+    }
+    public static int fromList(int... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0;
+    }
+    public static long fromList(long... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0L;
+    }
+    public static float fromList(float... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0f;
+    }
+    public static double fromList(double... values){
+        OngoingConfiguration.plannedRule = Rules.fromList(values);
+        return 0.;
     }
 
     public static <T> List<T> listDefinition(Class clazzOfObjects) {
@@ -98,8 +155,28 @@ public class OngoingRules {
 		return null;
 	}
 
-	public static int range(final int from, final int to) {
-		OngoingConfiguration.plannedRule = Rules.range(from, to);
+	public static <T> T range(Range<T> range) {
+		OngoingConfiguration.plannedRule = Rules.range(range);
+		return null;
+	}
+
+	public static double range(Range<Double> range){
+		OngoingConfiguration.plannedRule = Rules.range(range);
+		return 0.;
+	}
+
+	public static int range(Range<Integer> range){
+		OngoingConfiguration.plannedRule = Rules.range(range);
+		return 0;
+	}
+
+	public static long range(Range<Long> range){
+		OngoingConfiguration.plannedRule = Rules.range(range);
+		return 0;
+	}
+
+	public static float range(Range<Float> range){
+		OngoingConfiguration.plannedRule = Rules.range(range);
 		return 0;
 	}
 }

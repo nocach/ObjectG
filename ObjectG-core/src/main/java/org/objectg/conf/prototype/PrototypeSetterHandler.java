@@ -25,6 +25,7 @@ import org.springframework.util.Assert;
  */
 public class PrototypeSetterHandler {
     //TODO: need to make clean up of the used rules
+	//TODO: use weak reference on to prototypes
     //e.g before each test or testcase
     /**
      * Integer = System.identityHashCode(prototyp)

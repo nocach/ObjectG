@@ -135,13 +135,24 @@ public class GenerationSession {
 	 * method for creating SessionState that can be used in {@link org.objectg.gen.Generator} or
 	 * {@link org.objectg.gen.GenerationRule} to maintain their state. See {@link SessionState} for more info.
 	 * @param stateOwner not null object that is managing state
-	 * @param valueClass specify type of the value
+	 * @param valueClass optional type of the value
 	 * @param stateDescription not null description of the state
 	 * @param <T> type of the value that is managed. Only one type can be managed by one object.
 	 * @return thread-safe SessionState that can be used in owner object.
 	 */
 	public static <T> SessionState<T> createManagedState(Object stateOwner, Class<T> valueClass, SessionStateDescription<T> stateDescription){
 		return sessionStateLifeCycle.createManagedState(stateOwner, stateDescription);
+	}
+	/**
+	 * method for creating SessionState that can be used in {@link org.objectg.gen.Generator} or
+	 * {@link org.objectg.gen.GenerationRule} to maintain their state. See {@link SessionState} for more info.
+	 * @param stateOwner not null object that is managing state
+	 * @param stateDescription not null description of the state
+	 * @param <T> type of the value that is managed. Only one type can be managed by one object.
+	 * @return thread-safe SessionState that can be used in owner object.
+	 */
+	public static <T> SessionState<T> createManagedState(Object stateOwner, SessionStateDescription<T> stateDescription){
+		return createManagedState(stateOwner, null, stateDescription);
 	}
 
 	private void setupGeneratorChain() {

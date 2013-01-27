@@ -1,8 +1,12 @@
 package org.objectg.gen.rule;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
+import org.objectg.ObjectG;
 import org.objectg.conf.GenerationConfiguration;
+import org.objectg.conf.OngoingRules;
+import org.objectg.fixtures.PrimitivesClass;
 import org.objectg.gen.GenerationContext;
 
 import static java.util.Arrays.asList;
@@ -32,6 +36,15 @@ public class FromListGenerationRuleTest extends BaseObjectGTest {
         assertEquals(2, listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class)));
         assertEquals(1, listGenerationRule.getValue(new GenerationConfiguration(), GenerationContext.createRoot(Integer.class)));
     }
+
+	@Test
+	public void canGeneratePrimitiveValue(){
+		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
+		prototype.setIntField(OngoingRules.value(1));
+
+		final PrimitivesClass unique = ObjectG.unique(prototype);
+		assertEquals(1, unique.getIntField());
+	}
 
     @Test(expected = IllegalArgumentException.class)
     public void throwsIfNoValues(){

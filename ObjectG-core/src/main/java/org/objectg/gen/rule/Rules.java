@@ -8,6 +8,8 @@ import java.util.List;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.RuleScope;
+import org.objectg.gen.rule.range.IntRange;
+import org.objectg.gen.rule.range.Range;
 import org.springframework.util.Assert;
 
 /**
@@ -119,7 +121,7 @@ public class Rules {
 		return new ConfigurationOverrideGenerationRule(configuration);
 	}
 
-	public static GenerationRule range(final int from, final int to) {
-		return new RangeGenerationRule(from, to);
+	public static GenerationRule range(Range<?> range) {
+		return new RangeGenerationRule(range);
 	}
 }

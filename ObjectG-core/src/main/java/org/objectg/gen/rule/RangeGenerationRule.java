@@ -3,6 +3,7 @@ package org.objectg.gen.rule;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
+import org.objectg.gen.rule.range.Range;
 import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.session.SessionState;
 import org.objectg.gen.session.SessionStateDescription;
@@ -16,37 +17,53 @@ import org.objectg.gen.session.SessionStateDescription;
  * Date: 22.1.13
  * </p>
  */
-class RangeGenerationRule extends GenerationRule<Integer> {
+class RangeGenerationRule<T> extends GenerationRule<T> {
 
-	private final int from;
-	private final int to;
-	private final SessionState<Integer> currentValue;
+	private final SessionState<T> currentValue;
+	private Range<T> range;
 
 
-	public RangeGenerationRule(final int from, int to){
-		this.from = from;
-		this.to = to;
-		currentValue = GenerationSession.createManagedState(this, Integer.class, new SessionStateDescription<Integer>() {
+	public RangeGenerationRule(final Range<T> range){
+		this.range = range;
+		currentValue = GenerationSession.createManagedState(this, new SessionStateDescription<T>() {
 			@Override
-			public Integer getInitValue() {
-				return from;
+			public T getInitValue() {
+				return range.isReversed() ? range.getEnd() : range.getStart();
 			}
 		});
 	}
 
 	@Override
-	public Integer getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
-		Integer result = currentValue.get();
+	public T getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
+		T result = currentValue.get();
 		updateCurrentValue(result);
 		return result;
 	}
 
-	private void updateCurrentValue(final Integer result) {
-		if (result >= to) {
-			currentValue.set(from);
+	private void updateCurrentValue(final T currentValue) {
+		if (!range.isReversed()){
+			updateWithNextValue(currentValue);
 		}
 		else{
-			currentValue.set(result+1);
+			updateWithPreviousValue(currentValue);
+		}
+	}
+
+	private void updateWithPreviousValue(final T currentValue) {
+		if (range.hasPrevious(currentValue)){
+			this.currentValue.set(range.getPrevious(currentValue));
+		}
+		else{
+			this.currentValue.set(range.getEnd());
+		}
+	}
+
+	private void updateWithNextValue(final T currentValue) {
+		if (range.hasNext(currentValue)) {
+			this.currentValue.set(range.getNext(currentValue));
+		}
+		else{
+			this.currentValue.set(range.getStart());
 		}
 	}
 }
