@@ -1,5 +1,7 @@
 package org.objectg.util;
 
+import javassist.CtClass;
+
 /**
  * User: __nocach
  * Date: 5.10.12
@@ -27,4 +29,28 @@ public class Types {
         return interfaces;
     }
 
+
+	public static boolean isPrimitive(Class clazz){
+		return     boolean.class.equals(clazz)
+				|| char.class.equals(clazz)
+				|| byte.class.equals(clazz)
+				|| short.class.equals(clazz)
+				|| int.class.equals(clazz)
+				|| long.class.equals(clazz)
+				|| float.class.equals(clazz)
+				|| double.class.equals(clazz)
+				;
+	}
+
+	public static boolean  isPrimitive(CtClass ctClass){
+		return     CtClass.booleanType.equals(ctClass)
+				|| CtClass.charType.equals(ctClass)
+				|| CtClass.byteType.equals(ctClass)
+				|| CtClass.shortType.equals(ctClass)
+				|| CtClass.intType.equals(ctClass)
+				|| CtClass.longType.equals(ctClass)
+				|| CtClass.floatType.equals(ctClass)
+				|| CtClass.doubleType.equals(ctClass)
+				;
+	}
 }

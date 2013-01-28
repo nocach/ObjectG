@@ -53,7 +53,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 
     @Test
     public void canConfigureNoObjects(){
-        Tour tour = ObjectG.unique(Tour.class, ObjectG.config().noObjects());
+        Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
 
         assertNull("not primitive should be null", tour.getSeason());
         assertEquals("collections should be empty", 0, tour.getStops().size());
@@ -61,26 +61,26 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 
 	@Test
 	public void noObjectsGeneratesEmptyArrays(){
-		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().noObjects());
+		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
 
 		assertEquals(0, tour.getBarcode().length);
 	}
 
 	@Test
 	public void noObjectsWillSetEnums(){
-		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().noObjects());
+		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
 
 		assertNotNull("enum is considered primitive", tour.getTourType());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void cantChangeObjectsInCollectionsAfterNoObjectsCall(){
-		ObjectG.config().noObjects().setObjectsInCollection(1);
+		ObjectG.config().onlyPrimitives().setObjectsInCollection(1);
 	}
 
     @Test
     public void canConfigureNullObjectsClassWithMap(){
-        ClassWithMap classWithMap = ObjectG.unique(ClassWithMap.class, ObjectG.config().noObjects());
+        ClassWithMap classWithMap = ObjectG.unique(ClassWithMap.class, ObjectG.config().onlyPrimitives());
 
         assertEquals("map should be empty", 0, classWithMap.getMap().size());
     }
@@ -165,6 +165,14 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
+	public void canSpecifyZeroGenerationDepth(){
+		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(0));
+
+		assertNotNull(generated);
+		assertNull(generated.classB);
+	}
+
+	@Test
 	public void generationDepthGeneratesNativeTypesOnBottom(){
 		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(1));
 
@@ -172,11 +180,6 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 		assertNotNull("enumPrimitive", generated.classB.enumPrimitive);
 		assertNotNull("intPrimitive", generated.classB.intPrimitive);
 		assertNotNull("longRefPrimitive", generated.classB.longRefPrimitive);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void depthMustBeMoreThanOne(){
-		ObjectG.unique(ClassA.class, ObjectG.config().depth(0));
 	}
 
 	@Test
@@ -207,7 +210,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	@GoodToHave
 	public void canCreateMissingObjectsInPropertyExpression(){
 		Tour tour = ObjectG.unique(Tour.class, ObjectG.config()
-				.noObjects()
+				.onlyPrimitives()
 				.when("season.name").setValue("setByExpression"));
 
 		assertNotNull("season should be generated when property expression was evaluated", tour.getSeason());

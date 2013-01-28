@@ -36,11 +36,10 @@ public class ConfigurationBuilder {
     }
 
     /**
-     * sets rule that any not primitive object will be set to null during generation,
-     * except for collections and maps, which will be only empty.
-     * @return
+     * will set only primitive attributes
+     * collections, arrays and maps are still generated, but will be empty.
      */
-    public ConfigurationBuilder noObjects() {
+    public ConfigurationBuilder onlyPrimitives() {
         GenerationRule nullForNotRootObjects = Rules.onlyNull();
 		//for not native types set null
 		//except the generated object
@@ -110,7 +109,7 @@ public class ConfigurationBuilder {
 
 	public ConfigurationBuilder setObjectsInCollection(final int objectsInCollection) {
 		Assert.isTrue(objectsInCollection >= 0 , "objectsInCollection should be >= 0");
-		Assert.isTrue(!notAllowSetInObjectChange, "can't change ObjectsInCollection after noObjects() was called");
+		Assert.isTrue(!notAllowSetInObjectChange, "can't change ObjectsInCollection after onlyPrimitives() was called");
 
 		resultConfiguration.setObjectsInCollections(objectsInCollection);
 		return this;
@@ -125,8 +124,15 @@ public class ConfigurationBuilder {
 		return this;
 	}
 
+	/**
+	 *
+	 * @param depth how deep to go into the object graph when generating root object
+	 *              depth(0) means that only generating object will be created, any other not primitive field will
+	 *              be omitted.
+	 * @return
+	 */
 	public ConfigurationBuilder depth(final int depth) {
-		Assert.isTrue(depth > 0, "depth must be > 0");
+		Assert.isTrue(depth >= 0, "depth must be >= 0");
 		resultConfiguration.setDepth(depth);
 		return this;
 	}

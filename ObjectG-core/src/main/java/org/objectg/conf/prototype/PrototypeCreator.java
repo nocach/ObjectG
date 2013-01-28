@@ -1,5 +1,6 @@
 package org.objectg.conf.prototype;
 
+import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -16,8 +17,10 @@ import com.google.common.collect.Sets;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
@@ -95,7 +98,14 @@ public class PrototypeCreator {
     }
 
     private <T> T createInterceptedClassInstance(Class interceptedClass) throws InstantiationException, IllegalAccessException, NoSuchFieldException {
-        T modifiedInstance = (T) interceptedClass.newInstance();
+		T modifiedInstance = null;
+		try{
+        	modifiedInstance = (T) interceptedClass.newInstance();
+		}
+		catch (Exception e){
+			throw new PrototypeCreationException("could not instantiate prototype. " +
+					"Do you have validation logic in your constructor?", e);
+		}
 
         Field handlerField = modifiedInstance.getClass().getDeclaredField(FIELD_NAME_OF_PROTOTYPE_HANDLER);
         ReflectionUtils.setField(handlerField, modifiedInstance, configurationHandler);
@@ -259,7 +269,8 @@ public class PrototypeCreator {
                 .toString();
     }
 
-    private <T> CtClass createInterceptedCtClass(Class<T> clazz) throws NotFoundException, CannotCompileException {
+    private <T> CtClass createInterceptedCtClass(Class<T> clazz)
+			throws NotFoundException, CannotCompileException, ClassNotFoundException {
         ClassPool classPool = ClassPool.getDefault();
         CtClass interceptedClass = classPool.get(clazz.getName());
         interceptedClass.setName(getNameForInterceptedClass(clazz));
@@ -269,6 +280,10 @@ public class PrototypeCreator {
         interceptedClass.setSuperclass(originalClass);
 		removeNotInheritedMethods(interceptedClass);
 
+		if (!doesHaveNoArgConstructor(interceptedClass)){
+			addNoArgConstructor(interceptedClass);
+		}
+
         CtClass[] interfaces = new CtClass[interceptedClass.getInterfaces().length + 1];
         System.arraycopy(interceptedClass.getInterfaces(), 0, interfaces, 0, interceptedClass.getInterfaces().length);
         int oneNewInterfaceIndex = interceptedClass.getInterfaces().length;
@@ -277,6 +292,54 @@ public class PrototypeCreator {
 
         return interceptedClass;
     }
+
+	private void addNoArgConstructor(final CtClass interceptedClass)
+			throws CannotCompileException, NotFoundException, ClassNotFoundException {
+		CtConstructor superConstructor = interceptedClass.getConstructors()[0]; //first constructor will be used
+		CtConstructor noArgConstructor = new CtConstructor(null, interceptedClass);
+		noArgConstructor.setBody(createCallingSuper(superConstructor));
+		interceptedClass.addConstructor(noArgConstructor);
+	}
+
+	private String createCallingSuper(final CtConstructor superConstructor) throws NotFoundException {
+		StringBuilder src = new StringBuilder("{super(");
+		for (CtClass each : superConstructor.getParameterTypes()){
+			if (CtClass.booleanType.equals(each)){
+				src.append("false,");
+			} else if (Types.isPrimitive(each)){
+				src.append("0,");
+			} else {
+				src.append("null,");
+			}
+		}
+		final String withoutLastComma = src.substring(0, src.length() - 1);
+		return withoutLastComma +");}";
+	}
+
+	private String createEmptyInitializer(final CtClass interceptedClass) throws NotFoundException {
+		StringBuilder src = new StringBuilder("{");
+		for (CtField each : interceptedClass.getDeclaredFields()) {
+			if (Modifier.isFinal(each.getModifiers())) {
+				final CtClass fieldType =each.getType();
+				if (CtClass.booleanType.equals(fieldType)){
+					src.append(each.getName()).append("=false;");
+				} else if (Types.isPrimitive(fieldType)){
+					src.append(each.getName()).append("=0;");
+				} else {
+					src.append(each.getName()).append("=null;");
+				}
+			}
+		}
+		return src.append("}").toString();
+	}
+
+	private boolean doesHaveNoArgConstructor(final CtClass interceptedClass) throws NotFoundException {
+		boolean hasNoArgConstructor = false;
+		for (CtConstructor ctConstructor : interceptedClass.getConstructors()) {
+			if (ctConstructor.getParameterTypes().length == 0) hasNoArgConstructor = true;
+		}
+		return hasNoArgConstructor;
+	}
 
 	private void removeNotInheritedMethods(final CtClass originalClass){
 		for (CtMethod each : originalClass.getMethods()){

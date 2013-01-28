@@ -1,10 +1,13 @@
 package org.objectg.conf;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.GoodToHave;
+import org.objectg.conf.prototype.PrototypeCreationException;
 import org.objectg.conf.prototype.PrototypeCreator;
+import org.springframework.util.Assert;
 
 import static org.junit.Assert.fail;
 
@@ -14,16 +17,21 @@ import static org.junit.Assert.fail;
  */
 public class PrototypeCreatorTest extends BaseObjectGTest {
 
+	private PrototypeCreator prototypeCreator;
+
+	@Before
+	public void createPrototypeCreator(){
+		prototypeCreator = new PrototypeCreator();
+	}
+
     @Test
     public void canCreateTwoPrototypes(){
-        PrototypeCreator prototypeCreator = new PrototypeCreator();
         prototypeCreator.newPrototype(ClassWithProperties.class);
         prototypeCreator.newPrototype(ClassWithProperties.class);
     }
 
 	@Test
 	public void canCreatePrototypeForClassWithFinalsAndStatics(){
-		PrototypeCreator prototypeCreator = new PrototypeCreator();
 		prototypeCreator.newPrototype(ClassWithFinalAndStaticMethods.class);
 	}
 
@@ -33,6 +41,31 @@ public class PrototypeCreatorTest extends BaseObjectGTest {
     public void canCreatePrototypeForAbstractClass(){
         fail("think about it");
     }
+
+	@Test
+	public void canCreatePrototypeForClassWithoutNoArgConstructor(){
+		prototypeCreator.newPrototype(ClassWithoutNoArgConstructor.class);
+	}
+
+	@Test(expected = PrototypeCreationException.class)
+	public void throwIfValidationInMoreArgsConstructor(){
+		prototypeCreator.newPrototype(ClassWithoutNoArgConstructorWithLogic.class);
+	}
+
+	public static class ClassWithoutNoArgConstructorWithLogic{
+		public ClassWithoutNoArgConstructorWithLogic(Object arg){
+			Assert.notNull(arg);
+		}
+	}
+
+	public static class ClassWithoutNoArgConstructor{
+		private final Object someFinalObjectField;
+		private final int someFinalPrimitiveField;
+		public ClassWithoutNoArgConstructor(Object arg, int primitive){
+			someFinalObjectField = arg;
+			someFinalPrimitiveField = primitive;
+		}
+	}
 
 	public static class ClassWithFinalAndStaticMethods{
 		public final String getString(){
