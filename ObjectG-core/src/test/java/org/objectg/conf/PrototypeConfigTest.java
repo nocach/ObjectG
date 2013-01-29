@@ -15,11 +15,6 @@ import org.objectg.fixtures.domain.GuideAssignment;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.ITour;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
-import static org.objectg.conf.OngoingRules.fromList;
 import static org.objectg.conf.OngoingRules.value;
 
 /**
@@ -45,7 +40,7 @@ public class PrototypeConfigTest extends BaseObjectGTest {
     @Test
     public void basic(){
         Person prototype = ObjectG.prototype(Person.class);
-        prototype.setName(fromList("configuredValue"));
+        prototype.setName(OngoingRules.sequence("configuredValue"));
 
         Person person = ObjectG.unique(Person.class, prototype);
         assertEquals("configuredValue", person.getName());
@@ -68,9 +63,9 @@ public class PrototypeConfigTest extends BaseObjectGTest {
     @Test
     public void canUseMultiplePrototypesDuringGeneration(){
         Person personPrototype = ObjectG.prototype(Person.class);
-        personPrototype.setName(fromList("nameConfiguredValue"));
+        personPrototype.setName(OngoingRules.sequence("nameConfiguredValue"));
         Address addressPrototype = ObjectG.prototype(Address.class);
-        addressPrototype.setStreet(fromList("streetConfiguredValue"));
+        addressPrototype.setStreet(OngoingRules.sequence("streetConfiguredValue"));
 
         Person person = ObjectG.unique(Person.class, personPrototype, addressPrototype);
         assertEquals("nameConfiguredValue", person.getName());
@@ -117,7 +112,7 @@ public class PrototypeConfigTest extends BaseObjectGTest {
     @Test
     public void samePropertyIsConfiguredOnlyOnRightClass(){
         ClassWithSameProperty1 prototype = ObjectG.prototype(ClassWithSameProperty1.class);
-        prototype.setProperty(fromList("configuredValue"));
+        prototype.setProperty(OngoingRules.sequence("configuredValue"));
 
         ClassWithSameProperty1 instance = ObjectG.unique(ClassWithSameProperty1.class, prototype);
 
@@ -133,9 +128,9 @@ public class PrototypeConfigTest extends BaseObjectGTest {
         generationConfiguration.setObjectsInCollections(2);
 
         ClassWithCollectionA prototype = ObjectG.prototype(ClassWithCollectionA.class);
-        prototype.setForConfiguration(fromList("confValueA"));
+        prototype.setForConfiguration(OngoingRules.sequence("confValueA"));
         prototype.setClassB(ObjectG.prototype(ClassWithCollectionB.class));
-        prototype.getClassB().setForConfiguration(fromList("confValueB"));
+        prototype.getClassB().setForConfiguration(OngoingRules.sequence("confValueB"));
 
         ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
                 generationConfiguration, prototype);
@@ -153,10 +148,10 @@ public class PrototypeConfigTest extends BaseObjectGTest {
         generationConfiguration.setObjectsInCollections(2);
 
         ClassWithCollectionA prototypeA = ObjectG.prototype(ClassWithCollectionA.class);
-        prototypeA.setForConfiguration(fromList("confValueA"));
+        prototypeA.setForConfiguration(OngoingRules.sequence("confValueA"));
 
         ClassWithCollectionB prototypeB = ObjectG.prototype(ClassWithCollectionB.class);
-        prototypeB.setForConfiguration(fromList("confValueB"));
+        prototypeB.setForConfiguration(OngoingRules.sequence("confValueB"));
 
         ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
                 generationConfiguration, prototypeA, prototypeB);

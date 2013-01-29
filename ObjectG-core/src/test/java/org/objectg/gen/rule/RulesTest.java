@@ -4,9 +4,11 @@ import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.OngoingRules;
+import org.objectg.fixtures.PrimitivesClass;
 import org.objectg.fixtures.domain.FixedPrice;
-
-import static junit.framework.Assert.assertEquals;
+import org.objectg.fixtures.domain.Tour;
+import org.objectg.fixtures.domain.TourSeason;
+import org.objectg.gen.GenerationRule;
 
 /**
  * User: __nocach
@@ -21,6 +23,41 @@ public class RulesTest extends BaseObjectGTest {
 
 		final ConcreteProduct unique = ObjectG.unique(prototype);
 		assertEquals(unique, unique.getPrice2Product().getProduct());
+	}
+
+	@Test
+	public void setRuleOnPrimitives(){
+		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
+		prototype.setByteField(OngoingRules.rule((GenerationRule<Byte>) Rules.value((byte)1)));
+		prototype.setCharField(OngoingRules.rule((GenerationRule<Character>) Rules.value('1')));
+		prototype.setShortField(OngoingRules.rule((GenerationRule<Short>) Rules.value((short)1)));
+		prototype.setIntField(OngoingRules.rule((GenerationRule<Integer>) Rules.value(1)));
+		prototype.setLongField(OngoingRules.rule((GenerationRule<Long>) Rules.value(1L)));
+		prototype.setFloatField(OngoingRules.rule((GenerationRule<Float>) Rules.value(1f)));
+		prototype.setDoubleField(OngoingRules.rule((GenerationRule<Double>) Rules.value(1d)));
+		prototype.setBooleanField(OngoingRules.rule((GenerationRule<Boolean>) Rules.value(true)));
+
+		final PrimitivesClass unique = ObjectG.unique(prototype);
+
+		assertEquals(1, unique.getByteField());
+		assertEquals('1', unique.getCharField());
+		assertEquals(1, unique.getShortField());
+		assertEquals(1, unique.getIntField());
+		assertEquals(1, unique.getLongField());
+		assertEquals(1f, unique.getFloatField());
+		assertEquals(1d, unique.getDoubleField());
+		assertEquals(true, unique.isBooleanField());
+	}
+
+	@Test
+	public void setRuleOnObject(){
+		final Tour prototype = ObjectG.prototype(Tour.class);
+		final TourSeason expectedSeason = new TourSeason();
+		prototype.setSeason(OngoingRules.rule(Rules.value(expectedSeason)));
+
+		final Tour unique = ObjectG.unique(prototype);
+
+		assertEquals(expectedSeason, unique.getSeason());
 	}
 
 	public static abstract class Product{

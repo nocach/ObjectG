@@ -1,6 +1,5 @@
 package org.objectg.gen;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
@@ -53,7 +52,7 @@ public class GenerationSessionTest extends BaseObjectGTest{
 	@BeforeClass
 	public static void setupRule(){
 		tourPrototype = ObjectG.prototype(Tour.class);
-		tourPrototype.setName(OngoingRules.fromList("one", "two"));
+		tourPrototype.setName(OngoingRules.sequence("one", "two"));
 	}
 
 	@Test

@@ -8,7 +8,6 @@ import java.util.List;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.RuleScope;
-import org.objectg.gen.rule.range.IntRange;
 import org.objectg.gen.rule.range.Range;
 import org.springframework.util.Assert;
 
@@ -20,7 +19,7 @@ public class Rules {
 
     private static final JpaRule jpaRule = new JpaRule(RuleScope.INTERNAL_DEFAULT);
 
-    public static GenerationRule value(Object value){
+    public static <T> GenerationRule<T> value(T value){
         return fromList(value);
     }
 
