@@ -11,7 +11,7 @@ import org.objectg.fixtures.domain.Person;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
 import org.objectg.gen.rule.Rules;
-import org.objectg.matcher.impl.FieldNameMatcher;
+import org.objectg.matcher.impl.PropertyNameMatcher;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -75,7 +75,7 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 			@Override
 			protected Collection<GenerationRule> getRules() {
 				final GenerationRule firstNameRule = Rules.value("ruledFirstName");
-				firstNameRule.when(new FieldNameMatcher<String>(Person.class, "firstName"));
+				firstNameRule.when(new PropertyNameMatcher<String>(Person.class, "firstName"));
 				return asList(firstNameRule);
 			}
 		};

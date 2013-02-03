@@ -15,13 +15,13 @@ public class GenericsTest extends BaseObjectGTest {
 
 	@Test
 	public void simpleGeneric() throws NoSuchFieldException {
-		final Class classAList = Generics.extractTypeFromGenerics(GenericFields.class.getDeclaredField("classAList"), 0);
+		final Class classAList = Generics.extractTypeFromField(GenericFields.class.getDeclaredField("classAList"), 0);
 		assertEquals(ClassA.class, classAList);
 	}
 
 	@Test
 	public void boundedTypeGeneric() throws NoSuchFieldException {
-		final Class classBoundedType = Generics.extractTypeFromGenerics(
+		final Class classBoundedType = Generics.extractTypeFromField(
 				GenericFields.class.getDeclaredField("boundedTypeParam"), 0);
 
 		assertEquals(ClassA.class, classBoundedType);
@@ -29,7 +29,7 @@ public class GenericsTest extends BaseObjectGTest {
 
 	@Test
 	public void superTypeGeneric() throws NoSuchFieldException {
-		final Class classSuper = Generics.extractTypeFromGenerics(
+		final Class classSuper = Generics.extractTypeFromField(
 				GenericFields.class.getDeclaredField("classASuperList"), 0
 		);
 
@@ -38,7 +38,7 @@ public class GenericsTest extends BaseObjectGTest {
 
 	@Test
 	public void unboundedGeneric() throws NoSuchFieldException {
-		final Class unboundClass = Generics.extractTypeFromGenerics(
+		final Class unboundClass = Generics.extractTypeFromField(
 				GenericFields.class.getDeclaredField("unboundedList"), 0
 		);
 
@@ -47,7 +47,7 @@ public class GenericsTest extends BaseObjectGTest {
 
 	@Test
 	public void recursiveTypeBoundGeneric() throws NoSuchFieldException{
-		final Class recursiveClass = Generics.extractTypeFromGenerics(
+		final Class recursiveClass = Generics.extractTypeFromField(
 				GenericFields.class.getDeclaredField("recursiveTypeBound"), 0
 		);
 

@@ -27,7 +27,7 @@ public class ConfigurationOverrideGenerationRule extends GenerationRule {
 	}
 
 	private void makeDepthRelativeToContext(final GenerationContext context) {
-		if (overrideConfiguration.getDepth() != null && overrideConfiguration.getDepth() != -1){
+		if (overrideConfiguration.getDepth() != null && overrideConfiguration.getDepth() != GenerationConfiguration.UNLIMITED_DEPTH){
 			//depth should be relative to current context
 			//this is more natural way how the user sees the configuration by prototype
 			overrideConfiguration.setDepth(overrideConfiguration.getDepth() + context.getGenerationDepth());

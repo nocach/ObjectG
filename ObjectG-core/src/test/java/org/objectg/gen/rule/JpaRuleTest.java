@@ -6,6 +6,7 @@ import org.objectg.BaseObjectGTest;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.RuleScope;
+import org.objectg.gen.access.FieldAccessor;
 import org.objectg.gen.jpa.JpaRelationTest;
 
 import javax.persistence.Entity;
@@ -56,7 +57,8 @@ public class JpaRuleTest extends BaseObjectGTest {
         GenerationContext organizationStep = context.push(JpaRelationTest.Organization.class, new JpaRelationTest.OrganizationUnit());
         GenerationContext listStep = organizationStep.push(List.class, new JpaRelationTest.Organization());
         GenerationContext organizationUnitStep = listStep.push(JpaRelationTest.OrganizationUnit.class, new ArrayList());
-        organizationUnitStep.setParentField(JpaRelationTest.Organization.class.getDeclaredField("units"));
+		final FieldAccessor unitsPropertyAccessor = new FieldAccessor(JpaRelationTest.Organization.class.getDeclaredField("units"));
+		organizationUnitStep.setParentPropertyAccessor(unitsPropertyAccessor);
 
         assertTrue(rule.matches(organizationUnitStep));
 
@@ -69,7 +71,9 @@ public class JpaRuleTest extends BaseObjectGTest {
         GenerationContext unitStep = listStep.push(JpaRelationTest.OrganizationUnit.class, new ArrayList());
         GenerationContext organizationInUnitStep =
                 unitStep.push(JpaRelationTest.Organization.class, new JpaRelationTest.OrganizationUnit());
-        organizationInUnitStep.setField(JpaRelationTest.OrganizationUnit.class.getDeclaredField("organization"));
+		final FieldAccessor organizationProperty = new FieldAccessor(
+				JpaRelationTest.OrganizationUnit.class.getDeclaredField("organization"));
+		organizationInUnitStep.setPropertyAccessor(organizationProperty);
 
         assertTrue(rule.matches(organizationInUnitStep));
     }
@@ -81,7 +85,7 @@ public class JpaRuleTest extends BaseObjectGTest {
         GenerationContext organizationStep = context.push(JpaRelationTest.Organization.class, firstlyGeneratedUnit);
         GenerationContext listStep = organizationStep.push(List.class, new JpaRelationTest.Organization());
         GenerationContext organizationUnitStep = listStep.push(JpaRelationTest.OrganizationUnit.class, new ArrayList());
-        organizationUnitStep.setParentField(JpaRelationTest.Organization.class.getDeclaredField("units"));
+		organizationUnitStep.setParentPropertyAccessor(new FieldAccessor(JpaRelationTest.Organization.class.getDeclaredField("units")));
 
         Object valueFromRule = rule.getValue(new GenerationConfiguration(), organizationUnitStep);
 

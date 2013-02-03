@@ -10,6 +10,7 @@ import java.util.Queue;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
+import org.objectg.gen.access.AccessStrategy;
 import org.objectg.gen.cycle.CycleStrategy;
 import org.objectg.gen.cycle.GoDeeperCycleStrategy;
 import org.objectg.util.Types;
@@ -32,6 +33,7 @@ import org.springframework.util.Assert;
  */
 public class GenerationConfiguration implements Cloneable{
     private static final Logger logger = LoggerFactory.getLogger(GenerationConfiguration.class);
+	public static final int UNLIMITED_DEPTH = -1;
 
 	////////////////////////
 	//if you add property don't forget to modify the init and merge method
@@ -51,6 +53,7 @@ public class GenerationConfiguration implements Cloneable{
 	 * -1 means no depth
 	 */
 	private Integer depth;
+	private AccessStrategy accessStrategy;
 
 	public GenerationConfiguration(){
 		this(LEVEL.USER);
@@ -203,6 +206,10 @@ public class GenerationConfiguration implements Cloneable{
 			if (this.cycleStrategy == null || canOverride)
 				cycleStrategy = thatConfiguration.cycleStrategy;
 		}
+		if (thatConfiguration.accessStrategy != null){
+			if (this.accessStrategy == null || canOverride)
+				accessStrategy = thatConfiguration.accessStrategy;
+		}
 		if (thatConfiguration.isUnique != null){
 			if (this.isUnique == null || canOverride)
 				isUnique = thatConfiguration.isUnique;
@@ -238,6 +245,9 @@ public class GenerationConfiguration implements Cloneable{
 		if (depth == null){
 			depth = -1;
 		}
+		if (accessStrategy == null){
+			accessStrategy = AccessStrategy.ONLY_FIELDS;
+		}
 		wasInit = true;
 	}
 
@@ -258,9 +268,17 @@ public class GenerationConfiguration implements Cloneable{
 	}
 
 	public <T> boolean shouldGenerate(final GenerationContext<T> context) {
-		if (getDepth() == -1) return true;
+		if (getDepth() == UNLIMITED_DEPTH) return true;
 		return context.getGenerationDepth() <= getDepth()
 				|| Types.isJavaType(context.getClassThatIsGenerated());
+	}
+
+	public void setAccessStrategy(final AccessStrategy accessStrategy) {
+		this.accessStrategy = accessStrategy;
+	}
+
+	public AccessStrategy getAccessStrategy() {
+		return accessStrategy;
 	}
 
 	/**

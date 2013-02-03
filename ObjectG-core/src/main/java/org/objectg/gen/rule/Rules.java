@@ -123,4 +123,8 @@ public class Rules {
 	public static GenerationRule range(Range<?> range) {
 		return new RangeGenerationRule(range);
 	}
+
+	public static GenerationRule skip() {
+		return new SkipGenerationRule();
+	}
 }

@@ -206,6 +206,40 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
+	public void canUseAccessMethodsOnly(){
+		final ClassWithHiddenField unique = ObjectG
+				.unique(ClassWithHiddenField.class, ObjectG.config().access().onlyMethods());
+
+		assertEquals(unique.hiddenField, ClassWithHiddenField.HIDDEN);
+		assertNotNull(unique.getOpenField());
+	}
+
+	@Test
+	public void willNotFallIfAccessMethodIsMissing(){
+		final ClassWithCombinedAccess unique = ObjectG
+				.unique(ClassWithCombinedAccess.class, ObjectG.config().access().onlyMethods());
+
+		assertNull("field without setter should not be set", unique.fieldAndGetterProperty);
+		assertNull("field without getter should not be set", unique.fieldAndSetterProperty);
+		assertNull("field without setter and getter should not be set", unique.onlyFieldProperty);
+		assertNotNull("only field with both setters and getters should be set", unique.setterGetterProperty);
+	}
+
+	@Test
+	public void canCombineFieldsWithSetterGetter(){
+		final ClassWithCombinedAccess unique = ObjectG
+				.unique(ClassWithCombinedAccess.class, ObjectG.config().access().preferMethods());
+
+		assertNotNull(unique.onlyFieldProperty);
+		assertNotNull(unique.setterGetterProperty);
+		assertNotNull(unique.fieldAndGetterProperty);
+		assertNotNull(unique.fieldAndSetterProperty);
+
+		assertTrue(ClassWithCombinedAccessFieldAndSetterPropertySetterCalled);
+		assertTrue(ClassWithCombinedAccessSetterAndGetterPropertySetterCalled);
+	}
+
+	@Test
 	@Ignore
 	@GoodToHave
 	public void canCreateMissingObjectsInPropertyExpression(){
@@ -234,6 +268,50 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 
 		assertEquals("first stop should be set by expression", expectedTourStop, unique.getStops().get(0));
     }
+
+	//this 4 flags should be in TestCase because if they were in ClassWithCombinedAccess then ObjectG
+	//would mess their values up
+	private static boolean ClassWithCombinedAccessFieldAndSetterPropertySetterCalled = false;
+	private static boolean ClassWithCombinedAccessSetterAndGetterPropertySetterCalled = false;
+
+	public static class ClassWithCombinedAccess{
+		private String onlyFieldProperty;
+		private String fieldAndSetterProperty;
+		private String fieldAndGetterProperty;
+		private String setterGetterProperty;
+
+		public void setFieldAndSetterProperty(final String fieldAndSetterProperty) {
+			this.fieldAndSetterProperty = fieldAndSetterProperty;
+			ClassWithCombinedAccessFieldAndSetterPropertySetterCalled = true;
+		}
+
+		public String getFieldAndGetterProperty() {
+			return fieldAndGetterProperty;
+		}
+
+		public String getSetterGetterProperty() {
+			return setterGetterProperty;
+		}
+
+		public void setSetterGetterProperty(final String setterGetterProperty) {
+			ClassWithCombinedAccessSetterAndGetterPropertySetterCalled = true;
+			this.setterGetterProperty = setterGetterProperty;
+		}
+	}
+
+	public static class ClassWithHiddenField{
+		public static final String HIDDEN = "HIDDEN";
+		private String hiddenField = HIDDEN;
+		private String openField;
+
+		public String getOpenField() {
+			return openField;
+		}
+
+		public void setOpenField(final String openField) {
+			this.openField = openField;
+		}
+	}
 
 	public static class ClassA{
 		private ClassB classB;

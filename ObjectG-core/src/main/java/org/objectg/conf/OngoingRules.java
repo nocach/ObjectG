@@ -436,4 +436,10 @@ public class OngoingRules {
 		OngoingConfiguration.plannedRule = rule;
 		return 0;
 	}
+
+	public static <T> T skip() {
+		//TODO: primitive overloads
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return null;
+	}
 }

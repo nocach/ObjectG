@@ -13,7 +13,7 @@ import com.google.common.reflect.TypeToken;
  * Date: 13.10.12
  */
 public class Generics {
-    public static Class extractTypeFromGenerics(Field field , int typeVarIndex){
+    public static Class extractTypeFromField(Field field, int typeVarIndex){
         if (noGenericInfoInClass(field.getGenericType())) return null;
         Type[] actualTypeArguments = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
 		return getClassFromGeneric(actualTypeArguments[typeVarIndex], typeVarIndex);

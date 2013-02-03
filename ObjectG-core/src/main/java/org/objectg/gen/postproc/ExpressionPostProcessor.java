@@ -15,6 +15,7 @@ import org.objectg.gen.ExtendedPropertyDescriptor;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
 import org.objectg.gen.PostProcessor;
+import org.objectg.gen.access.FieldAccessor;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
@@ -111,7 +112,8 @@ public class ExpressionPostProcessor implements PostProcessor {
 
     private GenerationContext createGenerationContext(Object targetParentObject, PropertyDescriptor targetPropertyDesc, Field targetField, Class targetType) {
         GenerationContext generationContext = GenerationContext.createRoot(targetType);
-        generationContext.setField(targetField);
+		//TODO: probably should decide here if to use FieldAccessor or MethodAccessor
+		generationContext.setPropertyAccessor(new FieldAccessor(targetField));
         generationContext.setFieldPropertyDescriptor(new ExtendedPropertyDescriptor(targetField, targetPropertyDesc));
         generationContext.setParentObject(targetParentObject);
         return generationContext;

@@ -8,15 +8,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.ExtendedPropertyDescriptor;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
+import org.objectg.gen.access.BackedUpAccessor;
+import org.objectg.gen.access.FieldAccessor;
+import org.objectg.gen.access.PropertyAccessor;
+import org.objectg.gen.access.MethodAccessor;
 import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.Generator;
 import org.objectg.util.Types;
@@ -54,33 +61,39 @@ class NotNativeClassGenerator extends Generator {
     }
 
     private void setValuesOnFields(final GenerationConfiguration configuration, final GenerationContext context, final Object resultObj) {
-            final List<Field> allFieldsToSetValues = getFieldForValueSetting(context);
+            final List<PropertyAccessor> allPropertiesToSetValues = getPropertiesForValueSetting(configuration, context);
             final Map<String, ExtendedPropertyDescriptor> propertyDescriptorMap = getPropertyDescriptorMap(context);
-            for (Field each : allFieldsToSetValues){
+            for (PropertyAccessor each : allPropertiesToSetValues){
                 ExtendedPropertyDescriptor fieldPropertyDesc = getPropertyDescriptorForField(each, propertyDescriptorMap);
                 GenerationContext pushedContext = context.push(getMostSpecificFieldType(each, fieldPropertyDesc), resultObj);
-                pushedContext.setField(each);
+				pushedContext.setPropertyAccessor(each);
                 pushedContext.setFieldPropertyDescriptor(fieldPropertyDesc);
-                Object generatedValueForField = generateForHierarchy(configuration, pushedContext);
-				tryToSetValueOnField(resultObj, each, generatedValueForField);
+				tryToSetValueOnField(resultObj, each, configuration, pushedContext);
 			}
     }
 
-	private void tryToSetValueOnField(final Object resultObj, final Field field, final Object generatedValueForField) {
+	private void tryToSetValueOnField(final Object resultObj, final PropertyAccessor propertyAccessor,
+			final GenerationConfiguration configuration, final GenerationContext pushedContext) {
 		try {
-			field.set(resultObj, generatedValueForField);
+			Object generatedValueForField = generateForHierarchy(configuration, pushedContext);
+			propertyAccessor.set(resultObj, generatedValueForField);
 		} catch (IllegalAccessException e) {
-			throw new GenerationException("could not set value on field="+field, e);
+			throw new GenerationException("could not set value on field="+propertyAccessor, e);
+		}
+		catch (SkipValueGenerationException e){
+			//skip this value
 		}
 	}
 
-	private Class<?> getMostSpecificFieldType(Field each, ExtendedPropertyDescriptor fieldPropertyDesc) {
+	private Class<?> getMostSpecificFieldType(PropertyAccessor propertyAccessor,
+			ExtendedPropertyDescriptor fieldPropertyDesc) {
         if (fieldPropertyDesc != null) return fieldPropertyDesc.getMostSpecificPropertyType();
-        return each.getType();
+        return propertyAccessor.getType();
     }
 
-    private ExtendedPropertyDescriptor getPropertyDescriptorForField(Field field, Map<String, ExtendedPropertyDescriptor> propertyDescriptorMap) {
-        return propertyDescriptorMap.get(field.getName());
+    private ExtendedPropertyDescriptor getPropertyDescriptorForField(PropertyAccessor propertyAccessor,
+			Map<String, ExtendedPropertyDescriptor> propertyDescriptorMap) {
+        return propertyDescriptorMap.get(propertyAccessor.getName());
     }
 
     /**
@@ -102,28 +115,104 @@ class NotNativeClassGenerator extends Generator {
         return result;
     }
 
-    private List<Field> getFieldForValueSetting(GenerationContext context) {
-        final List<Field> allFieldsToSetValues = new LinkedList<Field>();
-        ReflectionUtils.FieldCallback generateValueForField = new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                field.setAccessible(true);
-                allFieldsToSetValues.add(field);
-            }
-
-        };
-        ReflectionUtils.FieldFilter filteringStaticAndFinals = new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                return !Modifier.isStatic(field.getModifiers())
-                        && !Modifier.isFinal(field.getModifiers());
-            }
-        };
-        ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), generateValueForField, filteringStaticAndFinals);
-        return allFieldsToSetValues;
+    private List<PropertyAccessor> getPropertiesForValueSetting(final GenerationConfiguration configuration,
+			GenerationContext context) {
+		switch (configuration.getAccessStrategy()){
+			case ONLY_FIELDS:
+				return getFieldPropertyAccessors(context);
+			case ONLY_METHODS:
+				final boolean onlyFull = true;
+				return getMethodPropertyAccessors(context, onlyFull);
+			case PREFER_METHODS:
+				return getPreferMethodsAccessors(context);
+			default:
+					throw new GenerationException("unknown AccessStrategy "+configuration.getAccessStrategy());
+		}
     }
 
-    private Object createResultInstance(GenerationConfiguration configuration, GenerationContext context) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+	private List<PropertyAccessor> getPreferMethodsAccessors(final GenerationContext context) {
+		List<PropertyAccessor> result = new ArrayList<PropertyAccessor>();
+		final List<PropertyAccessor> fieldPropertyAccessors = getFieldPropertyAccessors(context);
+		boolean onlyFull = false;
+		final List<PropertyAccessor> allMethodPropertyAccessors = getMethodPropertyAccessors(context, onlyFull);
+		Map<String, PropertyAccessor> fieldAccessorByProperty = groupByPropertyName(fieldPropertyAccessors);
+		Map<String, PropertyAccessor> methodAccessorsByProperty = groupByPropertyName(allMethodPropertyAccessors);
+		//now we have method and field accessor group by property
+
+		Set<String> usedPropertyNames = new HashSet<String>();
+		for (String each : methodAccessorsByProperty.keySet()){
+			final MethodAccessor methodAccessor = (MethodAccessor) methodAccessorsByProperty.get(each);
+			//we will prefer method accessor: if read and write method for property exists - we use full method access
+			if (methodAccessor.isFull()){
+				usedPropertyNames.add(each);
+				result.add(methodAccessor);
+			}else{
+				//if method accessor is not full (read or write method is missing - back up this accessor
+				//with existing field accessor (only if such exists)
+				if (fieldAccessorByProperty.containsKey(each)){
+					usedPropertyNames.add(each);
+					result.add(new BackedUpAccessor(methodAccessor, fieldAccessorByProperty.get(each)));
+				}
+			}
+		}
+		//finally we should add field accessors for those properties which did not receive their love in full method
+		//accessor or semi-method accessor
+		for (String each : fieldAccessorByProperty.keySet()) {
+			if (usedPropertyNames.contains(each)) continue;
+			result.add(fieldAccessorByProperty.get(each));
+		}
+		return result;
+	}
+
+	private Map<String, PropertyAccessor> groupByPropertyName(final List<PropertyAccessor> fieldPropertyAccessors) {
+		Map<String, PropertyAccessor> result = new HashMap<String, PropertyAccessor>();
+		for (PropertyAccessor each : fieldPropertyAccessors) {
+			result.put(each.getName(), each);
+		}
+		return result;
+	}
+
+	private List<PropertyAccessor> getMethodPropertyAccessors(final GenerationContext context, boolean onlyFull){
+		try{
+			List<PropertyAccessor> result = new ArrayList<PropertyAccessor>();
+			BeanInfo beanInfo = Introspector.getBeanInfo(context.getClassThatIsGenerated(), Object.class);
+			for (PropertyDescriptor each : beanInfo.getPropertyDescriptors()){
+				//skip properties that miss some access method
+				if (onlyFull && (each.getReadMethod() == null || each.getWriteMethod() == null)) {
+					logger.debug("will not generate value for property " + each.getName()
+						+" because it does not have setter or getter");
+					continue;
+				}
+				result.add(new MethodAccessor(each.getWriteMethod(), each.getReadMethod()));
+			}
+			return result;
+		} catch (IntrospectionException e) {
+		throw new RuntimeException(e);
+		}
+	}
+
+	private List<PropertyAccessor> getFieldPropertyAccessors(final GenerationContext context) {
+		final List<PropertyAccessor> allFieldsToSetValues = new LinkedList<PropertyAccessor>();
+		ReflectionUtils.FieldCallback collectFieldCallback = new ReflectionUtils.FieldCallback() {
+			@Override
+			public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+				field.setAccessible(true);
+				allFieldsToSetValues.add(new FieldAccessor(field));
+			}
+
+		};
+		ReflectionUtils.FieldFilter filteringStaticAndFinals = new ReflectionUtils.FieldFilter() {
+			@Override
+			public boolean matches(Field field) {
+				return !Modifier.isStatic(field.getModifiers())
+						&& !Modifier.isFinal(field.getModifiers());
+			}
+		};
+		ReflectionUtils.doWithFields(context.getClassThatIsGenerated(), collectFieldCallback, filteringStaticAndFinals);
+		return allFieldsToSetValues;
+	}
+
+	private Object createResultInstance(GenerationConfiguration configuration, GenerationContext context) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         if (context.getClassThatIsGenerated().isInterface()){
             Object instance = fakeInterfaceFactory.create(context.getClassThatIsGenerated());
             context.setClassThatIsGenerated(instance.getClass());
@@ -177,8 +266,7 @@ class NotNativeClassGenerator extends Generator {
     }
 
     private Object generateForHierarchy(GenerationConfiguration configuration, GenerationContext pushedContext) {
-        Object result = GenerationSession.get().generate(configuration, pushedContext);
-        return result;
+		return GenerationSession.get().generate(configuration, pushedContext);
     }
 
     private Constructor getConstructorWithMostArgs(Class type) {

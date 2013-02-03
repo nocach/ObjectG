@@ -26,10 +26,13 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.gen.GenerationRule;
+import org.objectg.util.Methods;
 import org.objectg.util.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
+
+import static org.objectg.util.Methods.getPropertyName;
 
 /**
  * <p>
@@ -43,8 +46,6 @@ import org.springframework.util.ReflectionUtils;
 public class PrototypeCreator {
 
     public static final String FIELD_NAME_OF_PROTOTYPE_HANDLER = "$objectgPrototypeCreatorHandler";
-    public static final int SETTER_PREFIX_LENGTH = 3;
-    public static final int GETTER_PREFIX_LENGTH = 3;
 	private static Logger logger = LoggerFactory.getLogger(PrototypeCreator.class);
 
     private PrototypeSetterHandler configurationHandler;
@@ -182,12 +183,7 @@ public class PrototypeCreator {
 
 	private boolean isGetterMethod(CtMethod each) {
         String methodName = each.getName();
-        return isGetterMethod(methodName);
-    }
-
-    private static boolean isGetterMethod(String methodName) {
-        return methodName.startsWith("get")
-                && methodName.length() > GETTER_PREFIX_LENGTH;
+        return Methods.isGetterMethod(methodName);
     }
 
     private void interceptSetters(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
@@ -200,13 +196,7 @@ public class PrototypeCreator {
     }
 
     private boolean isSetterMethod(CtMethod each) throws NotFoundException {
-        return isSetterMethod(each.getName(), each.getParameterTypes().length);
-    }
-
-    private static boolean isSetterMethod(String methodName, int paramLength){
-        return methodName.startsWith("set")
-                && methodName.length() > SETTER_PREFIX_LENGTH
-                && paramLength == 1;
+        return Methods.isSetterMethod(each.getName(), each.getParameterTypes().length);
     }
 
     private void setBodyToInvokeConfigurationHandler(final CtClass interceptedClass, CtMethod method) throws NotFoundException, CannotCompileException {
@@ -257,16 +247,6 @@ public class PrototypeCreator {
     private String extractPropertyNameOfGetterSetter(CtMethod each) {
         String methodName = each.getName();
         return getPropertyName(methodName);
-    }
-
-    private static String getPropertyName(String methodName) {
-        String propertyNameNotFormatted = methodName.substring(SETTER_PREFIX_LENGTH, methodName.length());
-        return new StringBuilder()
-                //first letter in lowercase
-                .append(Character.toLowerCase(propertyNameNotFormatted.charAt(0)))
-                //all that is after first letter of property name
-                .append(methodName.substring(SETTER_PREFIX_LENGTH + 1, methodName.length()))
-                .toString();
     }
 
     private <T> CtClass createInterceptedCtClass(Class<T> clazz)
@@ -396,10 +376,10 @@ public class PrototypeCreator {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (args != null && isSetterMethod(method.getName(), args.length)){
+            if (args != null && Methods.isSetterMethod(method.getName(), args.length)){
                 configurationHandler.onSetter(proxy, args[0], getPropertyName(method.getName()));
             }
-            if (isGetterMethod(method.getName())){
+            if (Methods.isGetterMethod(method.getName())){
                 return configurationHandler.newPrototypeFromGetter(proxy, method.getReturnType()
                         , getPropertyName(method.getName()));
             }

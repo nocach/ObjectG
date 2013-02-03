@@ -1,6 +1,7 @@
 package org.objectg.gen.jpa;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,14 +21,22 @@ import org.hibernate.mapping.KeyValue;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.objectg.util.Generics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 
 /**
+ * <p>
+ *     Inspector for hibernate annotations (jpa as well) that will build list of {@link Relation} for the entity.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 13.10.12
+ * </p>
  */
 public class RelationInspector {
+	private Logger logger = LoggerFactory.getLogger(RelationInspector.class);
 
     public boolean isEntity(Class clazz){
         return isEntityAnnotationPresent(clazz);
@@ -41,13 +50,15 @@ public class RelationInspector {
         }
 
         Set<Class> relatedEntityClasses = collectRelatedEntityClasses(clazz);
+		logRelatedClasses(clazz, relatedEntityClasses);
         Configuration configuration = buildMappingsForClasses(relatedEntityClasses);
 
         Iterator collectionMappings = configuration.getCollectionMappings();
         Map<Class, List<Relation>> result = new HashMap<Class, List<Relation>>();
         while (collectionMappings.hasNext()){
             Relation relation = extractRelationFromCollection(configuration, collectionMappings);
-            addRelationToResult(result, relation);
+			logCreatedRelation(relation);
+			addRelationToResult(result, relation);
         }
 
         for (Class each : relatedEntityClasses){
@@ -57,7 +68,17 @@ public class RelationInspector {
         return result;
     }
 
-    private void addRelationToResult(Map<Class, List<Relation>> result, Relation relation) {
+	private void logCreatedRelation(final Relation relation) {
+		if (relation == null) return;
+		logger.info("creating relation: owner="+relation.getOwner().getName()+"."+relation.getOwnerProperty()
+			+", target="+relation.getTarget().getName()+"."+relation.getTargetProperty());
+	}
+
+	private void logRelatedClasses(final Class clazz, final Set<Class> relatedEntityClasses) {
+		logger.debug("found for "+clazz+" related entity classes: "+ Arrays.toString(relatedEntityClasses.toArray()));
+	}
+
+	private void addRelationToResult(Map<Class, List<Relation>> result, Relation relation) {
         if (relation == null) return;
         if (result.get(relation.getOwner()) == null){
             result.put(relation.getOwner(), new LinkedList<Relation>());
@@ -86,6 +107,7 @@ public class RelationInspector {
         Class target = classForKey.getMappedClass();
         String targetPropertyName = propertyForColumn.getName();
         Relation relation = new Relation(owner, ownerPropertyName, target, targetPropertyName);
+
         return relation;
     }
 
@@ -139,7 +161,7 @@ public class RelationInspector {
                 collectRelatedEntityClassesNested(each.getType(), relatedEntityClasses);
             } else if(isFieldGenericCollection(each)){
                 //TODO: currenty will fall if it will be generic collection without TypeVars defined
-                Class typeParam = (Class) Generics.extractTypeFromGenerics(each, 0);
+                Class typeParam = (Class) Generics.extractTypeFromField(each, 0);
                 if (isEntityAnnotationPresent(typeParam) && !relatedEntityClasses.contains(typeParam)){
                     relatedEntityClasses.add(typeParam);
                     collectRelatedEntityClassesNested(typeParam, relatedEntityClasses);

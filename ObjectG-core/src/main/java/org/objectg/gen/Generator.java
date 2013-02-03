@@ -2,6 +2,7 @@ package org.objectg.gen;
 
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.cycle.MustIgnoreCycleException;
+import org.objectg.gen.impl.SkipValueGenerationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +50,12 @@ public abstract class Generator {
             T result = generateValue(configuration, context);
             return result;
         }
+		catch (SkipValueGenerationException e){
+			//ugly special case
+			throw e;
+		}
 		catch (Exception e){
-			throw new GenerationException("exception occuried while generating value", context, e);
+			throw new GenerationException("exception occurred while generating value", context, e);
 		}
         finally {
             if (context.isPushed()) context.pop();

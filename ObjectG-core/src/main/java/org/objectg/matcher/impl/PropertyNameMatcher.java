@@ -9,12 +9,12 @@ import org.objectg.matcher.ValueTypeHintMatcher;
  * User: __nocach
  * Date: 29.9.12
  */
-public class FieldNameMatcher<U> extends TypeSafeMatcher<GenerationContext>
+public class PropertyNameMatcher<U> extends TypeSafeMatcher<GenerationContext>
                                 implements ValueTypeHintMatcher<GenerationContext, U>{
     private Class<?> parentClass;
     private String fieldName;
 
-    public FieldNameMatcher(Class<?> parentClass, String fieldName){
+    public PropertyNameMatcher(Class<?> parentClass, String fieldName){
         super(GenerationContext.class);
         this.parentClass = parentClass;
         this.fieldName = fieldName;
@@ -22,8 +22,8 @@ public class FieldNameMatcher<U> extends TypeSafeMatcher<GenerationContext>
     @Override
     protected boolean matchesSafely(GenerationContext item) {
         if (fieldName == null) return false;
-        if (item.getField() == null) return false;
-        boolean fieldMatched = fieldName.equals(item.getField().getName());
+        if (item.getPropertyAccessor() == null) return false;
+        boolean fieldMatched = fieldName.equals(item.getPropertyAccessor().getName());
         boolean parentClassInfoDefined = parentClass != null;
         boolean parentClassInContext = item.getParentObject() != null;
         boolean parentClassMatched = !parentClassInfoDefined ||

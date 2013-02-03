@@ -3,7 +3,7 @@ package org.objectg.gen;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.objectg.conf.GenerationConfiguration;
-import org.objectg.matcher.impl.FieldNameMatcher;
+import org.objectg.matcher.impl.PropertyNameMatcher;
 import org.springframework.util.Assert;
 
 import static org.hamcrest.Matchers.any;
@@ -43,7 +43,7 @@ public abstract class GenerationRule<T> implements Comparable<GenerationRule>{
      * @param forProperty for which property this rule must be applied
      */
     public void setForProperty(Class<?> parentClass, String forProperty) {
-        matcher = new FieldNameMatcher(parentClass, forProperty);
+        matcher = new PropertyNameMatcher(parentClass, forProperty);
     }
 
     /**

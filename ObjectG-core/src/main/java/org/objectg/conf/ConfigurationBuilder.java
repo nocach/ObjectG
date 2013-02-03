@@ -5,6 +5,7 @@ import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
+import org.objectg.gen.access.AccessStrategy;
 import org.objectg.gen.cycle.CycleStrategy;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
@@ -134,6 +135,28 @@ public class ConfigurationBuilder {
 	public ConfigurationBuilder depth(final int depth) {
 		Assert.isTrue(depth >= 0, "depth must be >= 0");
 		resultConfiguration.setDepth(depth);
+		return this;
+	}
+
+	/**
+	 * set no limit generation depth
+	 */
+	public ConfigurationBuilder noDepth(){
+		resultConfiguration.setDepth(GenerationConfiguration.UNLIMITED_DEPTH);
+		return this;
+	}
+
+	public AccessBuilder access() {
+		return new AccessBuilder(this);
+	}
+
+	/**
+	 *
+	 * @param accessStrategy not null
+	 */
+	public ConfigurationBuilder setAccessStrategy(final AccessStrategy accessStrategy) {
+		Assert.notNull(accessStrategy, "accessStrategy should not be null");
+		resultConfiguration.setAccessStrategy(accessStrategy);
 		return this;
 	}
 }

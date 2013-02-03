@@ -17,9 +17,9 @@ import org.objectg.util.Generics;
 abstract class CollectionGenerator<CollectionT> extends Generator {
     @Override
     public final <T> T generateValue(GenerationConfiguration configuration, GenerationContext<T> context) {
-        if (context.getField() == null
+        if (context.getPropertyAccessor() == null
                 && configuration.getObjectsInCollections() > 0){
-            throw new IllegalArgumentException("can't generate collection with objects for context without field"
+            throw new IllegalArgumentException("can't generate collection with objects for context without propertyAccessor"
                     +", context="+context);
         }
         CollectionT collection = createCollectionInstance(context);
@@ -59,8 +59,7 @@ abstract class CollectionGenerator<CollectionT> extends Generator {
             if (genericType != null) return genericType;
         }
         if (genericType == null){
-            Field contextField = fromContext.getField();
-            genericType = Generics.extractTypeFromGenerics(contextField, typeVarIndex);
+            genericType = fromContext.getPropertyAccessor().getGenericType(typeVarIndex);
         }
         return genericType;
     }

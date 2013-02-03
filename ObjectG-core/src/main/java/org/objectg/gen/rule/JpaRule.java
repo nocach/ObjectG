@@ -31,8 +31,8 @@ class JpaRule extends GenerationRule<Object>{
     public boolean matches(GenerationContext context) {
         List<Relation> relations = relationValueProvider.getRelationsFor(context.getClassThatIsGenerated());
         if (relations.isEmpty()) return false;
-        if (context.getField() == null
-                && context.getParentField() == null) return false;
+        if (context.getPropertyAccessor() == null
+                && context.getParentPropertyAccessor() == null) return false;
         Object objectForRelation = findGeneratedObjectFromRelations(context, relations);
         return objectForRelation != null;
     }
@@ -61,10 +61,10 @@ class JpaRule extends GenerationRule<Object>{
     }
 
     private boolean isContextForExpectedProperty(GenerationContext context, Class expectedClass, String expectedProperty) {
-        boolean matchedGeneratingField = context.getField() != null && context.getField().getName().equals(expectedProperty);
-        boolean matchedParentCollectionField = context.getParentField() != null
-                && Collection.class.isAssignableFrom(context.getParentField().getType())
-                && context.getParentField().getName().equals(expectedProperty);
+        boolean matchedGeneratingField = context.getPropertyAccessor() != null && context.getPropertyAccessor().getName().equals(expectedProperty);
+        boolean matchedParentCollectionField = context.getParentPropertyAccessor() != null
+                && Collection.class.isAssignableFrom(context.getParentPropertyAccessor().getType())
+                && context.getParentPropertyAccessor().getName().equals(expectedProperty);
         return expectedClass.equals(context.getClassThatIsGenerated())
                 && (matchedGeneratingField || matchedParentCollectionField);
     }
