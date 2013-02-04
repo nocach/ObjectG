@@ -6,11 +6,10 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.util.Date;
 
-import junit.framework.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
+import org.objectg.fixtures.domain.Person;
 
 /**
  * User: __nocach
@@ -114,4 +113,17 @@ public class NativeClassUniqueGeneratorTest extends BaseObjectGTest {
         Object secondValue = ObjectG.unique(type);
         assertNotSame("expect to generate unique values for type "+type.getName(), firstValue, secondValue);
     }
+
+	@Test
+	public void stringWillHavePropertyNameInValue(){
+		final Person unique1 = ObjectG.unique(Person.class);
+		final Person unique2 = ObjectG.unique(Person.class);
+
+		assertTrue("string property should have property name in generated value",
+				unique1.getFirstName().contains("firstName"));
+		assertTrue("string property should have property name in generated value",
+				unique2.getFirstName().contains("firstName"));
+		assertNotSame("string property should be unique in generation session",
+				unique1.getFirstName(), unique2.getFirstName());
+	}
 }

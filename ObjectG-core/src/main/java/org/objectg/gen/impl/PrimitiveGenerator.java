@@ -14,9 +14,9 @@ import java.util.Set;
 import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationException;
-import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.Generator;
 import org.objectg.gen.ValueSequence;
+import org.objectg.gen.session.GenerationSession;
 
 /**
  * <p>
@@ -110,6 +110,12 @@ class PrimitiveGenerator extends Generator {
     protected Object generateValue(GenerationConfiguration configuration, GenerationContext context) {
         try {
 			if (classToSequence.containsKey(context.getClassThatIsGenerated())){
+				final boolean canGeneratePrettyString = String.class.equals(context.getClassThatIsGenerated())
+						&& context.getPropertyAccessor() != null;
+				if (canGeneratePrettyString){
+					final Object next = classToSequence.get(context.getClassThatIsGenerated()).next();
+					return context.getPropertyAccessor().getName() + "-unique-"+next;
+				}
 				return classToSequence.get(context.getClassThatIsGenerated()).next();
 			}
             throw new IllegalArgumentException("can't generate value of type " + context);
