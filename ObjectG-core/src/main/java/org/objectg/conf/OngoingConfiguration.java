@@ -12,12 +12,27 @@ import org.objectg.gen.GenerationRule;
  * </p>
  */
 public class OngoingConfiguration {
-    //TODO: what about multithread? threadLocal?
-    public static volatile GenerationRule plannedRule;
-    public static volatile Object plannedPrototype;
+    private static ThreadLocal<GenerationRule> plannedRule = new ThreadLocal<GenerationRule>();
+    private static ThreadLocal<Object> plannedPrototype = new ThreadLocal<Object>();
 
     public static void clear() {
-        plannedRule = null;
-        plannedPrototype = null;
+		plannedRule.remove();
+		plannedPrototype.remove();
     }
+
+	public static GenerationRule getPlannedRule() {
+		return plannedRule.get();
+	}
+
+	public static void setPlannedRule(final GenerationRule plannedRule) {
+		OngoingConfiguration.plannedRule.set(plannedRule);
+	}
+
+	public static Object getPlannedPrototype() {
+		return plannedPrototype.get();
+	}
+
+	public static void setPlannedPrototype(final Object plannedPrototype) {
+		OngoingConfiguration.plannedPrototype.set(plannedPrototype);
+	}
 }

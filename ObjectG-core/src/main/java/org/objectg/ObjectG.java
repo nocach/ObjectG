@@ -15,8 +15,8 @@ import org.objectg.conf.prototype.InterceptedByPrototypeCreator;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
-import org.objectg.gen.session.GenerationSession;
 import org.objectg.gen.rule.Rules;
+import org.objectg.gen.session.GenerationSession;
 import org.springframework.util.Assert;
 
 /**
@@ -119,7 +119,7 @@ public class ObjectG {
 
     public static <T> T prototype(Class<T> clazz){
         T result = PROTOTYPE_CREATOR.newPrototype(clazz);
-        OngoingConfiguration.plannedPrototype = result;
+        OngoingConfiguration.setPlannedPrototype(result);
         return result;
     }
 

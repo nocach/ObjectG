@@ -74,7 +74,7 @@ public class PrototypeSetterHandler {
      */
     public void onSetter(Object prototype, Object value, String propertyName) {
         List<GenerationRule> configuredRules = getOngoingRules(prototype);
-        if (OngoingConfiguration.plannedRule != null) {
+        if (OngoingConfiguration.getPlannedRule() != null) {
             addPlannedRuleForProperty(prototype, propertyName, configuredRules);
         }
         else if (needToUseConfigurationObject(prototype)){
@@ -87,7 +87,7 @@ public class PrototypeSetterHandler {
     }
 
     private void setPrototypeForProperty(Object prototypeParent, String propertyName, Object prototypeForProperty) {
-        setRuleListForProperty(prototypeParent, propertyName, OngoingConfiguration.plannedPrototype);
+        setRuleListForProperty(prototypeParent, propertyName, OngoingConfiguration.getPlannedPrototype());
         Map<String, Object> prototypeProperties = getPrototypesForProperties(prototypeParent);
         prototypeProperties.put(propertyName, prototypeForProperty);
     }
@@ -122,8 +122,8 @@ public class PrototypeSetterHandler {
 
     private boolean needToUseConfigurationObject(Object prototype) {
         return prototype instanceof InterceptedByPrototypeCreator
-                && OngoingConfiguration.plannedPrototype != null
-                && OngoingConfiguration.plannedPrototype != prototype;
+                && OngoingConfiguration.getPlannedPrototype() != null
+                && OngoingConfiguration.getPlannedPrototype() != prototype;
     }
 
     private List<GenerationRule> getOngoingRules(Object prototype) {
@@ -132,7 +132,7 @@ public class PrototypeSetterHandler {
     }
 
     private void addPlannedRuleForProperty(Object prototype, String propertyName, List<GenerationRule> rulesForPrototype) {
-        GenerationRule plannedRule = OngoingConfiguration.plannedRule;
+        GenerationRule plannedRule = OngoingConfiguration.getPlannedRule();
         plannedRule.setForProperty(prototypeCreator.getRealObjectClass(prototype), propertyName);
         rulesForPrototype.add(plannedRule);
     }
