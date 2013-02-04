@@ -438,8 +438,46 @@ public class OngoingRules {
 	}
 
 	public static <T> T skip() {
-		//TODO: primitive overloads
 		OngoingConfiguration.plannedRule = Rules.skip();
 		return null;
+	}
+
+	public static boolean skipBoolean(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return false;
+	}
+
+	public static byte skipByte(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
+	}
+	public static char skipChar(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
+	}
+
+	public static short skipShort(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
+	}
+
+	public static int skipInt(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
+	}
+
+	public static long skipLong(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
+	}
+
+	public static float skipFloat(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
+	}
+
+	public static double skipDouble(){
+		OngoingConfiguration.plannedRule = Rules.skip();
+		return 0;
 	}
 }
