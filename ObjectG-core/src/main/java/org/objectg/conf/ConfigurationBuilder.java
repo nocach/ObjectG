@@ -28,7 +28,7 @@ import static org.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
 public class ConfigurationBuilder {
     private GenerationConfiguration resultConfiguration;
     private PrototypeCreator prototypeCreator;
-	boolean notAllowSetInObjectChange = false;
+	boolean notAllowObjectsInCollectionsChange = false;
 
     public ConfigurationBuilder(PrototypeCreator prototypeCreator){
         Assert.notNull(prototypeCreator, "prototypeCreator");
@@ -53,7 +53,7 @@ public class ConfigurationBuilder {
         resultConfiguration.addRule(nullForNotRootObjects);
 
 		resultConfiguration.setObjectsInCollections(0);
-		notAllowSetInObjectChange = true;
+		notAllowObjectsInCollectionsChange = true;
 
         return this;
     }
@@ -110,7 +110,7 @@ public class ConfigurationBuilder {
 
 	public ConfigurationBuilder setObjectsInCollection(final int objectsInCollection) {
 		Assert.isTrue(objectsInCollection >= 0 , "objectsInCollection should be >= 0");
-		Assert.isTrue(!notAllowSetInObjectChange, "can't change ObjectsInCollection after onlyPrimitives() was called");
+		Assert.isTrue(!notAllowObjectsInCollectionsChange, "can't change ObjectsInCollection after onlyPrimitives() was called");
 
 		resultConfiguration.setObjectsInCollections(objectsInCollection);
 		return this;
