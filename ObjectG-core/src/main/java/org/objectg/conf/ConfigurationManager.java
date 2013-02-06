@@ -142,9 +142,4 @@ public class ConfigurationManager {
 			return configuration;
 		}
 	}
-
-	public void setLocalConfiguration(final GenerationConfiguration configuration) {
-		Assert.notNull(configuration, "configuration");
-		bindConfigurationToCallClass(configuration);
-	}
 }

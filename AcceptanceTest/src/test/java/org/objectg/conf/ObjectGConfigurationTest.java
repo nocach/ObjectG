@@ -3,9 +3,8 @@ package org.objectg.conf;
 import java.util.List;
 
 import org.junit.Test;
+import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * <p>
@@ -16,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
  * Date: 10.11.12
  * </p>
  */
-public class ObjectGConfigurationTest {
+public class ObjectGConfigurationTest extends BaseObjectGTest {
 
 	@Test
 	public void globalConfigurationIsApplied(){

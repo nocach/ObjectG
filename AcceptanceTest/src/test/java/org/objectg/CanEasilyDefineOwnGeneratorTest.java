@@ -6,17 +6,15 @@ import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
 
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * User: __nocach
  * Date: 17.11.12
  */
-public class CanEasilyDefineOwnGeneratorTest {
+public class CanEasilyDefineOwnGeneratorTest extends BaseObjectGTest{
 
 	@Before
 	public void setup(){
-		ObjectG.setupConfig(ObjectG.config()
+		ObjectG.configLocal(ObjectG.config()
 				.when(SpecificClass.class)
 				.useRule(new SpecificClassGenerationRule()));
 	}
