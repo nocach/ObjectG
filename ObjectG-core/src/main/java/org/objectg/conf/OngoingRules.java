@@ -438,45 +438,68 @@ public class OngoingRules {
 		return 0;
 	}
 
+	/**
+	 * skip generation of this attribute
+	 */
 	public static <T> T skip() {
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return null;
 	}
 
+	/**
+	 * skip generation of this attribute
+	 */
 	public static boolean skipBoolean(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return false;
 	}
 
+	/**
+	 * skip generation of this attribute
+	 */
 	public static byte skipByte(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;
 	}
+
+	/**
+	 * skip generation of this attribute
+	 */
 	public static char skipChar(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;
 	}
-
+	/**
+	 * skip generation of this attribute
+	 */
 	public static short skipShort(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;
 	}
-
+	/**
+	 * skip generation of this attribute
+	 */
 	public static int skipInt(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;
 	}
-
+	/**
+	 * skip generation of this attribute
+	 */
 	public static long skipLong(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;
 	}
-
+	/**
+	 * skip generation of this attribute
+	 */
 	public static float skipFloat(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;
 	}
-
+	/**
+	 * skip generation of this attribute
+	 */
 	public static double skipDouble(){
 		OngoingConfiguration.setPlannedRule(Rules.skip());
 		return 0;

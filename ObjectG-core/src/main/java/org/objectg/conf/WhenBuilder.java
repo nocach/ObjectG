@@ -21,7 +21,7 @@ public class WhenBuilder<T> {
     private final ConfigurationBuilder configurationBuilder;
     private String expression;
 
-    public WhenBuilder(Matcher<GenerationContext> contextMatcher, ConfigurationBuilder configurationBuilder) {
+    WhenBuilder(Matcher<GenerationContext> contextMatcher, ConfigurationBuilder configurationBuilder) {
         Assert.notNull(contextMatcher, "contextMatcher");
         Assert.notNull(configurationBuilder, "configurationBuilder");
 

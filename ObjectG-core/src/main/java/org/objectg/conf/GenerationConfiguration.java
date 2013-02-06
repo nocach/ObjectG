@@ -1,5 +1,6 @@
 package org.objectg.conf;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +21,8 @@ import org.springframework.util.Assert;
 
 /**
  * <p>
- *     Defines how generation must be performed.
+ *     Defines how generation must be performed. Preferred way to define configuration is through builder
+ *     returned by {@link org.objectg.ObjectG#config()}.
  * </p>
  * <p>
  *     Control of generation can be performed by using rules {@link GenerationRule} or by setting certain properties
@@ -59,13 +61,22 @@ public class GenerationConfiguration implements Cloneable{
 		this(LEVEL.USER);
 	}
 
+	/**
+	 *
+	 * @param level not null level of this configuration. Normally you should not use this constructor,
+	 *              use the default one.
+	 */
 	public GenerationConfiguration(LEVEL level){
 		Assert.notNull(level, "level");
 		this.level = level;
 	}
 
-
+	/**
+	 * Add rule that will be used during generation
+	 * @param rule to add
+	 */
     public void addRule(GenerationRule rule) {
+		Assert.notNull(rule, "rule should not be null");
         rules.add(rule);
     }
 
@@ -73,6 +84,10 @@ public class GenerationConfiguration implements Cloneable{
         return isUnique;
     }
 
+	/**
+	 * Currently this does nothing
+	 * @param unique if generated values should be unique.
+	 */
     public void setUnique(boolean unique) {
         isUnique = unique;
     }
@@ -96,11 +111,18 @@ public class GenerationConfiguration implements Cloneable{
         return null;
     }
 
+	/**
+	 *
+	 * @return cloned configuration. list of rules and postprocessors are recreated but reference
+	 * same instances. So deleting rule in returned configuration will not alter original configuraiton
+	 * from which it was copied, but changing rule itself will still be reflected.
+	 */
     public GenerationConfiguration clone() {
         try{
             GenerationConfiguration result = (GenerationConfiguration) super.clone();
             //create defencive copies for collections
             result.rules = new PriorityQueue<GenerationRule>(this.rules);
+			result.postProcessors = new ArrayList<PostProcessor>(this.postProcessors);
             return result;
         }
         catch (CloneNotSupportedException e){
@@ -111,10 +133,10 @@ public class GenerationConfiguration implements Cloneable{
 
 
     /**
-     * create copy of current configuration, but additional add new rules passed as param
+     * create copy of current configuration, but additionally add new rules passed as param
      *
-     * @param rulesToAdd
-     * @return
+     * @param rulesToAdd not null rules to add
+     * @return copied configuraiton with added rules
      */
     public GenerationConfiguration newWithMoreRules(List<GenerationRule> rulesToAdd) {
         GenerationConfiguration overriden = clone();
@@ -165,6 +187,11 @@ public class GenerationConfiguration implements Cloneable{
         postProcessors.add(postProcessor);
     }
 
+	/**
+	 * called by framework to apply postProcessors for the generated value
+	 * @param result result of generation
+	 * @return value after post processing
+	 */
     public <T> T postProcess(T result) {
         Iterator<PostProcessor> iterator = postProcessors.iterator();
         while (iterator.hasNext()){
@@ -259,6 +286,10 @@ public class GenerationConfiguration implements Cloneable{
 		this.level = level;
 	}
 
+	/**
+	 * how deep to go into object graph.
+	 * @param depth >= 0. -1 means no depth.
+	 */
 	public void setDepth(final int depth) {
 		this.depth = depth;
 	}
