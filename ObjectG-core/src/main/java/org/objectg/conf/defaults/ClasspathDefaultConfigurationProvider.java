@@ -3,8 +3,14 @@ package org.objectg.conf.defaults;
 import org.objectg.conf.exception.ConfigurationException;
 
 /**
+ * <p>
+ *     Gets {@link AbstractObjectGConfiguration} by trying to instantiate class with name
+ *     {@code org.objectg.conf.ObjectGConfiguration}
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 8.11.12
+ * </p>
  */
 public class ClasspathDefaultConfigurationProvider implements DefaultConfigurationProvider {
 	@Override

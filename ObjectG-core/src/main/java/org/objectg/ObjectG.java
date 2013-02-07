@@ -15,6 +15,7 @@ import org.objectg.conf.prototype.InterceptedByPrototypeCreator;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
+import org.objectg.gen.RuleScope;
 import org.objectg.gen.rule.Rules;
 import org.objectg.gen.session.GenerationSession;
 import org.springframework.util.Assert;
@@ -196,7 +197,7 @@ public class ObjectG {
 	 */
     public static <T> T unique(Class<T> clazz, GenerationConfiguration configuration, Object... prototypes){
         configuration.setUnique(true);
-        configuration.addAllRules(rulesFromPrototypes(prototypes));
+        configuration.addAllRules(localRulesFromPrototypes(prototypes));
         return generate(clazz, configuration);
     }
 
@@ -240,7 +241,34 @@ public class ObjectG {
     }
 
 	/**
-	 * Create prototype for the passed clazz
+	 * <p>
+	 * 	Create prototype for the passed clazz
+	 * </p>
+	 * <p>
+	 *     Prototype is the main mechanism on how to configure generation of objects of some type. To configure
+	 *     specific rule for generation of attribute call setter and pass as argument special value
+	 *     returned from {@link org.objectg.conf.OngoingRules}.
+	 * </p>
+	 * <p>
+	 *     Calling setter with some value is the same as calling {@link org.objectg.conf.OngoingRules#value(Object)}.
+	 *     So calling personPrototype.setName("someName") and generating instance of Person using that prototype
+	 *     will result in object, that will have name set to "someName".
+	 * </p>
+	 * <p>
+	 *     You can call setter with another prototype and attribute for that setter will be generated using passed
+	 *     prototype. E.g. you could call {@code personPrototype.setAddress(addressPrototype)}and generating field address
+	 *     using personPrototype will be done by using addressPrototype
+	 * </p>
+	 * <p>
+	 *     Calling getters on prototype will automatically return prototype for the return type. So
+	 *     calling personPrototype.getAddress() will return prototype for type Address.class. This means that
+	 *     you don't need to manually set prototypes if you want use them only to configure specific field.
+	 * </p>
+	 * <p>
+	 *     For methods of {@link org.objectg.conf.OngoingRules} that can't derive return type
+	 *     (like {@link org.objectg.conf.OngoingRules#skip()}) you should add type parameter to the call, e.g.
+	 *     {@code personPrototype.setAddress(OngoingRules.<Address>skip())}
+	 * </p>
 	 *
 	 * @param clazz not null class for which to create prototype. Must be not final and not abstract class.
 	 *                 Can be interface.
@@ -253,8 +281,12 @@ public class ObjectG {
         return result;
     }
 
-    private static List<GenerationRule> rulesFromPrototypes(Object... prototypes){
-        return PROTOTYPE_CREATOR.getRulesFromPrototypes(prototypes);
+    private static List<GenerationRule> localRulesFromPrototypes(Object... prototypes){
+		final List<GenerationRule> result = PROTOTYPE_CREATOR.getRulesFromPrototypes(prototypes);
+		for (GenerationRule each : result) {
+			each.setScope(RuleScope.LOCAL);
+		}
+		return result;
     }
 
     /**
@@ -566,7 +598,7 @@ public class ObjectG {
         Assert.isTrue(size >= 0, "size must be >= 0");
         List<T> result = new ArrayList<T>(size);
         configuration.setUnique(true);
-        configuration.addAllRules(rulesFromPrototypes(prototypes));
+        configuration.addAllRules(localRulesFromPrototypes(prototypes));
         for (int i = 0; i < size; i++){
             result.add(i, generate(clazz, configuration));
         }
@@ -757,7 +789,7 @@ public class ObjectG {
         Assert.isTrue(size >= 0, "size must be >= 0");
         Set<T> result = new HashSet<T>();
         configuration.setUnique(true);
-        configuration.addAllRules(rulesFromPrototypes(prototypes));
+        configuration.addAllRules(localRulesFromPrototypes(prototypes));
         for (int i = 0; i < size; i++){
             result.add(generate(clazz, configuration));
         }

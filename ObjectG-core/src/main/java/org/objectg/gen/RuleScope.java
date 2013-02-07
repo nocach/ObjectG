@@ -28,6 +28,10 @@ public enum RuleScope {
      * rule is considered to be globally applied (e.g. rule must be used for every generation of some type)
      */
     GLOBAL,
+	/**
+	 * rule is considered to be local for test case (e.g. rule must be used in multiple generations in one test case)
+	 */
+	LOCAL,
     /**
      * rule is considered to be applied only on the certain property, so it will be checked as first
      */

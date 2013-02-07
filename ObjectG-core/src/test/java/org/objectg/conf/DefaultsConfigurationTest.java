@@ -7,6 +7,7 @@ import org.objectg.ObjectG;
 import org.objectg.conf.defaults.AbstractObjectGConfiguration;
 import org.objectg.fixtures.domain.Departure;
 import org.objectg.fixtures.domain.Guide;
+import org.objectg.fixtures.domain.GuideAssignment;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.gen.GenerationRule;
 import org.objectg.gen.PostProcessor;
@@ -14,14 +15,12 @@ import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.impl.PropertyNameMatcher;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * User: __nocach
  * Date: 8.11.12
  */
-public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
+public class DefaultsConfigurationTest extends FakeConfigurationProviderBaseTest {
 
 	@Test
 	public void emptyConfigurationWorks(){
@@ -105,4 +104,24 @@ public class DefaultsConfigTest extends FakeConfigurationProviderBaseTest {
 		assertEquals("postProcessedFirstName", generated.getFirstName());
 	}
 
+
+	@Test
+	public void canRedefineDefaultPrototypes(){
+		//setup
+		fakeConfigurationProvider.defaultConfiguration = new AbstractObjectGConfiguration(){
+			@Override
+			protected Collection<? extends Object> getPrototypes() {
+				final Departure departure = ObjectG.prototype(Departure.class);
+				departure.setId(999L);
+				return asList(departure);
+			}
+		};
+
+		final Departure departurePrototype = ObjectG.prototype(Departure.class);
+		departurePrototype.setId(111L);
+
+		final GuideAssignment unique = ObjectG.unique(GuideAssignment.class, departurePrototype);
+
+		assertEquals(111L, (long)unique.getDeparture().getId());
+	}
 }
