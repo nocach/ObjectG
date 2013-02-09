@@ -21,14 +21,14 @@ import org.springframework.util.Assert;
 
 /**
  * <p>
- *     PrototypeSetterHandler that manages list of rules for each property and objects.
+ *     PrototypeMethodsHandler that manages list of rules for each property and objects.
  * </p>
  * <p>
  * User: __nocach
  * Date: 16.9.12
  * </p>
  */
-public class PrototypeSetterHandler {
+public class PrototypeMethodsHandler {
     /**
      * Integer = System.identityHashCode(prototype)
      * LinkedList<GenerationRule> - rules for the prototype
@@ -59,7 +59,7 @@ public class PrototypeSetterHandler {
 			Collections.synchronizedSet(new HashSet<PrototypeReferenceHolder>());
 	private PrototypeCreator prototypeCreator;
 
-    public PrototypeSetterHandler(PrototypeCreator prototypeCreator) {
+    public PrototypeMethodsHandler(PrototypeCreator prototypeCreator) {
         this.prototypeCreator = prototypeCreator;
     }
 

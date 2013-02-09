@@ -47,11 +47,11 @@ public class PrototypeCreator {
     public static final String FIELD_NAME_OF_PROTOTYPE_HANDLER = "$objectgPrototypeCreatorHandler";
 	private static Logger logger = LoggerFactory.getLogger(PrototypeCreator.class);
 
-    private PrototypeSetterHandler configurationHandler;
+    private PrototypeMethodsHandler prototypeMethodsHandler;
     private Map<Object, Class> proxyToRealClass = Collections.synchronizedMap(new WeakHashMap<Object, Class>());
 
     public PrototypeCreator(){
-        this.configurationHandler = new PrototypeSetterHandler(this);
+        this.prototypeMethodsHandler = new PrototypeMethodsHandler(this);
     }
 
     public <T> T newPrototype(Class<T> clazz){
@@ -81,7 +81,7 @@ public class PrototypeCreator {
     private <T> T createPrototypeForConcreteClass(Class<T> clazz) throws NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Class interceptedClass = interceptClass(clazz);
         T modifiedInstance = (T) createInterceptedClassInstance(interceptedClass);
-        configurationHandler.onInit(modifiedInstance);
+        prototypeMethodsHandler.onInit(modifiedInstance);
         return modifiedInstance;
     }
 
@@ -91,8 +91,8 @@ public class PrototypeCreator {
         interfacesSet.add(InterceptedByPrototypeCreator.class);
         Class<?>[] interfaces = interfacesSet.toArray(new Class<?>[]{});
         T resultPrototypeInterface = (T) Proxy.newProxyInstance(getClass().getClassLoader(),
-                interfaces, new CallSetterHandler(configurationHandler));
-        configurationHandler.onInit(resultPrototypeInterface);
+                interfaces, new CallSetterHandler(prototypeMethodsHandler));
+        prototypeMethodsHandler.onInit(resultPrototypeInterface);
         proxyToRealClass.put(resultPrototypeInterface, clazz);
         return resultPrototypeInterface;
     }
@@ -108,7 +108,7 @@ public class PrototypeCreator {
 		}
 
         Field handlerField = modifiedInstance.getClass().getDeclaredField(FIELD_NAME_OF_PROTOTYPE_HANDLER);
-        ReflectionUtils.setField(handlerField, modifiedInstance, configurationHandler);
+        ReflectionUtils.setField(handlerField, modifiedInstance, prototypeMethodsHandler);
 
         return modifiedInstance;
     }
@@ -340,14 +340,14 @@ public class PrototypeCreator {
 
     private void addHandlerField(CtClass interceptedClass) throws NotFoundException, CannotCompileException {
         CtClass configurationHandlerCtType = ClassPool.getDefault().get(
-				PrototypeSetterHandler.class.getName());
+				PrototypeMethodsHandler.class.getName());
 		CtField ctField = new CtField(configurationHandlerCtType, FIELD_NAME_OF_PROTOTYPE_HANDLER, interceptedClass);
         ctField.setModifiers(Modifier.PUBLIC);
 		interceptedClass.addField(ctField);
     }
 
 	public List<GenerationRule> getRules(Object prototype) {
-        return configurationHandler.getRules(prototype);
+        return prototypeMethodsHandler.getRules(prototype);
     }
 
 	public List<GenerationRule> getRulesFromPrototypes(Object... prototypes){
@@ -355,7 +355,7 @@ public class PrototypeCreator {
 		for (Object each : prototypes){
 			List<GenerationRule> rules = getRules(each);
 			if (rules == null){
-				logger.debug("no rules contained in configurationHandler for object " + each
+				logger.debug("no rules contained in prototypeMethodsHandler for object " + each
 						+" was this object created using ObjectG.prototype(Class)?");
 			}
 			else {
@@ -366,14 +366,14 @@ public class PrototypeCreator {
 	}
 
 	public void clear() {
-		this.configurationHandler.clear();
+		this.prototypeMethodsHandler.clear();
 	}
 
 	private static class CallSetterHandler implements InvocationHandler{
 
-        private PrototypeSetterHandler configurationHandler;
+        private PrototypeMethodsHandler configurationHandler;
 
-        public CallSetterHandler(PrototypeSetterHandler configurationHandler) {
+        public CallSetterHandler(PrototypeMethodsHandler configurationHandler) {
             this.configurationHandler = configurationHandler;
         }
 
