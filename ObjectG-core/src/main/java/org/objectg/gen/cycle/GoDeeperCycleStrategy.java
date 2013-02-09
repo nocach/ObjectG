@@ -4,6 +4,10 @@ import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.GenerationContext;
 
 /**
+ * <p>
+ * will generate additional objects on cycle. calling goDeeper(1) will result in: if properties Person.address
+ * and Address.person exist then 3 objects will be generated Person, Person.address and Person.address.person.
+ * </p>
  * User: __nocach
  * Date: 11.11.12
  */

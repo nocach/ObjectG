@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
  *     is required.
  * </p>
  * <p>
+ *     Generator is a base class for generating values in common way of given type. For customisation of generation
+ *     process you must use {@link GenerationRule}
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 26.8.12
  * </p>
