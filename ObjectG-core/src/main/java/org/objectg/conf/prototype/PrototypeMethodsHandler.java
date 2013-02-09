@@ -120,7 +120,7 @@ public class PrototypeMethodsHandler {
 
     private void addValueRule(Object prototype, Object value, String propertyName) {
         List<GenerationRule> configuredRules = getOngoingRules(prototype);
-        GenerationRule generationRule = Rules.fromList(value);
+        GenerationRule generationRule = Rules.sequence(value);
         generationRule.setForProperty(prototypeCreator.getRealObjectClass(prototype), propertyName);
         configuredRules.add(generationRule);
     }

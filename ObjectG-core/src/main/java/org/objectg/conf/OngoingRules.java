@@ -34,7 +34,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static byte value(byte value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
 		return 0;
 	}
 
@@ -43,7 +43,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static boolean value(boolean value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
 		return false;
 	}
 
@@ -52,7 +52,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static char value(char value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
 		return 0;
 	}
 
@@ -60,7 +60,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static short value(short value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
 		return 0;
 	}
 
@@ -68,7 +68,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static int value(int value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
         return 0;
     }
 
@@ -77,7 +77,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static long value(long value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
         return 0;
     }
 
@@ -85,7 +85,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static float value(float value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
         return 0;
     }
 
@@ -94,7 +94,7 @@ public class OngoingRules {
 	 * @param value set exactly this value
 	 */
 	public static double value(double value){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(value));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(value));
         return 0;
     }
 
@@ -104,7 +104,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static  <T> T sequence(T... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return null;
     }
 	/**
@@ -113,7 +113,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
 	public static boolean sequence(boolean... values){
-		OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+		OngoingConfiguration.setPlannedRule(Rules.sequence(values));
 		return false;
 	}
 	/**
@@ -122,7 +122,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
 	public static  byte sequence(byte... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0;
     }
 	/**
@@ -131,7 +131,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static char sequence(char... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0;
     }
 	/**
@@ -140,7 +140,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static short sequence(short... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0;
     }
 	/**
@@ -149,7 +149,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static int sequence(int... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0;
     }
 	/**
@@ -158,7 +158,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static long sequence(long... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0L;
     }
 	/**
@@ -167,7 +167,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static float sequence(float... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0f;
     }
 	/**
@@ -176,7 +176,7 @@ public class OngoingRules {
 	 *               from the sequence. If the last value is reached then next values will be generated from the start.
 	 */
     public static double sequence(double... values){
-        OngoingConfiguration.setPlannedRule(Rules.fromList(values));
+        OngoingConfiguration.setPlannedRule(Rules.sequence(values));
         return 0.;
     }
 

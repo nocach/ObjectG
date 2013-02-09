@@ -6,8 +6,15 @@ import org.junit.runners.model.Statement;
 import org.objectg.ObjectG;
 
 /**
+ * <p>
+ *     {@link TestRule} that manages ObjectG lifecycle. If you can't use this rule then you must call
+ *     {@link org.objectg.ObjectG#setup()} in @before phase and {@link org.objectg.ObjectG#teardown()}
+ *     in @after phase of your tests.
+ * </p>
+ * <p>
  * User: __nocach
  * Date: 22.1.13
+ * </p>
  */
 public class ObjectGTestRule implements TestRule {
 

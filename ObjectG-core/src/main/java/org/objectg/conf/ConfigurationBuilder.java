@@ -1,5 +1,6 @@
 package org.objectg.conf;
 
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
@@ -74,6 +75,15 @@ public class ConfigurationBuilder {
     public GenerationConfiguration done() {
         return resultConfiguration;
     }
+
+	/**
+	 * create {@link WhenBuilder} for the passed contextMatcher.
+	 * @param contextMatcher see {@link ContextMatchers}. this context will be applied in returned {@link WhenBuilder}
+	 * @return {@link WhenBuilder} for the passed contextMatcher.
+	 */
+	public WhenBuilder when(Matcher<GenerationContext> contextMatcher){
+		return new WhenBuilder(contextMatcher, this);
+	}
 
     /**
      * create {@link WhenBuilder} for the passed contextMatcher.

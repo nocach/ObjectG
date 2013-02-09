@@ -37,7 +37,7 @@ public class WhenBuilder<T> {
         this.configurationBuilder = configurationBuilder;
     }
 
-    public ConfigurationBuilder useRule(GenerationRule rule){
+    public ConfigurationBuilder useRule(GenerationRule<T> rule){
         addRule(rule);
         return configurationBuilder;
     }
@@ -53,13 +53,13 @@ public class WhenBuilder<T> {
         }
     }
 
-    private void addRuleForMatcher(GenerationRule rule, RuleScope scope) {
+    private void addRuleForMatcher(GenerationRule<T> rule, RuleScope scope) {
         rule.when(contextMatcher);
         rule.setScope(scope);
         configurationBuilder.addRule(rule);
     }
 
-    public ConfigurationBuilder useRule(GenerationRule rule, RuleScope scope){
+    public ConfigurationBuilder useRule(GenerationRule<T> rule, RuleScope scope){
         addRuleForMatcher(rule, scope);
         return configurationBuilder;
     }
@@ -96,6 +96,6 @@ public class WhenBuilder<T> {
 	}
 
 	public ConfigurationBuilder setValues(final T... values) {
-		return useRule(Rules.fromList(values));
+		return useRule(Rules.sequence(values));
 	}
 }

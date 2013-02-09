@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.any;
  *     Conditions way be as flexible as you would like. During single generation {@link GenerationContext} will be
  *     passed FOR ALL properties of the generated object. Even root object is will be checked against matcher.
  *     This means that you can define GenerationRule that will match several properties or several types. Or you
- *     can define property for single property.
+ *     can define property for single property. For common matchers refer to {@link org.objectg.matcher.ContextMatchers}
  * </p>
  * <p>
  *     {@link #getValue(org.objectg.conf.GenerationConfiguration, GenerationContext)} is called when matcher set to

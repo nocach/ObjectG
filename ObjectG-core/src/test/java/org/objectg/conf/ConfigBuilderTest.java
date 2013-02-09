@@ -21,12 +21,7 @@ import org.objectg.fixtures.domain.TourType;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * User: __nocach
@@ -133,7 +128,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
         Person unique = ObjectG.unique(Person.class
                 , ObjectG.config()
                 .when("employee2Addresses")
-                .useRule(Rules.emptyCollection()));
+                .useRule(Rules.emptyCollections()));
 
         assertEquals(0, unique.getEmployee2Addresses().size());
     }
