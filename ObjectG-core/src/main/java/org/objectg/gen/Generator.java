@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- *     Interface used to generate values for specific types.
+ *     Class used to generate values for specific types.
  * </p>
  * <p>
  *     Generator CAN BE not thread-safe. Generators are used on per-thread basis, so no explicit concurrency management

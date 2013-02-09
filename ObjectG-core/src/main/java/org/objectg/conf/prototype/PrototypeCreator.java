@@ -1,17 +1,17 @@
 package org.objectg.conf.prototype;
 
-import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 import com.google.common.collect.Sets;
 import javassist.CannotCompileException;
@@ -20,7 +20,6 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
-import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
@@ -49,7 +48,7 @@ public class PrototypeCreator {
 	private static Logger logger = LoggerFactory.getLogger(PrototypeCreator.class);
 
     private PrototypeSetterHandler configurationHandler;
-    private Map<Object, Class> proxyToRealClass = new ConcurrentHashMap<Object, Class>();
+    private Map<Object, Class> proxyToRealClass = Collections.synchronizedMap(new WeakHashMap<Object, Class>());
 
     public PrototypeCreator(){
         this.configurationHandler = new PrototypeSetterHandler(this);
@@ -366,7 +365,11 @@ public class PrototypeCreator {
 		return result;
 	}
 
-    private static class CallSetterHandler implements InvocationHandler{
+	public void clear() {
+		this.configurationHandler.clear();
+	}
+
+	private static class CallSetterHandler implements InvocationHandler{
 
         private PrototypeSetterHandler configurationHandler;
 

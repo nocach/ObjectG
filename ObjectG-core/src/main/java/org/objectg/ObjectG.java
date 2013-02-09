@@ -869,6 +869,7 @@ public class ObjectG {
 	 * * See {@link org.objectg.integration.ObjectGTestRule} for simple integration into your tests.
 	 */
 	public static void teardown() {
+		PROTOTYPE_CREATOR.clear();
 		GenerationSession.get().end();
 	}
 }

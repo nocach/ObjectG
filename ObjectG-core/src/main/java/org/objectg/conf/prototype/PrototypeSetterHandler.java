@@ -1,9 +1,14 @@
 package org.objectg.conf.prototype;
 
+import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.objectg.conf.OngoingConfiguration;
@@ -24,38 +29,42 @@ import org.springframework.util.Assert;
  * </p>
  */
 public class PrototypeSetterHandler {
-    //TODO: need to make clean up of the used rules
-	//TODO: use weak reference on to prototypes
-    //e.g before each test or testcase
     /**
-     * Integer = System.identityHashCode(prototyp)
+     * Integer = System.identityHashCode(prototype)
      * LinkedList<GenerationRule> - rules for the prototype
      */
     private Map<Integer, LinkedList<GenerationRule>> rulesForPrototype =
             new ConcurrentHashMap<Integer, LinkedList<GenerationRule>>();
     /**
-     * Integer = System.identityHashCode(prototyp)
+     * Integer = System.identityHashCode(prototype)
      * String = name of the property for which to return nested prototype
      * Object = prototype for the property
      */
     private Map<Integer, Map<String, Object>> prototypesForPrototypeProperties
             = new ConcurrentHashMap<Integer, Map<String, Object>>();
     /**
-     * Integer = System.identityHashCode(prototyp)
+     * Integer = System.identityHashCode(prototype)
      * Map<String, List<GenerationRule>>
      *     String = name of the property
      *     List<GenerationRule> = rules for the property
      */
     private Map<Integer, Map<String, List<GenerationRule>>> rulesForPrototypeProperties =
             new ConcurrentHashMap<Integer, Map<String, List<GenerationRule>>>();
-    private PrototypeCreator prototypeCreator;
+	/**
+	 * There is no mechanism on how to determinate if some prototype it still stored somewhere in clients' code. That is
+	 * why we use WeakReferences to those prototypes to infer if we can clean up after them.
+	 * {@code PrototypeReferenceHolder} - reference to the managed prototype
+	 */
+	private Set<PrototypeReferenceHolder> managedPrototypes =
+			Collections.synchronizedSet(new HashSet<PrototypeReferenceHolder>());
+	private PrototypeCreator prototypeCreator;
 
     public PrototypeSetterHandler(PrototypeCreator prototypeCreator) {
         this.prototypeCreator = prototypeCreator;
     }
 
     /**
-    * called when new protype is created
+    * called when new prototype is created
     * @param prototype not null prototype
     */
     public void onInit(Object prototype) {
@@ -64,9 +73,14 @@ public class PrototypeSetterHandler {
             //we are extracting superclass, because PrototypeCreator is creating new subclass in runtime
             rulesForPrototype.put(identityOfObject, new LinkedList<GenerationRule>());
         }
-    }
+		managePrototype(prototype);
+	}
 
-    /**
+	private void managePrototype(final Object prototype) {
+		managedPrototypes.add(new PrototypeReferenceHolder(getObjectIdentity(prototype), prototype));
+	}
+
+	/**
      * called when setter was called for configuration.
      * @param prototype on which setter is called
      * @param value value with which setter was called
@@ -179,6 +193,7 @@ public class PrototypeSetterHandler {
 
             setRuleListForProperty(prototypeParent, propertyName, prototypeForProperty);
             prototypeProperties.put(propertyName, prototypeForProperty);
+			managePrototype(prototypeForProperty);
 
             OngoingConfiguration.clear();
 
@@ -189,4 +204,37 @@ public class PrototypeSetterHandler {
                     "on properties that can be configurated with prototyping", e);
         }
     }
+
+	/**
+	 * removes any information about prototypes that are no longer referred to.
+	 */
+	public void clear() {
+		final Iterator<PrototypeReferenceHolder> iterator = managedPrototypes.iterator();
+		synchronized(iterator){
+			while (iterator.hasNext()){
+				PrototypeReferenceHolder current = iterator.next();
+				//check if prototype no longer referred from clients' code
+				if (current.prototypeReference.get() == null){
+					clearPrototype(current.prototypeHashCode);
+					iterator.remove();
+				}
+			}
+		}
+	}
+
+	private void clearPrototype(final int prototypeHashCode) {
+		rulesForPrototype.remove(prototypeHashCode);
+		prototypesForPrototypeProperties.remove(prototypeHashCode);
+		rulesForPrototypeProperties.remove(prototypeHashCode);
+	}
+
+	private static class PrototypeReferenceHolder{
+		public final int prototypeHashCode;
+		public final WeakReference<Object> prototypeReference;
+		public PrototypeReferenceHolder(int prototypeHashCode, Object prototype){
+			this.prototypeHashCode = prototypeHashCode;
+			this.prototypeReference = new WeakReference<Object>(prototype);
+		}
+
+	}
 }
