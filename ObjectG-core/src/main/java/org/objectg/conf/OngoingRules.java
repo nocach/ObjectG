@@ -327,7 +327,7 @@ public class OngoingRules {
 	 * use passed range to generating values. See {@link Range} for more info.
 	 * @param range not null
 	 */
-	public static double range(Range<Double> range){
+	public static double rangeDouble(Range<Double> range){
 		OngoingConfiguration.setPlannedRule(Rules.range(range));
 		return 0.;
 	}
@@ -335,7 +335,7 @@ public class OngoingRules {
 	 * use passed range to generating values. See {@link Range} for more info.
 	 * @param range not null
 	 */
-	public static int range(Range<Integer> range){
+	public static int rangeInt(Range<Integer> range){
 		OngoingConfiguration.setPlannedRule(Rules.range(range));
 		return 0;
 	}
@@ -343,7 +343,7 @@ public class OngoingRules {
 	 * use passed range to generating values. See {@link Range} for more info.
 	 * @param range not null
 	 */
-	public static long range(Range<Long> range){
+	public static long rangeLong(Range<Long> range){
 		OngoingConfiguration.setPlannedRule(Rules.range(range));
 		return 0;
 	}
@@ -351,7 +351,7 @@ public class OngoingRules {
 	 * use passed range to generating values. See {@link Range} for more info.
 	 * @param range not null
 	 */
-	public static float range(Range<Float> range){
+	public static float rangeFloat(Range<Float> range){
 		OngoingConfiguration.setPlannedRule(Rules.range(range));
 		return 0;
 	}
@@ -369,7 +369,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static byte rule(GenerationRule<Byte> rule){
+	public static byte ruleByte(GenerationRule<Byte> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;
@@ -378,7 +378,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static boolean rule(GenerationRule<Boolean> rule){
+	public static boolean ruleBoolean(GenerationRule<Boolean> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return false;
@@ -387,7 +387,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static char rule(GenerationRule<Character> rule){
+	public static char ruleChar(GenerationRule<Character> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;
@@ -396,7 +396,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static short rule(GenerationRule<Short> rule){
+	public static short ruleShort(GenerationRule<Short> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;
@@ -405,7 +405,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static int rule(GenerationRule<Integer> rule){
+	public static int ruleInt(GenerationRule<Integer> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;
@@ -414,7 +414,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static long rule(GenerationRule<Long> rule){
+	public static long ruleLong(GenerationRule<Long> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;
@@ -423,7 +423,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static float rule(GenerationRule<Float> rule){
+	public static float ruleFloat(GenerationRule<Float> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;
@@ -432,7 +432,7 @@ public class OngoingRules {
 	 * Use passed rule for generating field's value. {@code rule} must return value of matching type.
 	 * @param rule not null
 	 */
-	public static double rule(GenerationRule<Double> rule){
+	public static double ruleDouble(GenerationRule<Double> rule){
 		Assert.notNull(rule, "rule must be not null");
 		OngoingConfiguration.setPlannedRule(rule);
 		return 0;

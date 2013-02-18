@@ -307,62 +307,15 @@ public class ObjectG {
      * @return not null generated list
      */
     public static <T> List<T> uniqueList(T prototype) {
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), 1, prototype);
+        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), 1, prototype);
     }
 
-	/**
-	 * create list of unique objects.
-	 *
-	 * @param clazz type of the objects for list
-	 * @param size how much unique objects to generate for list
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(Class<T> clazz, int size, Object... prototypes){
-        return uniqueList(clazz, new GenerationConfiguration(), size, prototypes);
-    }
-
-	/**
-	 * create list of unique objects.
-	 *
-	 * @param prototype not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 * @param size how much unique objects to generate for list
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(T prototype, int size, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), size, merge(prototype, prototypes));
-    }
 
 	/**
 	 * create list of unique objects.  List will contain 1 unique object.
 	 *
 	 * @param clazz type of the objects for list
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(Class<T> clazz, Object... prototypes){
-        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
-        return uniqueList(clazz, generationConfiguration, 1, prototypes);
-    }
-
-	/**
-	 * create list of unique objects.  List will contain 1 unique object.
-	 *
-	 * @param clazz type of the objects for list
-	 * @param generationConfiguration not null configuration that will be used during generation
+	 * @param generationConfiguration optional configuration that will be used during generation
 	 * @param <T> type of the generating object
 	 * @return not null generated list
 	 */
@@ -374,7 +327,7 @@ public class ObjectG {
 	 * create list of unique objects.  List will contain 1 unique object.
 	 *
 	 * @param prototype not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 * @param generationConfiguration not null configuration that will be used during generation
+	 * @param generationConfiguration optional configuration that will be used during generation
 	 * @param <T> type of the generating object
 	 * @return not null generated list
 	 */
@@ -386,7 +339,7 @@ public class ObjectG {
 	 * create list of unique objects.
 	 *
 	 * @param clazz type of the objects for list
-	 * @param generationConfiguration not null configuration that will be used during generation
+	 * @param generationConfiguration optional configuration that will be used during generation
 	 * @param size how much unique objects to generate for list
 	 * @param <T> type of the generating object
 	 * @return not null generated list
@@ -399,7 +352,7 @@ public class ObjectG {
 	 * create list of unique objects.
 	 *
 	 * @param prototype not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 * @param generationConfiguration not null configuration that will be used during generation
+	 * @param generationConfiguration optional configuration that will be used during generation
 	 * @param size how much unique objects to generate for list
 	 * @param <T> type of the generating object
 	 * @return not null generated list
@@ -456,70 +409,6 @@ public class ObjectG {
 	 */
     public static <T> List<T> uniqueList(T prototype, ConfigurationBuilder generationBuilder, int size){
         return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, prototype);
-    }
-
-	/**
-	 * create list of unique objects.  List will contain 1 unique object.
-	 *
-	 * @param clazz type of the objects for list
-	 * @param generationConfiguration not null configuration that will be used during generation
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration generationConfiguration, Object... prototypes){
-        return uniqueList(clazz, generationConfiguration, 1, prototypes);
-    }
-
-	/**
-	 * create list of unique objects.  List will contain 1 unique object.
-	 *
-	 * @param prototype not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 * @param generationConfiguration not null configuration that will be used during generation
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(T prototype, GenerationConfiguration generationConfiguration, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, merge(prototype, prototypes));
-    }
-
-	/**
-	 * create list of unique objects.  List will contain 1 unique object.
-	 *
-	 * @param clazz type of the objects for list
-	 * @param generationBuilder not null configuration that will be used during generation
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(Class<T> clazz, ConfigurationBuilder generationBuilder, Object... prototypes){
-        return uniqueList(clazz, generationBuilder.done(), 1, prototypes);
-    }
-
-	/**
-	 * create list of unique objects.  List will contain 1 unique object.
-	 *
-	 * @param prototype not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 * @param generationBuilder not null configuration that will be used during generation
-	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
-	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
-	 *                   you can pass addressPrototype and any object of type Address.class will be generated
-	 *                   using addressPrototype.
-	 * @param <T> type of the generating object
-	 * @return not null generated list
-	 */
-    public static <T> List<T> uniqueList(T prototype, ConfigurationBuilder generationBuilder, Object... prototypes){
-        return uniqueList(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, merge(prototype, prototypes));
     }
 
 	/**
@@ -585,7 +474,7 @@ public class ObjectG {
 	 * create list of unique objects.
 	 *
 	 * @param clazz type of the objects for list
-	 * @param configuration not null configuration that will be used during generation
+	 * @param configuration optional configuration that will be used during generation
 	 * @param size how much unique objects to generate for list
 	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
 	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
@@ -596,6 +485,7 @@ public class ObjectG {
 	 */
     public static <T> List<T> uniqueList(Class<T> clazz, GenerationConfiguration configuration, int size, Object... prototypes){
         Assert.isTrue(size >= 0, "size must be >= 0");
+		if (configuration == null) configuration = new GenerationConfiguration();
         List<T> result = new ArrayList<T>(size);
         configuration.setUnique(true);
         configuration.addAllRules(localRulesFromPrototypes(prototypes));
@@ -609,7 +499,7 @@ public class ObjectG {
 	 * create list of unique objects.
 	 *
 	 * @param prototype not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 * @param configuration not null configuration that will be used during generation
+	 * @param configuration optional configuration that will be used during generation
 	 * @param size how much unique objects to generate for list
 	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
 	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
@@ -636,17 +526,9 @@ public class ObjectG {
 	 * @param prototype  not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
 	 */
     public static <T> Set<T> uniqueSet(T prototype) {
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), 1, prototype);
+        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), new GenerationConfiguration(), 1, prototype);
     }
 
-	/**
-	 * see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
-	 * create set with single object.
-	 */
-    public static <T> Set<T> uniqueSet(Class<T> clazz, Object... prototypes){
-        GenerationConfiguration generationConfiguration = new GenerationConfiguration();
-        return uniqueSet(clazz, generationConfiguration, 1, prototypes);
-    }
 
 	/**
 	 * see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
@@ -709,39 +591,7 @@ public class ObjectG {
         return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), size, prototype);
     }
 
-	/**
-	 * see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
-	 * create set with single object.
-	 */
-    public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration generationConfiguration, Object... prototypes){
-        return uniqueSet(clazz, generationConfiguration, 1, prototypes);
-    }
-	/**
-	 * see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
-	 * create set with single object.
-	 * @param prototype  not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 */
-    public static <T> Set<T> uniqueSet(T prototype, GenerationConfiguration generationConfiguration, Object... prototypes){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationConfiguration, 1, merge(prototype, prototypes));
-    }
 
-	/**
-	 *
-	 *  see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
-	 * create set with single object.
-	 */
-    public static <T> Set<T> uniqueSet(Class<T> clazz, ConfigurationBuilder generationBuilder, Object... prototypes){
-        return uniqueSet(clazz, generationBuilder.done(), 1, prototypes);
-    }
-
-	/**
-	 * see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
-	 * create set with single object.
-	 * @param prototype  not null prototype, see {@link #prototype(Class)}. Will be used to create object for list.
-	 */
-    public static <T> Set<T> uniqueSet(T prototype, ConfigurationBuilder generationBuilder, Object... prototypes){
-        return uniqueSet(PROTOTYPE_CREATOR.getRealObjectClass(prototype), generationBuilder.done(), 1, merge(prototype, prototypes));
-    }
 	/**
 	 * see {@link #uniqueSet(Class, org.objectg.conf.GenerationConfiguration, int, Object...)}
 	 */
@@ -776,7 +626,7 @@ public class ObjectG {
 	 * create set of unique objects.
 	 *
 	 * @param clazz type of the objects for set
-	 * @param configuration not null configuration that will be used during generation
+	 * @param configuration optional configuration that will be used during generation
 	 * @param size how much unique objects to generate for set
 	 * @param prototypes prototypes created using {@link #prototype(Class)}. These prototypes will be used as a default
 	 *                   way how to generate classes of the types. E.g. if you are generating Person.class
@@ -786,6 +636,7 @@ public class ObjectG {
 	 * @return not null generated set
 	 */
     public static <T> Set<T> uniqueSet(Class<T> clazz, GenerationConfiguration configuration, int size, Object... prototypes){
+		if (configuration == null) configuration = new GenerationConfiguration();
         Assert.isTrue(size >= 0, "size must be >= 0");
         Set<T> result = new HashSet<T>();
         configuration.setUnique(true);
@@ -870,6 +721,7 @@ public class ObjectG {
 	 */
 	public static void teardown() {
 		PROTOTYPE_CREATOR.clear();
+		CONFIGURATION_MANAGER.clear();
 		GenerationSession.get().end();
 	}
 }

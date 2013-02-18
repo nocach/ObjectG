@@ -39,15 +39,10 @@ public class ObjectGTest extends BaseObjectGTest{
 
         ObjectG.uniqueList(Person.class);
         ObjectG.uniqueList(prototype);
-		ObjectG.uniqueList(Person.class, prototype);
 		ObjectG.uniqueList(Person.class, 1);
         ObjectG.uniqueList(prototype, 1);
-        ObjectG.uniqueList(Person.class, 1, prototype);
-        ObjectG.uniqueList(prototype, 1, prototype);
         ObjectG.uniqueList(Person.class, new GenerationConfiguration());
         ObjectG.uniqueList(prototype, new GenerationConfiguration());
-        ObjectG.uniqueList(Person.class, new GenerationConfiguration(), prototype);
-        ObjectG.uniqueList(prototype, new GenerationConfiguration(), anotherPrototype);
         ObjectG.uniqueList(Person.class, new GenerationConfiguration(), 1);
         ObjectG.uniqueList(prototype, new GenerationConfiguration(), 1);
         ObjectG.uniqueList(Person.class, new GenerationConfiguration(), 1, prototype);
@@ -56,8 +51,6 @@ public class ObjectGTest extends BaseObjectGTest{
         ObjectG.uniqueList(prototype, ObjectG.config());
         ObjectG.uniqueList(Person.class, ObjectG.config(), 1);
         ObjectG.uniqueList(prototype, ObjectG.config(), 1);
-        ObjectG.uniqueList(Person.class, ObjectG.config(), prototype);
-        ObjectG.uniqueList(prototype, ObjectG.config(), anotherPrototype);
         ObjectG.uniqueList(Person.class, ObjectG.config(), 1, prototype);
         ObjectG.uniqueList(prototype, ObjectG.config(), 1, anotherPrototype);
     }
@@ -71,11 +64,8 @@ public class ObjectGTest extends BaseObjectGTest{
         ObjectG.uniqueSet(prototype);
         ObjectG.uniqueSet(Person.class, 1);
         ObjectG.uniqueSet(prototype, 1);
-        ObjectG.uniqueSet(Person.class, prototype);
         ObjectG.uniqueSet(Person.class, new GenerationConfiguration());
         ObjectG.uniqueSet(prototype, new GenerationConfiguration());
-        ObjectG.uniqueSet(Person.class, new GenerationConfiguration(), prototype);
-        ObjectG.uniqueSet(prototype, new GenerationConfiguration(), anotherPrototype);
         ObjectG.uniqueSet(Person.class, new GenerationConfiguration(), 1);
         ObjectG.uniqueSet(prototype, new GenerationConfiguration(), 1);
         ObjectG.uniqueSet(Person.class, new GenerationConfiguration(), 1, prototype);
@@ -84,8 +74,6 @@ public class ObjectGTest extends BaseObjectGTest{
         ObjectG.uniqueSet(prototype, ObjectG.config());
         ObjectG.uniqueSet(Person.class, ObjectG.config(), 1);
         ObjectG.uniqueSet(prototype, ObjectG.config(), 1);
-        ObjectG.uniqueSet(Person.class, ObjectG.config(), prototype);
-        ObjectG.uniqueSet(prototype, ObjectG.config(), anotherPrototype);
         ObjectG.uniqueSet(Person.class, ObjectG.config(), 1, prototype);
         ObjectG.uniqueSet(prototype, ObjectG.config(), 1, anotherPrototype);
     }

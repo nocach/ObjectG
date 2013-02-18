@@ -142,4 +142,8 @@ public class ConfigurationManager {
 			return configuration;
 		}
 	}
+
+	public void clear(){
+		classToConfiguration.clear();
+	}
 }

@@ -28,14 +28,14 @@ public class RulesTest extends BaseObjectGTest {
 	@Test
 	public void setRuleOnPrimitives(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setByteField(OngoingRules.rule((GenerationRule<Byte>) Rules.value((byte)1)));
-		prototype.setCharField(OngoingRules.rule((GenerationRule<Character>) Rules.value('1')));
-		prototype.setShortField(OngoingRules.rule((GenerationRule<Short>) Rules.value((short)1)));
-		prototype.setIntField(OngoingRules.rule((GenerationRule<Integer>) Rules.value(1)));
-		prototype.setLongField(OngoingRules.rule((GenerationRule<Long>) Rules.value(1L)));
-		prototype.setFloatField(OngoingRules.rule((GenerationRule<Float>) Rules.value(1f)));
-		prototype.setDoubleField(OngoingRules.rule((GenerationRule<Double>) Rules.value(1d)));
-		prototype.setBooleanField(OngoingRules.rule((GenerationRule<Boolean>) Rules.value(true)));
+		prototype.setByteField(OngoingRules.ruleByte(Rules.value((byte) 1)));
+		prototype.setCharField(OngoingRules.ruleChar(Rules.value('1')));
+		prototype.setShortField(OngoingRules.ruleShort(Rules.value((short) 1)));
+		prototype.setIntField(OngoingRules.ruleInt(Rules.value(1)));
+		prototype.setLongField(OngoingRules.ruleLong(Rules.value(1L)));
+		prototype.setFloatField(OngoingRules.ruleFloat(Rules.value(1f)));
+		prototype.setDoubleField(OngoingRules.ruleDouble(Rules.value(1d)));
+		prototype.setBooleanField(OngoingRules.ruleBoolean(Rules.value(true)));
 
 		final PrimitivesClass unique = ObjectG.unique(prototype);
 
