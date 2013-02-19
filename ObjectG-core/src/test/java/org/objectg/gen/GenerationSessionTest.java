@@ -2,35 +2,26 @@ package org.objectg.gen;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.OngoingRules;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Tour;
 
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+
 /**
  * User: __nocach
  * Date: 23.1.13
  */
-public class GenerationSessionTest extends BaseObjectGTest{
-	private static Person person1;
-	private static Person person2;
-	private static Tour tour1;
-	private static Tour tour2;
+public class GenerationSessionTest{
 	private static Tour tourPrototype;
 
 	@Test
-	public void generatePersonOne(){
-		person1 = ObjectG.unique(Person.class);
-	}
-
-	@Test
-	public void generatePersonTwo(){
-		person2 = ObjectG.unique(Person.class);
-	}
-
-	@Test
 	public void assertPersonOneAndTwoEqual(){
+		Person person1 = generateInSession(Person.class);
+		Person person2 = generateInSession(Person.class);
+
 		assertNotSame("generated persons should be different", person1, person2);
 		assertEquals("generated attributes are same between multiple generation sessions",
 				person1.getFirstName(), person2.getFirstName());
@@ -56,19 +47,26 @@ public class GenerationSessionTest extends BaseObjectGTest{
 	}
 
 	@Test
-	public void generateTour1(){
-		tour1 = ObjectG.unique(tourPrototype);
-	}
-
-	@Test
-	public void generateTour2(){
-		tour2 = ObjectG.unique(tourPrototype);
-	}
-
-	@Test
 	public void assertTourOneAndTwoEqualInRuledProperty(){
+		Tour tour1 = generateInSession(tourPrototype);
+		Tour tour2 = generateInSession(tourPrototype);
+
 		assertEquals("tour1.name should be one", "one", tour1.getName());
 		assertEquals("tour2.name should be one", "one", tour2.getName());
+	}
+
+	private <T> T generateInSession(T prototype) {
+		ObjectG.setup();
+		T result = ObjectG.unique(prototype);
+		ObjectG.teardown();
+		return result;
+	}
+
+	private <T> T generateInSession(Class<T> clazz) {
+		ObjectG.setup();
+		T result = ObjectG.unique(clazz);
+		ObjectG.teardown();
+		return result;
 	}
 
 }
