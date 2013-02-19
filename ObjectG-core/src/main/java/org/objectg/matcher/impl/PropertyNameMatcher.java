@@ -20,7 +20,7 @@ public class PropertyNameMatcher<U> extends TypeSafeMatcher<GenerationContext>
         this.fieldName = fieldName;
     }
     @Override
-    protected boolean matchesSafely(GenerationContext item) {
+    public boolean matchesSafely(GenerationContext item) {
         if (fieldName == null) return false;
         if (item.getPropertyAccessor() == null) return false;
         boolean fieldMatched = fieldName.equals(item.getPropertyAccessor().getName());

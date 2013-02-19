@@ -3,7 +3,8 @@ package org.objectg.matcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.objectg.gen.GenerationContext;
-import org.objectg.matcher.impl.GenerationContextFeatures;
+import org.objectg.matcher.impl.GeneratedClassMatcher;
+import org.objectg.matcher.impl.IsRootMatcher;
 import org.springframework.util.Assert;
 
 /**
@@ -34,7 +35,19 @@ public class ContextMatchers {
         for (int i = 0; i < classes.length; i++){
             classMatchers[i] = Matchers.equalTo(classes[i]);
         }
-        return GenerationContextFeatures.forClass(Matchers.anyOf(classMatchers));
+        return matchingGeneratingClass(AnyOf.anyOf(classMatchers));
     }
 
+	/**
+	 *
+	 * @param isRoot if matching context must be root
+	 * @return matcher that will check if given context is root context
+	 */
+	public static Matcher<GenerationContext> isRoot(boolean isRoot){
+		return new IsRootMatcher(isRoot);
+	}
+
+	public static <U> ValueTypeHintMatcher<GenerationContext, U> matchingGeneratingClass(Matcher<Class<U>> classMatcher){
+		return new GeneratedClassMatcher<U>(classMatcher);
+	}
 }

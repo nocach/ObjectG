@@ -11,11 +11,11 @@ import org.objectg.gen.cycle.CycleStrategy;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 import org.objectg.matcher.ValueTypeHintMatcher;
-import org.objectg.matcher.impl.GenerationContextFeatures;
 import org.objectg.matcher.impl.JavaNativeTypeMatcher;
 import org.springframework.util.Assert;
 
-import static org.objectg.matcher.impl.GenerationContextFeatures.forIsRoot;
+import static org.objectg.matcher.ContextMatchers.isRoot;
+
 
 /**
  * <p>
@@ -56,8 +56,8 @@ public class ConfigurationBuilder {
 		//except the generated object
         nullForNotRootObjects.when(
                 Matchers.<GenerationContext>allOf(
-                        Matchers.not(GenerationContextFeatures.forClass(JavaNativeTypeMatcher.INSTANCE))
-                        , forIsRoot(Matchers.is(false))
+                        Matchers.not(ContextMatchers.matchingGeneratingClass(JavaNativeTypeMatcher.INSTANCE))
+                        , isRoot(false)
                 )
         );
         resultConfiguration.addRule(nullForNotRootObjects);

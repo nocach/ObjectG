@@ -9,15 +9,15 @@ import org.objectg.util.Types;
  * User: __nocach
  * Date: 29.9.12
  */
-public class JavaNativeTypeMatcher extends TypeSafeMatcher<Class> {
-    public static Matcher<Class> INSTANCE  = new JavaNativeTypeMatcher();
+public class JavaNativeTypeMatcher<T> extends TypeSafeMatcher<Class> {
+    public static Matcher<Class<Object>> INSTANCE  = new JavaNativeTypeMatcher();
 
     public JavaNativeTypeMatcher() {
         super(Class.class);
     }
 
     @Override
-    protected boolean matchesSafely(Class item) {
+    public boolean matchesSafely(Class item) {
         return Types.isJavaType(item);
     }
 
