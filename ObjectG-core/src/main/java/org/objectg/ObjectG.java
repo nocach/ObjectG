@@ -656,6 +656,26 @@ public class ObjectG {
 	}
 
 	/**
+	 * helper method for applying rules. Can be used to generate primitive values from rules.
+	 *  <pre>
+	 *      final GenerationRule sequence = Rules.sequence(10, 20);
+	 * 	final Integer first = ObjectG.applyRule(Integer.class, sequence);
+	 * </pre>
+	 *
+	 * @param clazz not null type of class to which rule will be applied
+	 * @param rule not null rule that must be applied for the clazz
+	 * @return value after applying rule
+	 */
+	public static <T> T applyRule(Class<T> clazz, GenerationRule<T> rule){
+		Assert.notNull(clazz, "clazz should not be null");
+		Assert.notNull(rule, "rule should not be null");
+		final GenerationContext context = GenerationContext.createRoot(clazz);
+		final GenerationConfiguration finalConfiguration = CONFIGURATION_MANAGER
+				.getFinalConfiguration(PROTOTYPE_CREATOR, new GenerationConfiguration());
+		return rule.getValue(finalConfiguration, context);
+	}
+
+	/**
 	 * Start setting configuration for generation. See {@link ConfigurationBuilder} for more info
 	 *
 	 * @return {@link ConfigurationBuilder}

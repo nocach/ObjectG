@@ -35,8 +35,8 @@ public class Rules {
 	 * returned in the order they are specified. If last value is reached, then sequence
 	 * is used from the start.
 	 */
-    public static GenerationRule sequence(Object... values){
-        return new FromListGenerationRule(values);
+    public static <T> GenerationRule<T> sequence(T... values){
+        return new FromListGenerationRule<T>(values);
     }
 
 	/**
