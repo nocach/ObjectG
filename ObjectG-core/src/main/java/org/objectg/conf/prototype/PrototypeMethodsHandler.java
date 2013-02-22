@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.objectg.conf.OngoingConfiguration;
+import org.objectg.conf.PrototypeConfiguration;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.conf.exception.PrototypeMisuseException;
 import org.objectg.gen.GenerationRule;
@@ -88,7 +88,7 @@ public class PrototypeMethodsHandler {
      */
     public void onSetter(Object prototype, Object value, String propertyName) {
         List<GenerationRule> configuredRules = getOngoingRules(prototype);
-        if (OngoingConfiguration.getPlannedRule() != null) {
+        if (PrototypeConfiguration.getPlannedRule() != null) {
             addPlannedRuleForProperty(prototype, propertyName, configuredRules);
         }
         else if (needToUseConfigurationObject(prototype)){
@@ -97,11 +97,11 @@ public class PrototypeMethodsHandler {
         else {
             addValueRule(prototype, value, propertyName);
         }
-        OngoingConfiguration.clear();
+        PrototypeConfiguration.clear();
     }
 
     private void setPrototypeForProperty(Object prototypeParent, String propertyName, Object prototypeForProperty) {
-        setRuleListForProperty(prototypeParent, propertyName, OngoingConfiguration.getPlannedPrototype());
+        setRuleListForProperty(prototypeParent, propertyName, PrototypeConfiguration.getPlannedPrototype());
         Map<String, Object> prototypeProperties = getPrototypesForProperties(prototypeParent);
         prototypeProperties.put(propertyName, prototypeForProperty);
     }
@@ -136,8 +136,8 @@ public class PrototypeMethodsHandler {
 
     private boolean needToUseConfigurationObject(Object prototype) {
         return prototype instanceof InterceptedByPrototypeCreator
-                && OngoingConfiguration.getPlannedPrototype() != null
-                && OngoingConfiguration.getPlannedPrototype() != prototype;
+                && PrototypeConfiguration.getPlannedPrototype() != null
+                && PrototypeConfiguration.getPlannedPrototype() != prototype;
     }
 
     private List<GenerationRule> getOngoingRules(Object prototype) {
@@ -146,7 +146,7 @@ public class PrototypeMethodsHandler {
     }
 
     private void addPlannedRuleForProperty(Object prototype, String propertyName, List<GenerationRule> rulesForPrototype) {
-        GenerationRule plannedRule = OngoingConfiguration.getPlannedRule();
+        GenerationRule plannedRule = PrototypeConfiguration.getPlannedRule();
         plannedRule.setForProperty(prototypeCreator.getRealObjectClass(prototype), propertyName);
         rulesForPrototype.add(plannedRule);
     }
@@ -195,7 +195,7 @@ public class PrototypeMethodsHandler {
             prototypeProperties.put(propertyName, prototypeForProperty);
 			managePrototype(prototypeForProperty);
 
-            OngoingConfiguration.clear();
+            PrototypeConfiguration.clear();
 
             return prototypeForProperty;
         }

@@ -15,7 +15,7 @@ import org.objectg.fixtures.domain.GuideAssignment;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.ITour;
 
-import static org.objectg.conf.OngoingRules.value;
+import static org.objectg.conf.PrototypeRules.value;
 
 /**
  * User: __nocach
@@ -40,7 +40,7 @@ public class PrototypeConfigTest extends BaseObjectGTest {
     @Test
     public void basic(){
         Person prototype = ObjectG.prototype(Person.class);
-        prototype.setName(OngoingRules.sequence("configuredValue"));
+        prototype.setName(PrototypeRules.sequence("configuredValue"));
 
         Person person = ObjectG.unique(Person.class, prototype);
         assertEquals("configuredValue", person.getName());
@@ -63,9 +63,9 @@ public class PrototypeConfigTest extends BaseObjectGTest {
     @Test
     public void canUseMultiplePrototypesDuringGeneration(){
         Person personPrototype = ObjectG.prototype(Person.class);
-        personPrototype.setName(OngoingRules.sequence("nameConfiguredValue"));
+        personPrototype.setName(PrototypeRules.sequence("nameConfiguredValue"));
         Address addressPrototype = ObjectG.prototype(Address.class);
-        addressPrototype.setStreet(OngoingRules.sequence("streetConfiguredValue"));
+        addressPrototype.setStreet(PrototypeRules.sequence("streetConfiguredValue"));
 
         Person person = ObjectG.unique(Person.class, personPrototype, addressPrototype);
         assertEquals("nameConfiguredValue", person.getName());
@@ -112,7 +112,7 @@ public class PrototypeConfigTest extends BaseObjectGTest {
     @Test
     public void samePropertyIsConfiguredOnlyOnRightClass(){
         ClassWithSameProperty1 prototype = ObjectG.prototype(ClassWithSameProperty1.class);
-        prototype.setProperty(OngoingRules.sequence("configuredValue"));
+        prototype.setProperty(PrototypeRules.sequence("configuredValue"));
 
         ClassWithSameProperty1 instance = ObjectG.unique(ClassWithSameProperty1.class, prototype);
 
@@ -128,9 +128,9 @@ public class PrototypeConfigTest extends BaseObjectGTest {
         generationConfiguration.setObjectsInCollections(2);
 
         ClassWithCollectionA prototype = ObjectG.prototype(ClassWithCollectionA.class);
-        prototype.setForConfiguration(OngoingRules.sequence("confValueA"));
+        prototype.setForConfiguration(PrototypeRules.sequence("confValueA"));
         prototype.setClassB(ObjectG.prototype(ClassWithCollectionB.class));
-        prototype.getClassB().setForConfiguration(OngoingRules.sequence("confValueB"));
+        prototype.getClassB().setForConfiguration(PrototypeRules.sequence("confValueB"));
 
         ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
                 generationConfiguration, prototype);
@@ -148,10 +148,10 @@ public class PrototypeConfigTest extends BaseObjectGTest {
         generationConfiguration.setObjectsInCollections(2);
 
         ClassWithCollectionA prototypeA = ObjectG.prototype(ClassWithCollectionA.class);
-        prototypeA.setForConfiguration(OngoingRules.sequence("confValueA"));
+        prototypeA.setForConfiguration(PrototypeRules.sequence("confValueA"));
 
         ClassWithCollectionB prototypeB = ObjectG.prototype(ClassWithCollectionB.class);
-        prototypeB.setForConfiguration(OngoingRules.sequence("confValueB"));
+        prototypeB.setForConfiguration(PrototypeRules.sequence("confValueB"));
 
         ClassWithCollectionA generated = ObjectG.unique(ClassWithCollectionA.class,
                 generationConfiguration, prototypeA, prototypeB);
@@ -276,7 +276,7 @@ public class PrototypeConfigTest extends BaseObjectGTest {
 	@Test
 	public void canOverrideConfiguration(){
 		final GuideAssignment prototype = ObjectG.prototype(GuideAssignment.class);
-		prototype.setDeparture(OngoingRules.<Departure>overrideConfiguration(ObjectG.config().depth(1)));
+		prototype.setDeparture(PrototypeRules.<Departure>overrideConfiguration(ObjectG.config().depth(1)));
 
 		final GuideAssignment unique = ObjectG.unique(prototype);
 		assertNotNull(unique.getDeparture().getTour());

@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import org.objectg.conf.ConfigurationBuilder;
 import org.objectg.conf.ConfigurationManager;
 import org.objectg.conf.GenerationConfiguration;
-import org.objectg.conf.OngoingConfiguration;
+import org.objectg.conf.PrototypeConfiguration;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.conf.prototype.InterceptedByPrototypeCreator;
 import org.objectg.conf.prototype.PrototypeCreator;
@@ -247,10 +247,10 @@ public class ObjectG {
 	 * <p>
 	 *     Prototype is the main mechanism on how to configure generation of objects of some type. To configure
 	 *     specific rule for generation of attribute call setter and pass as argument special value
-	 *     returned from {@link org.objectg.conf.OngoingRules}.
+	 *     returned from {@link org.objectg.conf.PrototypeRules}.
 	 * </p>
 	 * <p>
-	 *     Calling setter with some value is the same as calling {@link org.objectg.conf.OngoingRules#value(Object)}.
+	 *     Calling setter with some value is the same as calling {@link org.objectg.conf.PrototypeRules#value(Object)}.
 	 *     So calling personPrototype.setName("someName") and generating instance of Person using that prototype
 	 *     will result in object, that will have name set to "someName".
 	 * </p>
@@ -265,9 +265,9 @@ public class ObjectG {
 	 *     you don't need to manually set prototypes if you want use them only to configure specific field.
 	 * </p>
 	 * <p>
-	 *     For methods of {@link org.objectg.conf.OngoingRules} that can't derive return type
-	 *     (like {@link org.objectg.conf.OngoingRules#skip()}) you should add type parameter to the call, e.g.
-	 *     {@code personPrototype.setAddress(OngoingRules.<Address>skip())}
+	 *     For methods of {@link org.objectg.conf.PrototypeRules} that can't derive return type
+	 *     (like {@link org.objectg.conf.PrototypeRules#skip()}) you should add type parameter to the call, e.g.
+	 *     {@code personPrototype.setAddress(PrototypeRules.<Address>skip())}
 	 * </p>
 	 *
 	 * @param clazz not null class for which to create prototype. Must be not final and not abstract class.
@@ -277,7 +277,7 @@ public class ObjectG {
 	 */
     public static <T> T prototype(Class<T> clazz){
         T result = PROTOTYPE_CREATOR.newPrototype(clazz);
-        OngoingConfiguration.setPlannedPrototype(result);
+        PrototypeConfiguration.setPlannedPrototype(result);
         return result;
     }
 

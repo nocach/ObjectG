@@ -3,7 +3,7 @@ package org.objectg.gen.rule;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 
 /**
  * User: __nocach
@@ -14,7 +14,7 @@ public class SkipRuleTest extends BaseObjectGTest{
 	@Test
 	public void testCanSkipField(){
 		final FieldChangeObserver prototype = ObjectG.prototype(FieldChangeObserver.class);
-		prototype.setSkipField(OngoingRules.<String>skip());
+		prototype.setSkipField(PrototypeRules.<String>skip());
 
 		final FieldChangeObserver changeObserver = ObjectG.unique(prototype, ObjectG.config().access().onlyMethods());
 

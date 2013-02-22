@@ -3,12 +3,11 @@ package org.objectg.gen.rule;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 import org.objectg.fixtures.PrimitivesClass;
 import org.objectg.fixtures.domain.FixedPrice;
 import org.objectg.fixtures.domain.Tour;
 import org.objectg.fixtures.domain.TourSeason;
-import org.objectg.gen.GenerationRule;
 
 /**
  * User: __nocach
@@ -19,7 +18,7 @@ public class RulesTest extends BaseObjectGTest {
 	public void setGeneratedObjectRule(){
 		//TODO: add comment why or when to use this?
 		ConcreteProduct prototype = ObjectG.prototype(ConcreteProduct.class);
-		prototype.getPrice2Product().setProduct(OngoingRules.<Product>generatedObject());
+		prototype.getPrice2Product().setProduct(PrototypeRules.<Product>generatedObject());
 
 		final ConcreteProduct unique = ObjectG.unique(prototype);
 		assertEquals(unique, unique.getPrice2Product().getProduct());
@@ -28,14 +27,14 @@ public class RulesTest extends BaseObjectGTest {
 	@Test
 	public void setRuleOnPrimitives(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setByteField(OngoingRules.ruleByte(Rules.value((byte) 1)));
-		prototype.setCharField(OngoingRules.ruleChar(Rules.value('1')));
-		prototype.setShortField(OngoingRules.ruleShort(Rules.value((short) 1)));
-		prototype.setIntField(OngoingRules.ruleInt(Rules.value(1)));
-		prototype.setLongField(OngoingRules.ruleLong(Rules.value(1L)));
-		prototype.setFloatField(OngoingRules.ruleFloat(Rules.value(1f)));
-		prototype.setDoubleField(OngoingRules.ruleDouble(Rules.value(1d)));
-		prototype.setBooleanField(OngoingRules.ruleBoolean(Rules.value(true)));
+		prototype.setByteField(PrototypeRules.ruleByte(Rules.value((byte) 1)));
+		prototype.setCharField(PrototypeRules.ruleChar(Rules.value('1')));
+		prototype.setShortField(PrototypeRules.ruleShort(Rules.value((short) 1)));
+		prototype.setIntField(PrototypeRules.ruleInt(Rules.value(1)));
+		prototype.setLongField(PrototypeRules.ruleLong(Rules.value(1L)));
+		prototype.setFloatField(PrototypeRules.ruleFloat(Rules.value(1f)));
+		prototype.setDoubleField(PrototypeRules.ruleDouble(Rules.value(1d)));
+		prototype.setBooleanField(PrototypeRules.ruleBoolean(Rules.value(true)));
 
 		final PrimitivesClass unique = ObjectG.unique(prototype);
 
@@ -53,7 +52,7 @@ public class RulesTest extends BaseObjectGTest {
 	public void setRuleOnObject(){
 		final Tour prototype = ObjectG.prototype(Tour.class);
 		final TourSeason expectedSeason = new TourSeason();
-		prototype.setSeason(OngoingRules.rule(Rules.value(expectedSeason)));
+		prototype.setSeason(PrototypeRules.rule(Rules.value(expectedSeason)));
 
 		final Tour unique = ObjectG.unique(prototype);
 

@@ -3,7 +3,7 @@ package org.objectg.gen;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.objectg.ObjectG;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 import org.objectg.fixtures.domain.Person;
 import org.objectg.fixtures.domain.Tour;
 
@@ -43,7 +43,7 @@ public class GenerationSessionTest{
 	@BeforeClass
 	public static void setupRule(){
 		tourPrototype = ObjectG.prototype(Tour.class);
-		tourPrototype.setName(OngoingRules.sequence("one", "two"));
+		tourPrototype.setName(PrototypeRules.sequence("one", "two"));
 	}
 
 	@Test

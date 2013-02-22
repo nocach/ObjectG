@@ -3,7 +3,7 @@ package org.objectg.gen.rule;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 import org.objectg.fixtures.PrimitivesClass;
 
 /**
@@ -15,12 +15,12 @@ public class ValueRuleTest  extends BaseObjectGTest{
 	@Test
 	public void canValuePrimitives(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setByteField((byte) OngoingRules.value(1));
-		prototype.setCharField(OngoingRules.value('a'));
-		prototype.setShortField((short) OngoingRules.value(1));
-		prototype.setIntField(OngoingRules.value(1));
-		prototype.setLongField(OngoingRules.value(1));
-		prototype.setFloatField(OngoingRules.value(1));
-		prototype.setBooleanField(OngoingRules.value(false));
+		prototype.setByteField((byte) PrototypeRules.value(1));
+		prototype.setCharField(PrototypeRules.value('a'));
+		prototype.setShortField((short) PrototypeRules.value(1));
+		prototype.setIntField(PrototypeRules.value(1));
+		prototype.setLongField(PrototypeRules.value(1));
+		prototype.setFloatField(PrototypeRules.value(1));
+		prototype.setBooleanField(PrototypeRules.value(false));
 	}
 }

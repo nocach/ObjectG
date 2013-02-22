@@ -1,11 +1,10 @@
 package org.objectg.gen.rule;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
 import org.objectg.conf.GenerationConfiguration;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 import org.objectg.fixtures.PrimitivesClass;
 import org.objectg.gen.GenerationContext;
 
@@ -40,7 +39,7 @@ public class FromListGenerationRuleTest extends BaseObjectGTest {
 	@Test
 	public void canGeneratePrimitiveValue(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setIntField(OngoingRules.value(1));
+		prototype.setIntField(PrototypeRules.value(1));
 
 		final PrimitivesClass unique = ObjectG.unique(prototype);
 		assertEquals(1, unique.getIntField());

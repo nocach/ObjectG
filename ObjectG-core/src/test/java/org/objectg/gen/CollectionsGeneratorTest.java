@@ -6,11 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -101,7 +100,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void canConfigurateClassForGenericListField(){
         ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
-        prototype.setGenericList(OngoingRules.listDefinition(String.class));
+        prototype.setGenericList(PrototypeRules.listDefinition(String.class));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
@@ -113,7 +112,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void canConfigurateClassForGenericSetField(){
         ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
-        prototype.setGenericSet(OngoingRules.setDefinition(String.class));
+        prototype.setGenericSet(PrototypeRules.setDefinition(String.class));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
@@ -126,7 +125,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void configurateClassForGenericListFieldCanDefineSize(){
         ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
-        prototype.setGenericList(OngoingRules.listDefinition(String.class, 0));
+        prototype.setGenericList(PrototypeRules.listDefinition(String.class, 0));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
@@ -136,7 +135,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void configurateClassForGenericSetFieldCanDefineSize(){
         ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
-        prototype.setGenericSet(OngoingRules.setDefinition(String.class, 0));
+        prototype.setGenericSet(PrototypeRules.setDefinition(String.class, 0));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
@@ -146,7 +145,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void configurateClassForGenericListFieldCanDefineValues(){
         ClassWithGenericList prototype = ObjectG.prototype(ClassWithGenericList.class);
-        prototype.setGenericList(OngoingRules.listDefinition("one", "two"));
+        prototype.setGenericList(PrototypeRules.listDefinition("one", "two"));
 
         ClassWithGenericList generated = ObjectG.unique(ClassWithGenericList.class, prototype);
 
@@ -158,7 +157,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void configurateClassForGenericSetFieldCanDefineValues(){
         ClassWithGenericSet prototype = ObjectG.prototype(ClassWithGenericSet.class);
-        prototype.setGenericSet(OngoingRules.setDefinition("one", "two"));
+        prototype.setGenericSet(PrototypeRules.setDefinition("one", "two"));
 
         ClassWithGenericSet generated = ObjectG.unique(ClassWithGenericSet.class, prototype);
 
@@ -180,7 +179,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void canConfigurateCollectionOfConcreteType(){
         ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
-		prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class));
+		prototype.setArrayListString(PrototypeRules.collectionDefinition(ArrayList.class, String.class));
 
         ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
 
@@ -191,7 +190,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void canConfigurateCollectionOfConcreteTypeAndCanDefineSize(){
 		ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
-		prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, String.class, 2));
+		prototype.setArrayListString(PrototypeRules.collectionDefinition(ArrayList.class, String.class, 2));
 
 		ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
 
@@ -203,7 +202,7 @@ public class CollectionsGeneratorTest extends BaseObjectGTest {
     @Test
     public void canConfigurateCollectionOfConcreteTypeAndCanDefineValues(){
 		ClassWithCollections prototype = ObjectG.prototype(ClassWithCollections.class);
-		prototype.setArrayListString(OngoingRules.collectionDefinition(ArrayList.class, "value1", "value2", "value3"));
+		prototype.setArrayListString(PrototypeRules.collectionDefinition(ArrayList.class, "value1", "value2", "value3"));
 
 		ClassWithCollections generated = ObjectG.unique(ClassWithCollections.class, prototype);
 

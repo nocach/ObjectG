@@ -4,14 +4,15 @@ import org.objectg.gen.GenerationRule;
 
 /**
  * <p>
- *     Holds planned objects for the configuration. After configuration was applied {@link #clear()} must be called.
+ *     Holds planned objects for the prototype configuration.
+ *     After configuration was applied {@link #clear()} must be called.
  * </p>
  * <p>
  * User: __nocach
  * Date: 15.9.12
  * </p>
  */
-public class OngoingConfiguration {
+public class PrototypeConfiguration {
     private static ThreadLocal<GenerationRule> plannedRule = new ThreadLocal<GenerationRule>();
     private static ThreadLocal<Object> plannedPrototype = new ThreadLocal<Object>();
 
@@ -25,7 +26,7 @@ public class OngoingConfiguration {
 	}
 
 	public static void setPlannedRule(final GenerationRule plannedRule) {
-		OngoingConfiguration.plannedRule.set(plannedRule);
+		PrototypeConfiguration.plannedRule.set(plannedRule);
 	}
 
 	public static Object getPlannedPrototype() {
@@ -33,6 +34,6 @@ public class OngoingConfiguration {
 	}
 
 	public static void setPlannedPrototype(final Object plannedPrototype) {
-		OngoingConfiguration.plannedPrototype.set(plannedPrototype);
+		PrototypeConfiguration.plannedPrototype.set(plannedPrototype);
 	}
 }

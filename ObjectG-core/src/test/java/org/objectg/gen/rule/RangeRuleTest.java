@@ -6,7 +6,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
 import org.objectg.ObjectG;
-import org.objectg.conf.OngoingRules;
+import org.objectg.conf.PrototypeRules;
 import org.objectg.fixtures.PrimitivesClass;
 import org.objectg.gen.rule.range.BigDecimalRange;
 import org.objectg.gen.rule.range.DateRange;
@@ -15,7 +15,6 @@ import org.objectg.gen.rule.range.FloatRange;
 import org.objectg.gen.rule.range.IntRange;
 import org.objectg.gen.rule.range.LongRange;
 
-import static org.objectg.conf.OngoingRules.range;
 import static org.objectg.gen.rule.range.IntRange.create;
 
 /**
@@ -27,7 +26,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void intRangeBase(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setIntField(OngoingRules.rangeInt(create(0, 3)));
+		prototype.setIntField(PrototypeRules.rangeInt(create(0, 3)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -46,7 +45,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void intRangeWithStep(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setIntField(OngoingRules.rangeInt(create(0, 3).step(2)));
+		prototype.setIntField(PrototypeRules.rangeInt(create(0, 3).step(2)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -60,7 +59,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void doubleRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setDoubleField(OngoingRules.rangeDouble(DoubleRange.create(0., 2.)));
+		prototype.setDoubleField(PrototypeRules.rangeDouble(DoubleRange.create(0., 2.)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -76,7 +75,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void doubleRangeWithStep(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setDoubleField(OngoingRules.rangeDouble(DoubleRange.create(0., 0.3).step(0.2)));
+		prototype.setDoubleField(PrototypeRules.rangeDouble(DoubleRange.create(0., 0.3).step(0.2)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -90,7 +89,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void longRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setLongField(OngoingRules.rangeLong(LongRange.create(2, 3)));
+		prototype.setLongField(PrototypeRules.rangeLong(LongRange.create(2, 3)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -104,7 +103,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void floatRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setFloatField(OngoingRules.rangeFloat(FloatRange.create(1.f, 1.1f).step(0.1f)));
+		prototype.setFloatField(PrototypeRules.rangeFloat(FloatRange.create(1.f, 1.1f).step(0.1f)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -118,7 +117,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test
 	public void bigDecimalRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setBigDecimal(OngoingRules
+		prototype.setBigDecimal(PrototypeRules
 				.range(BigDecimalRange.create(new BigDecimal(1), new BigDecimal(2)).step(BigDecimal.ONE)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
@@ -135,7 +134,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
 		final Date from = new Date(1990, 0, 1);
 		final Date to = new Date(1990, 0, 3);
-		prototype.setDate(OngoingRules.range(DateRange.create(from, to)));
+		prototype.setDate(PrototypeRules.range(DateRange.create(from, to)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -151,13 +150,13 @@ public class RangeRuleTest extends BaseObjectGTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void noValidValueRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setIntField(OngoingRules.rangeInt(IntRange.create(5, 0)));
+		prototype.setIntField(PrototypeRules.rangeInt(IntRange.create(5, 0)));
 	}
 
 	@Test
 	public void canDefineReverseIntRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setIntField(OngoingRules.rangeInt(IntRange.createReverse(1, 0)));
+		prototype.setIntField(PrototypeRules.rangeInt(IntRange.createReverse(1, 0)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -173,7 +172,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 	public void canDefineReverseBigDecimalRange(){
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
 		prototype.setBigDecimal(
-				OngoingRules.range(BigDecimalRange.createReverse(BigDecimal.valueOf(2L), BigDecimal.valueOf(1L))));
+				PrototypeRules.range(BigDecimalRange.createReverse(BigDecimal.valueOf(2L), BigDecimal.valueOf(1L))));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
@@ -189,7 +188,7 @@ public class RangeRuleTest extends BaseObjectGTest {
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
 		final Date from = new Date(1990, 0, 2);
 		final Date to = new Date(1990, 0, 1);
-		prototype.setDate(OngoingRules.range(DateRange.createReverse(from, to)));
+		prototype.setDate(PrototypeRules.range(DateRange.createReverse(from, to)));
 
 		final PrimitivesClass unique1 = ObjectG.unique(prototype);
 		final PrimitivesClass unique2 = ObjectG.unique(prototype);
