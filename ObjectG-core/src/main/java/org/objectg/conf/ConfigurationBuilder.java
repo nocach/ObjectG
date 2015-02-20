@@ -1,7 +1,14 @@
 package org.objectg.conf;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.hamcrest.TypeSafeMatcher;
 import org.objectg.conf.prototype.PrototypeCreator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.GenerationRule;
@@ -11,7 +18,9 @@ import org.objectg.gen.cycle.CycleStrategy;
 import org.objectg.gen.rule.Rules;
 import org.objectg.matcher.ContextMatchers;
 import org.objectg.matcher.ValueTypeHintMatcher;
+import org.objectg.matcher.impl.GeneratedClassMatcher;
 import org.objectg.matcher.impl.JavaNativeTypeMatcher;
+import org.objectg.util.Types;
 import org.springframework.util.Assert;
 
 import static org.objectg.matcher.ContextMatchers.isRoot;
@@ -19,16 +28,16 @@ import static org.objectg.matcher.ContextMatchers.isRoot;
 
 /**
  * <p>
- *     Builder allowing to quickly configure most common things in {@link GenerationConfiguration}.
- *     Use {@link org.objectg.ObjectG#config()} to create instances of this class.
+ * Builder allowing to quickly configure most common things in {@link GenerationConfiguration}.
+ * Use {@link org.objectg.ObjectG#config()} to create instances of this class.
  * </p>
  * <p>
- *     This Builder can be used not only in tests, but also to define configuration for
- *     {@link org.objectg.conf.defaults.AbstractObjectGConfiguration} and
- *     for local configuration {@link org.objectg.ObjectG#configLocal(GenerationConfiguration)}
+ * This Builder can be used not only in tests, but also to define configuration for
+ * {@link org.objectg.conf.defaults.AbstractObjectGConfiguration} and
+ * for local configuration {@link org.objectg.ObjectG#configLocal(GenerationConfiguration)}
  * </p>
  * <p>
- *     call {@link #done()} to create configuration itself
+ * call {@link #done()} to create configuration itself
  * </p>
  * <p>
  * User: __nocach
@@ -36,107 +45,104 @@ import static org.objectg.matcher.ContextMatchers.isRoot;
  * </p>
  */
 public class ConfigurationBuilder {
-    private GenerationConfiguration resultConfiguration;
-    private PrototypeCreator prototypeCreator;
+	private GenerationConfiguration resultConfiguration;
+	private PrototypeCreator prototypeCreator;
 	boolean notAllowObjectsInCollectionsChange = false;
 
-    public ConfigurationBuilder(PrototypeCreator prototypeCreator){
-        Assert.notNull(prototypeCreator, "prototypeCreator");
-        this.prototypeCreator = prototypeCreator;
-        resultConfiguration = new GenerationConfiguration();
-    }
+	public ConfigurationBuilder(PrototypeCreator prototypeCreator) {
+		Assert.notNull(prototypeCreator, "prototypeCreator");
+		this.prototypeCreator = prototypeCreator;
+		resultConfiguration = new GenerationConfiguration();
+	}
 
-    /**
-     * will set only primitive attributes ignoring any user-defined types.
-     * collections, arrays and maps are still generated, but will be empty.
-     */
-    public ConfigurationBuilder onlyPrimitives() {
-        GenerationRule nullForNotRootObjects = Rules.onlyNull();
+	/**
+	 * will set only primitive attributes ignoring any user-defined types.
+	 * collections, arrays and maps are still generated, but will be empty.
+	 */
+	public ConfigurationBuilder onlyPrimitives() {
+		GenerationRule nullForNotRootObjects = Rules.onlyNull();
 		//for not native types set null
 		//except the generated object
-        nullForNotRootObjects.when(
-                Matchers.<GenerationContext>allOf(
-                        Matchers.not(ContextMatchers.matchingGeneratingClass(JavaNativeTypeMatcher.INSTANCE))
-                        , isRoot(false)
-                )
-        );
-        resultConfiguration.addRule(nullForNotRootObjects);
+		nullForNotRootObjects.when(
+				Matchers.<GenerationContext>allOf(
+						Matchers.not(ContextMatchers.matchingGeneratingClass(JavaNativeTypeMatcher.INSTANCE))
+						, isRoot(false)
+				)
+		);
+		resultConfiguration.addRule(nullForNotRootObjects);
 
 		resultConfiguration.setObjectsInCollections(0);
 		notAllowObjectsInCollectionsChange = true;
 
-        return this;
-    }
+		return this;
+	}
 
 	/**
-	 *
 	 * @return built configuration
 	 */
-    public GenerationConfiguration done() {
-        return resultConfiguration;
-    }
+	public GenerationConfiguration done() {
+		return resultConfiguration;
+	}
 
 	/**
 	 * create {@link WhenBuilder} for the passed contextMatcher.
+	 *
 	 * @param contextMatcher see {@link ContextMatchers}. this context will be applied in returned {@link WhenBuilder}
 	 * @return {@link WhenBuilder} for the passed contextMatcher.
 	 */
-	public WhenBuilder when(Matcher<GenerationContext> contextMatcher){
+	public WhenBuilder when(Matcher<GenerationContext> contextMatcher) {
 		return new WhenBuilder(contextMatcher, this);
 	}
 
-    /**
-     * create {@link WhenBuilder} for the passed contextMatcher.
-     * @param contextMatcher see {@link ContextMatchers}. this context will be applied in returned {@link WhenBuilder}
-     * @param <U> type of the value that is expected to be generated by WhenBuilder.
- 	 * @return {@link WhenBuilder} for the passed contextMatcher.
-     */
-    public <U> WhenBuilder<U> when(ValueTypeHintMatcher<GenerationContext, ? extends U> contextMatcher){
-        return new WhenBuilder(contextMatcher, this);
-    }
+	/**
+	 * create {@link WhenBuilder} for the passed contextMatcher.
+	 *
+	 * @param contextMatcher see {@link ContextMatchers}. this context will be applied in returned {@link WhenBuilder}
+	 * @param <U>            type of the value that is expected to be generated by WhenBuilder.
+	 * @return {@link WhenBuilder} for the passed contextMatcher.
+	 */
+	public <U> WhenBuilder<U> when(ValueTypeHintMatcher<GenerationContext, ? extends U> contextMatcher) {
+		return new WhenBuilder(contextMatcher, this);
+	}
 
 	/**
-	 *
 	 * @param classes list of classes for which returned {@link WhenBuilder} will be applied.
 	 * @return {@link WhenBuilder} that will apply rules on objects of passed types.
 	 */
-    public <T> WhenBuilder<T> forClass(Class<? extends T>... classes){
-        Assert.isTrue(classes.length > 0, "should be at least one class");
-        Assert.noNullElements(classes, "should not contain null elements");
-        return new WhenBuilder(ContextMatchers.typeOf(classes), this);
-    }
+	public <T> WhenBuilder<T> forClass(Class<? extends T>... classes) {
+		Assert.isTrue(classes.length > 0, "should be at least one class");
+		Assert.noNullElements(classes, "should not contain null elements");
+		return new WhenBuilder(ContextMatchers.typeOf(classes), this);
+	}
 
-    void addRule(GenerationRule rule) {
-        Assert.notNull(rule, "rule");
-        resultConfiguration.addRule(rule);
-    }
-
-    /**
-     *
-     * @param propertyExpression expression defining property for which this WhenBuilder will be applied.
-     *                           collections and arrays are supported.
-     *                           Example : {@code when("person2Address[0].owner.firstName)"}
-	 * @return {@link WhenBuilder} that will apply rules on the object matched passed propertyExpression
-     */
-    public <T> WhenBuilder<T> when(String propertyExpression) {
-        return new WhenBuilder<T>(propertyExpression, this);
-    }
+	void addRule(GenerationRule rule) {
+		Assert.notNull(rule, "rule");
+		resultConfiguration.addRule(rule);
+	}
 
 	/**
-	 *
+	 * @param propertyExpression expression defining property for which this WhenBuilder will be applied.
+	 *                           collections and arrays are supported.
+	 *                           Example : {@code when("person2Address[0].owner.firstName)"}
+	 * @return {@link WhenBuilder} that will apply rules on the object matched passed propertyExpression
+	 */
+	public <T> WhenBuilder<T> when(String propertyExpression) {
+		return new WhenBuilder<T>(propertyExpression, this);
+	}
+
+	/**
 	 * @param postProcessor not null {@link PostProcessor}
 	 */
-    public ConfigurationBuilder addPostProcessor(PostProcessor postProcessor) {
-        resultConfiguration.addPostProcessor(postProcessor);
-        return this;
-    }
+	public ConfigurationBuilder addPostProcessor(PostProcessor postProcessor) {
+		resultConfiguration.addPostProcessor(postProcessor);
+		return this;
+	}
 
-    PrototypeCreator getPrototypeCreator() {
-        return prototypeCreator;
-    }
+	PrototypeCreator getPrototypeCreator() {
+		return prototypeCreator;
+	}
 
 	/**
-	 *
 	 * @param clazz class of objects for which {@link WhenBuilder} will be applied.
 	 * @return {@link WhenBuilder} that will apply rules on objects of passed type.
 	 */
@@ -146,21 +152,28 @@ public class ConfigurationBuilder {
 
 	/**
 	 * define how many objects to generate for all collections
+	 *
 	 * @param objectsInCollection how many objects should be generated in collections (list, set, map, array)
 	 *                            must be >= 0
 	 */
 	public ConfigurationBuilder setObjectsInCollection(final int objectsInCollection) {
-		Assert.isTrue(objectsInCollection >= 0 , "objectsInCollection should be >= 0");
-		Assert.isTrue(!notAllowObjectsInCollectionsChange, "can't change ObjectsInCollection after onlyPrimitives() was called");
+		Assert.isTrue(objectsInCollection >= 0, "objectsInCollection should be >= 0");
+		assertCanChangeObjectsInCollection();
 
 		resultConfiguration.setObjectsInCollections(objectsInCollection);
 		return this;
+	}
+
+	private void assertCanChangeObjectsInCollection() {
+		Assert.isTrue(!notAllowObjectsInCollectionsChange,
+				"can't change ObjectsInCollection after onlyPrimitives() was called");
 	}
 
 	/**
 	 * Default CycleStrategy is {@link org.objectg.gen.cycle.GoDeeperCycleStrategy} that will generate
 	 * one additional object on cycle. So if properties Person.address and Address.person exist then
 	 * 3 objects will be generated Person, Person.address and Person.address.person
+	 *
 	 * @return {@link CycleBuilder} for defining {@link CycleStrategy}
 	 */
 	public CycleBuilder onCycle() {
@@ -169,6 +182,7 @@ public class ConfigurationBuilder {
 
 	/**
 	 * define cycle strategy to be used for cycles
+	 *
 	 * @param strategy not null strategy
 	 */
 	public ConfigurationBuilder setCycleStrategy(final CycleStrategy strategy) {
@@ -177,10 +191,16 @@ public class ConfigurationBuilder {
 	}
 
 	/**
-	 *
 	 * @param depth how deep to go into the object graph when generating root object
 	 *              depth(0) means that only generating object will be created, any other not primitive field will
 	 *              be omitted.
+	 *              depth is affected only by complext objects. E.g. collections do NOT effect depth, this means,
+	 *              that depth(1) for Person will result in Person.address[0] to be on depth=1
+	 *              (although 3 objects are accessed)
+	 *              person depth=0
+	 *              person.addresses depth=0
+	 *              person.addresses[0] depth=1
+	 *              person.addresses[0].postOffice depth=2
 	 */
 	public ConfigurationBuilder depth(final int depth) {
 		Assert.isTrue(depth >= 0, "depth must be >= 0");
@@ -191,13 +211,14 @@ public class ConfigurationBuilder {
 	/**
 	 * set no limit generation depth
 	 */
-	public ConfigurationBuilder noDepth(){
+	public ConfigurationBuilder noDepth() {
 		resultConfiguration.setDepth(GenerationConfiguration.UNLIMITED_DEPTH);
 		return this;
 	}
 
 	/**
 	 * define what access to use for setting generated values.
+	 *
 	 * @return {@link AccessBuilder}
 	 */
 	public AccessBuilder access() {
@@ -206,11 +227,137 @@ public class ConfigurationBuilder {
 
 	/**
 	 * Default Access Strategy is {@link AccessStrategy#ONLY_FIELDS}
+	 *
 	 * @param accessStrategy not null
 	 */
 	public ConfigurationBuilder setAccessStrategy(final AccessStrategy accessStrategy) {
 		Assert.notNull(accessStrategy, "accessStrategy should not be null");
 		resultConfiguration.setAccessStrategy(accessStrategy);
 		return this;
+	}
+
+	/**
+	 * <p>
+	 * same as {@link #onlyPrimitives()} but allows you to generate more complex objects. If complex object is part of
+	 * collection (e.g. {@code List<Person>} then collection will be generated with elements of size
+	 * {@code objectsInCollection}
+	 * </p>
+	 * <p>
+	 * E.g. {@code ObjectG.unique(Person.class, ObjectG.config().onlyPrimitives(1, Address.class))} will result in generated
+	 * object of type Person, that will have all complex attributes null (e.g. Employer), but it will have
+	 * generated attributes of type Address (e.g. person.homeAddress will be not null) or
+	 * collections of those types (e.g. person.workAddressesList will be not null and contain one not null instance
+	 * of type Address)
+	 * </p>
+	 *
+	 * @param objectsInCollection how many objects should be generated in collections (list, set, map)
+	 *                            must be >= 0
+	 * @param exceptClasses       classes that will be additionally generated
+	 * @return
+	 */
+	public ConfigurationBuilder onlyPrimitivesExcept(int objectsInCollection, final Class<?>... exceptClasses) {
+		Assert.isTrue(objectsInCollection >= 0, "objectsInCollection should be >= 0");
+		Assert.notNull(exceptClasses, "exceptClasses should not be null");
+		Assert.noNullElements(exceptClasses, "exceptClasses should not containt null elements");
+		assertCanChangeObjectsInCollection();
+
+		//for collections of objects other then exceptClasses we generate empty collections
+		final GenerationConfiguration emptyCollectionsConfiguration = new GenerationConfiguration();
+		emptyCollectionsConfiguration.setObjectsInCollections(0);
+		final GenerationRule emptyCollectionRule = Rules.configurationOverride(emptyCollectionsConfiguration);
+		emptyCollectionRule.when(createMatcherOfCollectionWithElementsNotTypeOf(exceptClasses));
+		resultConfiguration.addRule(emptyCollectionRule);
+
+		//for collections of objects of type exceptClasses we generate collections with given size
+		final GenerationConfiguration objectsInCollectionConfiguration = new GenerationConfiguration();
+		objectsInCollectionConfiguration.setObjectsInCollections(objectsInCollection);
+		final GenerationRule objectsInCollectionRule = Rules.configurationOverride(objectsInCollectionConfiguration);
+		objectsInCollectionRule.when(createMatcherOfCollectionWithElementsTypeOf(exceptClasses));
+		resultConfiguration.addRule(objectsInCollectionRule);
+
+		//for primitives and object of type exceptClasses we generate not null values. For anything else null is set
+		GenerationRule nullForNotRootObjects = createNullRuleExceptPrimitivesAndExclude(exceptClasses);
+		resultConfiguration.addRule(nullForNotRootObjects);
+
+		notAllowObjectsInCollectionsChange = true;
+		return this;
+	}
+
+	private Matcher<GenerationContext> createMatcherOfCollectionWithElementsNotTypeOf(
+			final Class<?>... exceptClasses) {
+		List<Matcher<? extends GenerationContext>> result = new ArrayList<Matcher<? extends GenerationContext>>();
+		for (Class each : exceptClasses) {
+			result.add(Matchers.not(ContextMatchers.collectionOrMapOfType(each)));
+		}
+		result.add(Matchers.anyOf(new GeneratedClassMatcher(new IsAssignedFromMatcher(Collection.class)),
+				new GeneratedClassMatcher(new IsAssignedFromMatcher(Map.class)),
+				new GeneratedClassMatcher(new IsArrayMatcher())));
+		return Matchers.allOf(result);
+	}
+
+	private Matcher<GenerationContext> createMatcherOfCollectionWithElementsTypeOf(
+			final Class<?>... exceptClasses) {
+		List<Matcher<? extends GenerationContext>> result = new ArrayList<Matcher<? extends GenerationContext>>();
+		for (Class each : exceptClasses) {
+			result.add(ContextMatchers.collectionOrMapOfType(each));
+		}
+		return Matchers.anyOf(result);
+	}
+
+	private static class IsArrayMatcher extends TypeSafeMatcher<Class> {
+
+		@Override
+		public boolean matchesSafely(final Class aClass) {
+			return Types.isArray(aClass);
+		}
+
+		@Override
+		public void describeTo(final Description description) {
+			description.appendText("is array");
+		}
+	}
+
+	private static class IsAssignedFromMatcher extends TypeSafeMatcher<Class> {
+		private Class targetClass;
+
+		public IsAssignedFromMatcher(Class targetClass) {
+			this.targetClass = targetClass;
+		}
+
+		@Override
+		public boolean matchesSafely(final Class aClass) {
+			return targetClass.isAssignableFrom(aClass);
+		}
+
+		@Override
+		public void describeTo(final Description description) {
+			description.appendText("is assigned from " + targetClass);
+		}
+	}
+
+	private GenerationRule createNullRuleExceptPrimitivesAndExclude(final Class<?>[] exceptClasses) {
+		GenerationRule nullForNotRootObjects = Rules.onlyNull();
+
+		Matcher<GenerationContext> matchingExceptClasses = createNotMatchingClassesMatcher(exceptClasses);
+		List<Matcher<? extends GenerationContext>> matchersForNullValues
+				= new ArrayList<Matcher<? extends GenerationContext>>();
+		matchersForNullValues.add(matchingExceptClasses);
+		matchersForNullValues
+				.add(Matchers.not(ContextMatchers.matchingGeneratingClass(JavaNativeTypeMatcher.INSTANCE)));
+		matchersForNullValues.add(isRoot(false));
+		//for not native types set null
+		//except the generated object
+		nullForNotRootObjects.when(
+				Matchers.<GenerationContext>allOf(matchersForNullValues)
+		);
+		return nullForNotRootObjects;
+	}
+
+	private Matcher<GenerationContext> createNotMatchingClassesMatcher(final Class<?>... matchingClasses) {
+		List<Matcher<? extends GenerationContext>> result = new ArrayList<Matcher<? extends GenerationContext>>();
+		for (Class each : matchingClasses) {
+			result.add(new GeneratedClassMatcher(Matchers.not(new IsAssignedFromMatcher(each))));
+		}
+		return Matchers.allOf(result);
 	}
 }

@@ -10,7 +10,7 @@ import org.objectg.gen.GenerationRule;
  */
 class SetGeneratedObjectGenerationRule extends GenerationRule {
 	@Override
-	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
+	public Object getValueInner(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		return context.getRootObject();
 	}
 

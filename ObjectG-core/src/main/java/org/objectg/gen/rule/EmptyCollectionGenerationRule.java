@@ -11,11 +11,11 @@ import org.objectg.gen.session.GenerationSession;
  */
 class EmptyCollectionGenerationRule extends GenerationRule {
 
-    @Override
-    public Object getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
-        configurationOfCollection.setObjectsInCollections(0);
-        configurationOfCollection.removeRule(this);
-        return GenerationSession.get().generate(configurationOfCollection, context);
-    }
+	@Override
+	public Object getValueInner(GenerationConfiguration currentConfiguration, GenerationContext context) {
+		GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
+		configurationOfCollection.setObjectsInCollections(0);
+		configurationOfCollection.removeRule(this);
+		return GenerationSession.get().generate(configurationOfCollection, context);
+	}
 }

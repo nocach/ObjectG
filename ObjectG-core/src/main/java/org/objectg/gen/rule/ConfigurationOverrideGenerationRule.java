@@ -14,23 +14,25 @@ public class ConfigurationOverrideGenerationRule extends GenerationRule {
 
 	private GenerationConfiguration overrideConfiguration;
 
-	public ConfigurationOverrideGenerationRule(GenerationConfiguration overrideConfiguration){
+	public ConfigurationOverrideGenerationRule(GenerationConfiguration overrideConfiguration) {
 		Assert.notNull(overrideConfiguration, "overrideConfiguration");
 		this.overrideConfiguration = overrideConfiguration;
 	}
+
 	@Override
-	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
+	public Object getValueInner(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		makeDepthRelativeToContext(context);
 		final GenerationConfiguration mergedConfiguration = overrideConfiguration.merge(currentConfiguration);
-		mergedConfiguration.removeRule(this);
 		return GenerationSession.get().generate(mergedConfiguration, context);
 	}
 
 	private void makeDepthRelativeToContext(final GenerationContext context) {
-		if (overrideConfiguration.getDepth() != null && overrideConfiguration.getDepth() != GenerationConfiguration.UNLIMITED_DEPTH){
+		if (overrideConfiguration.getDepth() != null
+				&& overrideConfiguration.getDepth() != GenerationConfiguration.UNLIMITED_DEPTH) {
 			//depth should be relative to current context
 			//this is more natural way how the user sees the configuration by prototype
 			overrideConfiguration.setDepth(overrideConfiguration.getDepth() + context.getGenerationDepth());
 		}
 	}
+
 }

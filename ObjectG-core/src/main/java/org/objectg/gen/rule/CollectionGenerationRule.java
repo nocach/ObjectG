@@ -11,20 +11,20 @@ import org.objectg.gen.session.GenerationSession;
  * User: __nocach
  * Date: 28.9.12
  */
-class CollectionGenerationRule<T> extends GenerationRule<T>{
-    private final Class<? extends Collection> collectionClass;
+class CollectionGenerationRule<T> extends GenerationRule<T> {
+	private final Class<? extends Collection> collectionClass;
 	private Object[] values;
 	private Class classOfObjects;
 	private int objectsInCollection;
 
-    public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects,
-			final int objectsInCollection){
-        this.collectionClass = collectionClass;
-        this.classOfObjects = classOfObjects;
+	public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects,
+			final int objectsInCollection) {
+		this.collectionClass = collectionClass;
+		this.classOfObjects = classOfObjects;
 		this.objectsInCollection = objectsInCollection;
 	}
 
-    public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects){
+	public CollectionGenerationRule(Class<? extends Collection> collectionClass, Class classOfObjects) {
 		this(collectionClass, classOfObjects, 1);
 	}
 
@@ -35,14 +35,14 @@ class CollectionGenerationRule<T> extends GenerationRule<T>{
 	}
 
 	@Override
-    public T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
-        configurationOfCollection.setObjectsInCollections(objectsInCollection);
+	public T getValueInner(GenerationConfiguration currentConfiguration, GenerationContext context) {
+		GenerationConfiguration configurationOfCollection = currentConfiguration.clone();
+		configurationOfCollection.setObjectsInCollections(objectsInCollection);
 		configurationOfCollection.removeRule(this);
-        Collection collection = GenerationSession.get().generate(configurationOfCollection, context);
-		if (values != null){
+		Collection collection = GenerationSession.get().generate(configurationOfCollection, context);
+		if (values != null) {
 			for (Object each : values) collection.add(each);
 		}
-        return (T)collection;
-    }
+		return (T) collection;
+	}
 }

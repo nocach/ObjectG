@@ -6,28 +6,29 @@ import org.objectg.conf.GenerationConfiguration;
 import org.objectg.gen.CompositeGenerator;
 import org.objectg.gen.GenerationContext;
 import org.objectg.gen.impl.Generators;
+import org.objectg.util.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
  * <p>
- *     GenerationSession represents unit of work when generating objects.
+ * GenerationSession represents unit of work when generating objects.
  * </p>
  * <p>
- *     During GenerationSession multiple different objects can be created. GenerationSession makes sure that each
- *     generation is reproducible given that code used to generate objects remained unchanged.
+ * During GenerationSession multiple different objects can be created. GenerationSession makes sure that each
+ * generation is reproducible given that code used to generate objects remained unchanged.
  * </p>
  * <p>
- *     GenerationSession manages generators and sequence that will be used in given thread. This simplifies all other
- *     code, because it can be not thread-safe. All state should be managed in bounds of GenerationSession. This mean
- *     that any {@link org.objectg.gen.Generator} or {@link org.objectg.gen.GenerationRule} should NOT maintain it's state between different
- *     GenerationSessions. This is important, because if state is maintained between different GenerationSession then
- *     result of generation is affected by previous generations. State that is considered
+ * GenerationSession manages generators and sequence that will be used in given thread. This simplifies all other
+ * code, because it can be not thread-safe. All state should be managed in bounds of GenerationSession. This mean
+ * that any {@link org.objectg.gen.Generator} or {@link org.objectg.gen.GenerationRule} should NOT maintain it's state between different
+ * GenerationSessions. This is important, because if state is maintained between different GenerationSession then
+ * result of generation is affected by previous generations. State that is considered
  * </p>
  * <p>
- *     GenerationSession provides factory methods for creating {@link org.objectg.gen.ValueSequence} for managing sequence of values
- *     in the scope of GenerationSession.
+ * GenerationSession provides factory methods for creating {@link org.objectg.gen.ValueSequence} for managing sequence of values
+ * in the scope of GenerationSession.
  * </p>
  * <p>
  * User: __nocach
@@ -55,29 +56,35 @@ public class GenerationSession {
 	 */
 	private CompositeGenerator generatorChain = null;
 
-	private GenerationSession(){}
+	private GenerationSession() {
+	}
 
 	/**
-	 *
 	 * generate object in this GenerationSession
+	 *
 	 * @param context not null context for which generator must be found
 	 * @throws IllegalArgumentException if generator for the passed context and configuration was not found
 	 */
-	public <T> T generate(GenerationConfiguration configuration,  GenerationContext context) {
+	public <T> T generate(GenerationConfiguration configuration, GenerationContext context) {
 		Assert.notNull(context, "context");
 
 		T result = (T) generatorChain.generate(configuration, context);
-		logger.info("generated value=" + getSafeObjectToString(result));
-		logger.debug("for context="+context);
+		if (logger.isDebugEnabled()) {
+			logger.debug("generated value=" + getSafeObjectToString(result) + "for context=" + context);
+		} else {
+			if (!Types.isJavaType(context.getClassThatIsGenerated())) {
+				logger.info("generated type = " + context.getClassThatIsGenerated().getSimpleName()
+						+ "   value=" + getSafeObjectToString(result));
+			}
+		}
 		return result;
 	}
 
 	private String getSafeObjectToString(final Object result) {
 		if (result == null) return null;
-		try{
+		try {
 			return result.toString();
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			return "result.toString threw exception";
 		}
 	}
@@ -86,11 +93,11 @@ public class GenerationSession {
 	/**
 	 * checks if current GenerationSession is ready to be used - was properly begun and ended.
 	 */
-	public void assertReady(){
+	public void assertReady() {
 		if (currentState != State.STARTED) {
 			if (currentState == State.UNDEFINED)
 				throw new IllegalStateException("Session is not started. Did you forget to call ObjectG.setup()?");
-			if (currentState == State.STOPED){
+			if (currentState == State.STOPED) {
 				throw new IllegalStateException("Session is not stopped. Did you forget to call ObjectG.teardown()?");
 			}
 		}
@@ -99,7 +106,7 @@ public class GenerationSession {
 	/**
 	 * call when GenerationSessions is about to begin
 	 */
-	public void begin(){
+	public void begin() {
 		logger.info("starting new GenerationSession from thread=" + Thread.currentThread());
 		if (currentState == State.STARTED) {
 			throw new IllegalStateException("You must stop session, before you can start new. " +
@@ -115,43 +122,49 @@ public class GenerationSession {
 	 * GenerationSession allows to store only SINGLE object (of any type)
 	 *
 	 * @param stateOwner object owning state
-	 * @param state state.
+	 * @param state      state.
 	 */
-	void saveState(Object stateOwner, Object state){
+	void saveState(Object stateOwner, Object state) {
 		managedState.put(stateOwner, state);
 	}
 
 	/**
 	 * Return state relative to this GenerationSession
+	 *
 	 * @param stateOwner
 	 * @param <T>
 	 * @return
 	 */
-	<T> T getState(Object stateOwner){
-		return (T)managedState.get(stateOwner);
+	<T> T getState(Object stateOwner) {
+		return (T) managedState.get(stateOwner);
 	}
 
 	/**
 	 * method for creating SessionState that can be used in {@link org.objectg.gen.Generator} or
 	 * {@link org.objectg.gen.GenerationRule} to maintain their state. See {@link SessionState} for more info.
-	 * @param stateOwner not null object that is managing state
-	 * @param valueClass optional type of the value
+	 *
+	 * @param stateOwner       not null object that is managing state
+	 * @param valueClass       optional type of the value
 	 * @param stateDescription not null description of the state
-	 * @param <T> type of the value that is managed. Only one type can be managed by one object.
+	 * @param <T>              type of the value that is managed. Only one type can be managed by one object.
 	 * @return thread-safe SessionState that can be used in owner object.
 	 */
-	public static <T> SessionState<T> createManagedState(Object stateOwner, Class<T> valueClass, SessionStateDescription<T> stateDescription){
+	public static <T> SessionState<T> createManagedState(Object stateOwner, Class<T> valueClass,
+			SessionStateDescription<T> stateDescription) {
 		return sessionStateLifeCycle.createManagedState(stateOwner, stateDescription);
 	}
+
 	/**
 	 * method for creating SessionState that can be used in {@link org.objectg.gen.Generator} or
 	 * {@link org.objectg.gen.GenerationRule} to maintain their state. See {@link SessionState} for more info.
-	 * @param stateOwner not null object that is managing state
+	 *
+	 * @param stateOwner       not null object that is managing state
 	 * @param stateDescription not null description of the state
-	 * @param <T> type of the value that is managed. Only one type can be managed by one object.
+	 * @param <T>              type of the value that is managed. Only one type can be managed by one object.
 	 * @return thread-safe SessionState that can be used in owner object.
 	 */
-	public static <T> SessionState<T> createManagedState(Object stateOwner, SessionStateDescription<T> stateDescription){
+	public static <T> SessionState<T> createManagedState(Object stateOwner,
+			SessionStateDescription<T> stateDescription) {
 		return createManagedState(stateOwner, null, stateDescription);
 	}
 
@@ -169,18 +182,18 @@ public class GenerationSession {
 	/**
 	 * call when GenerationSession is ended.
 	 */
-	public void end(){
-		logger.info("stopping GenerationSession from thread="+Thread.currentThread());
-		if (currentState == State.STOPED){
+	public void end() {
+		logger.info("stopping GenerationSession from thread=" + Thread.currentThread());
+		if (currentState == State.STOPED) {
 			throw new IllegalStateException("session was already stopped. Did you forget to call ObjectG.setup()?");
 		}
-		if (currentState == State.UNDEFINED){
+		if (currentState == State.UNDEFINED) {
 			throw new IllegalStateException("session was no started. Did you forget to call ObjectG.setup()?");
 		}
 		currentState = State.STOPED;
 	}
 
-	public static GenerationSession get(){
+	public static GenerationSession get() {
 		if (threadInstance.get() == null) threadInstance.set(new GenerationSession());
 		return threadInstance.get();
 	}
@@ -189,7 +202,7 @@ public class GenerationSession {
 		return sequenceFactory;
 	}
 
-	private static enum State{
+	private static enum State {
 		UNDEFINED, STARTED, STOPED
 	}
 }

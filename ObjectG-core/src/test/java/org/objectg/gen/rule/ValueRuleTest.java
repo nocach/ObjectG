@@ -10,17 +10,17 @@ import org.objectg.fixtures.PrimitivesClass;
  * User: __nocach
  * Date: 29.1.13
  */
-public class ValueRuleTest  extends BaseObjectGTest{
+public class ValueRuleTest extends BaseObjectGTest {
 
 	@Test
-	public void canValuePrimitives(){
+	public void canValuePrimitives() {
 		final PrimitivesClass prototype = ObjectG.prototype(PrimitivesClass.class);
-		prototype.setByteField((byte) PrototypeRules.value(1));
-		prototype.setCharField(PrototypeRules.value('a'));
-		prototype.setShortField((short) PrototypeRules.value(1));
-		prototype.setIntField(PrototypeRules.value(1));
-		prototype.setLongField(PrototypeRules.value(1));
-		prototype.setFloatField(PrototypeRules.value(1));
-		prototype.setBooleanField(PrototypeRules.value(false));
+		prototype.setByteField(PrototypeRules.valueByte((byte) 1));
+		prototype.setCharField(PrototypeRules.valueChar('a'));
+		prototype.setShortField(PrototypeRules.valueShort((short) 1));
+		prototype.setIntField(PrototypeRules.valueInt(1));
+		prototype.setLongField(PrototypeRules.valueLong(1));
+		prototype.setFloatField(PrototypeRules.valueFloat(1));
+		prototype.setBooleanField(PrototypeRules.valueBoolean(false));
 	}
 }

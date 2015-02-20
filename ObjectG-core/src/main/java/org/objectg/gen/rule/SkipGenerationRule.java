@@ -7,17 +7,17 @@ import org.objectg.gen.impl.SkipValueGenerationException;
 
 /**
  * <p>
- *     GenerationRule saying that some property should be skipped, meaning that no attempt
- *     to setting this property is done.
+ * GenerationRule saying that some property should be skipped, meaning that no attempt
+ * to setting this property is done.
  * </p>
  * <p>
  * User: __nocach
  * Date: 3.2.13
  * </p>
  */
-class SkipGenerationRule extends GenerationRule{
+class SkipGenerationRule extends GenerationRule {
 	@Override
-	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
+	public Object getValueInner(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		throw new SkipValueGenerationException();
 	}
 

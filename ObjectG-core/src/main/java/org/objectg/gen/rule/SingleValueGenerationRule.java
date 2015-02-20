@@ -9,14 +9,15 @@ import org.objectg.gen.GenerationRule;
  * Date: 23.9.12
  */
 
-class SingleValueGenerationRule<T> extends GenerationRule<T>{
-    private T value;
+class SingleValueGenerationRule<T> extends GenerationRule<T> {
+	private T value;
 
-    public SingleValueGenerationRule(T value){
-        this.value = value;
-    }
-    @Override
-    public T getValue(GenerationConfiguration currentConfiguration, GenerationContext context) {
-        return value;
-    }
+	public SingleValueGenerationRule(T value) {
+		this.value = value;
+	}
+
+	@Override
+	public T getValueInner(GenerationConfiguration currentConfiguration, GenerationContext context) {
+		return value;
+	}
 }

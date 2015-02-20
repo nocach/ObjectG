@@ -12,8 +12,10 @@ import org.objectg.GoodToHave;
 import org.objectg.ObjectG;
 import org.objectg.conf.exception.ConfigurationException;
 import org.objectg.fixtures.ClassWithIPerson;
+import org.objectg.fixtures.domain.Departure;
 import org.objectg.fixtures.domain.IPerson;
 import org.objectg.fixtures.domain.Person;
+import org.objectg.fixtures.domain.Reservation;
 import org.objectg.fixtures.domain.Tour;
 import org.objectg.fixtures.domain.TourSeason;
 import org.objectg.fixtures.domain.TourStop;
@@ -29,112 +31,112 @@ import static org.junit.Assert.assertThat;
  */
 public class ConfigBuilderTest extends BaseObjectGTest {
 
-    @Test(expected = ConfigurationException.class)
-    public void throwsWhenTryingToPassNotPrototypeObject(){
-        //user passes object that was not created by ObjectG.prototype()
-        ObjectG.unique(String.class, new PrototypeConfigTest.Person());
-    }
-
-    @Test
-    public void canConfigureRuleWithMatcher(){
-        Person generated = ObjectG.unique(Person.class,
-                ObjectG.config().when(ContextMatchers.typeOf(String.class)).useRule(Rules.value("someValue")));
-
-        assertEquals("someValue", generated.getFirstName());
-        assertEquals("someValue", generated.getMiddleName());
-        assertEquals("someValue", generated.getLastName());
-
-    }
-
-    @Test
-    public void canConfigureNoObjects(){
-        Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
-
-        assertNull("not primitive should be null", tour.getSeason());
-        assertEquals("collections should be empty", 0, tour.getStops().size());
-    }
+	@Test(expected = ConfigurationException.class)
+	public void throwsWhenTryingToPassNotPrototypeObject() {
+		//user passes object that was not created by ObjectG.prototype()
+		ObjectG.unique(String.class, new PrototypeConfigTest.Person());
+	}
 
 	@Test
-	public void noObjectsGeneratesEmptyArrays(){
+	public void canConfigureRuleWithMatcher() {
+		Person generated = ObjectG.unique(Person.class,
+				ObjectG.config().when(ContextMatchers.typeOf(String.class)).useRule(Rules.value("someValue")));
+
+		assertEquals("someValue", generated.getFirstName());
+		assertEquals("someValue", generated.getMiddleName());
+		assertEquals("someValue", generated.getLastName());
+
+	}
+
+	@Test
+	public void canConfigureNoObjects() {
+		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
+
+		assertNull("not primitive should be null", tour.getSeason());
+		assertEquals("collections should be empty", 0, tour.getStops().size());
+	}
+
+	@Test
+	public void noObjectsGeneratesEmptyArrays() {
 		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
 
 		assertEquals(0, tour.getBarcode().length);
 	}
 
 	@Test
-	public void noObjectsWillSetEnums(){
+	public void noObjectsWillSetEnums() {
 		Tour tour = ObjectG.unique(Tour.class, ObjectG.config().onlyPrimitives());
 
 		assertNotNull("enum is considered primitive", tour.getTourType());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void cantChangeObjectsInCollectionsAfterNoObjectsCall(){
+	public void cantChangeObjectsInCollectionsAfterNoObjectsCall() {
 		ObjectG.config().onlyPrimitives().setObjectsInCollection(1);
 	}
 
-    @Test
-    public void canConfigureNullObjectsClassWithMap(){
-        ClassWithMap classWithMap = ObjectG.unique(ClassWithMap.class, ObjectG.config().onlyPrimitives());
+	@Test
+	public void canConfigureNullObjectsClassWithMap() {
+		ClassWithMap classWithMap = ObjectG.unique(ClassWithMap.class, ObjectG.config().onlyPrimitives());
 
-        assertEquals("map should be empty", 0, classWithMap.getMap().size());
-    }
+		assertEquals("map should be empty", 0, classWithMap.getMap().size());
+	}
 
-    @Test
-    public void canSimplyConfigValueForClass(){
-        TourSeason expectedSeason = new TourSeason();
-        Tour generated = ObjectG.unique(Tour.class,
-                ObjectG.config().forClass(TourSeason.class).setValue(expectedSeason));
+	@Test
+	public void canSimplyConfigValueForClass() {
+		TourSeason expectedSeason = new TourSeason();
+		Tour generated = ObjectG.unique(Tour.class,
+				ObjectG.config().forClass(TourSeason.class).setValue(expectedSeason));
 
-        assertEquals(expectedSeason, generated.getSeason());
-    }
+		assertEquals(expectedSeason, generated.getSeason());
+	}
 
-    @Test
-    public void canSimplyConfigNullForClass(){
-        Tour generated = ObjectG.unique(Tour.class,
-                ObjectG.config().forClass(TourSeason.class).setNull());
+	@Test
+	public void canSimplyConfigNullForClass() {
+		Tour generated = ObjectG.unique(Tour.class,
+				ObjectG.config().forClass(TourSeason.class).setNull());
 
-        assertNull(generated.getSeason());
-    }
+		assertNull(generated.getSeason());
+	}
 
-    @Test
-    public void canUsePropertyExpressionToSetValue(){
-        Person unique = ObjectG.unique(Person.class
+	@Test
+	public void canUsePropertyExpressionToSetValue() {
+		Person unique = ObjectG.unique(Person.class
 				, ObjectG.config()
 				.onCycle()
-					.backReference()
+				.backReference()
 				.when("employee2Addresses[0].owner.firstName")
 				.setValue("setByExpression"));
 
-        assertEquals("setByExpression", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
-    }
-
-    @Test
-    public void canUsePropertyExpressionToUsePrototype(){
-        Person prototype = ObjectG.prototype(Person.class);
-        prototype.setFirstName("fromPrototype");
-        Person unique = ObjectG.unique(Person.class
-                , ObjectG.config()
-                .when("employee2Addresses[0].owner")
-                .usePrototype(prototype));
-
-        assertEquals("fromPrototype", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
-    }
-
-    @Test
-    public void canUsePropertyExpressionToSpecifyRule(){
-        Person prototype = ObjectG.prototype(Person.class);
-        prototype.setFirstName("fromPrototype");
-        Person unique = ObjectG.unique(Person.class
-                , ObjectG.config()
-                .when("employee2Addresses")
-                .useRule(Rules.emptyCollections()));
-
-        assertEquals(0, unique.getEmployee2Addresses().size());
-    }
+		assertEquals("setByExpression", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
+	}
 
 	@Test
-	public void canSpecifyImplementation(){
+	public void canUsePropertyExpressionToUsePrototype() {
+		Person prototype = ObjectG.prototype(Person.class);
+		prototype.setFirstName("fromPrototype");
+		Person unique = ObjectG.unique(Person.class
+				, ObjectG.config()
+				.when("employee2Addresses[0].owner")
+				.usePrototype(prototype));
+
+		assertEquals("fromPrototype", unique.getEmployee2Addresses().get(0).getOwner().getFirstName());
+	}
+
+	@Test
+	public void canUsePropertyExpressionToSpecifyRule() {
+		Person prototype = ObjectG.prototype(Person.class);
+		prototype.setFirstName("fromPrototype");
+		Person unique = ObjectG.unique(Person.class
+				, ObjectG.config()
+				.when("employee2Addresses")
+				.useRule(Rules.emptyCollections()));
+
+		assertEquals(0, unique.getEmployee2Addresses().size());
+	}
+
+	@Test
+	public void canSpecifyImplementation() {
 		ClassWithIPerson classWithIPerson = ObjectG.unique(ClassWithIPerson.class,
 				ObjectG.config().when(IPerson.class).useClass(Person.class));
 
@@ -142,7 +144,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void specifiedImplementationIsUsedDuringWholeGeneration(){
+	public void specifiedImplementationIsUsedDuringWholeGeneration() {
 		final Book generated = ObjectG.unique(Book.class, ObjectG.config()
 				.onCycle().goDeeper(1)
 				.when(BasePage.class).useClass(TextPage.class));
@@ -152,7 +154,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void canSpecifyGenerationDepth(){
+	public void canSpecifyGenerationDepth() {
 		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(1));
 
 		assertNotNull(generated.classB);
@@ -160,7 +162,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void canSpecifyZeroGenerationDepth(){
+	public void canSpecifyZeroGenerationDepth() {
 		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(0));
 
 		assertNotNull(generated);
@@ -168,7 +170,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void generationDepthGeneratesNativeTypesOnBottom(){
+	public void generationDepthGeneratesNativeTypesOnBottom() {
 		ClassA generated = ObjectG.unique(ClassA.class, ObjectG.config().depth(1));
 
 		assertNotNull("arrayPrimitive", generated.classB.arrayPrimitive);
@@ -178,18 +180,18 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void canConfigureValues(){
+	public void canConfigureValues() {
 		List<Tour> tours = ObjectG.uniqueList(Tour.class, ObjectG.config()
 				.when(TourType.class)
 				.setValues(TourType.ECONOMIC, TourType.ENTERPRISE)
-		, 2);
+				, 2);
 
 		Assert.assertEquals(TourType.ECONOMIC, tours.get(0).getTourType());
 		Assert.assertEquals(TourType.ENTERPRISE, tours.get(1).getTourType());
 	}
 
 	@Test
-	public void canRewriteValueInCollectionUsingPropertyExpression(){
+	public void canRewriteValueInCollectionUsingPropertyExpression() {
 		final TourStop expectedTourStop = new TourStop();
 		Tour unique = ObjectG.unique(Tour.class
 				, ObjectG.config()
@@ -201,7 +203,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void canUseAccessMethodsOnly(){
+	public void canUseAccessMethodsOnly() {
 		final ClassWithHiddenField unique = ObjectG
 				.unique(ClassWithHiddenField.class, ObjectG.config().access().onlyMethods());
 
@@ -210,7 +212,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void willNotFallIfAccessMethodIsMissing(){
+	public void willNotFallIfAccessMethodIsMissing() {
 		final ClassWithCombinedAccess unique = ObjectG
 				.unique(ClassWithCombinedAccess.class, ObjectG.config().access().onlyMethods());
 
@@ -221,7 +223,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
-	public void canCombineFieldsWithSetterGetter(){
+	public void canCombineFieldsWithSetterGetter() {
 		final ClassWithCombinedAccess unique = ObjectG
 				.unique(ClassWithCombinedAccess.class, ObjectG.config().access().preferMethods());
 
@@ -235,9 +237,71 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 	}
 
 	@Test
+	public void canSpecifyComplexObjects() {
+		final Departure unique = ObjectG.unique(Departure.class,
+				ObjectG.config()
+						.onlyPrimitivesExcept(2, Tour.class, Reservation.class, TourStop.class)
+		);
+
+		assertNull("not specified types should be null", unique.getStaff());
+		assertNotNull("specified types should not be null", unique.getTour());
+		assertFalse("specified types will have not empty collections of listedType",
+				unique.getTour().getStops().isEmpty());
+		assertTrue("collections without specified types should be empty", unique.getServedCustomers().isEmpty());
+		assertEquals("collections with specified types should contain objectsInCollection",
+				2, unique.getReservations().size());
+		assertNotNull("collections should containt not null elements, [0]", unique.getReservations().get(0));
+		assertNotNull("collections should containt not null elements, [1]", unique.getReservations().get(1));
+		assertEquals("collection size should be used in except classes", 2, unique.getTour().getStops().size());
+	}
+
+	@Test
+	public void canSpecifyComplexObjectsImplicitEmptyCollections() {
+		final Departure unique = ObjectG.unique(Departure.class,
+				ObjectG.config()
+						.onlyPrimitivesExcept(2, Tour.class)
+		);
+
+		assertNotNull("specified types should not be null", unique.getTour());
+		assertTrue("specified types should have empty collections of not listed types",
+				unique.getTour().getStops().isEmpty());
+	}
+
+	@Test
+	public void canSpecifyComplexObjectsArraysAndMapAreNotEmpty() {
+		final ClassWithBags unique = ObjectG.unique(ClassWithBags.class, ObjectG.config()
+				.onlyPrimitivesExcept(2, Person.class)
+		);
+
+		assertFalse("person map should be not empty", unique.getPersonMap().isEmpty());
+		assertNotNull("map should have not null keys", unique.getPersonMap().keySet().iterator().next());
+		assertEquals("person array should have 2 elements", 2, unique.personArray.length);
+		assertNotNull("person array must have not null element [0]", unique.personArray[0]);
+		assertNotNull("person array must have not null element [1]", unique.personArray[1]);
+	}
+
+	@Test
+	public void canSpecifyComplexObjectsArraysAndMapAreEmpty() {
+		final ClassWithBags unique = ObjectG.unique(ClassWithBags.class, ObjectG.config()
+				.onlyPrimitivesExcept(2, Person.class)
+		);
+
+		assertTrue("tour map should be empty", unique.getTourMap().isEmpty());
+		assertEquals("person array should be empty", 0, unique.tourArray.length);
+	}
+
+	@Test
+	public void canSpecifyComplextObjectsDerivedClasses() {
+		final ClassWithDerivedBasePage unique = ObjectG
+				.unique(ClassWithDerivedBasePage.class, ObjectG.config().onlyPrimitivesExcept(1, BasePage.class));
+
+		assertNotNull("derived class should not be null", unique.getTextPage());
+	}
+
+	@Test
 	@Ignore
 	@GoodToHave
-	public void canCreateMissingObjectsInPropertyExpression(){
+	public void canCreateMissingObjectsInPropertyExpression() {
 		Tour tour = ObjectG.unique(Tour.class, ObjectG.config()
 				.onlyPrimitives()
 				.when("season.name").setValue("setByExpression"));
@@ -247,10 +311,10 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 				"setByExpression", tour.getSeason().getName());
 	}
 
-    @Test
+	@Test
 	@Ignore
 	@GoodToHave
-    public void canInferPropertyTypeForExpressionMatchingCollection(){
+	public void canInferPropertyTypeForExpressionMatchingCollection() {
 		final TourStop expectedTourStop = new TourStop();
 		Tour unique = ObjectG.unique(Tour.class
 				, ObjectG.config()
@@ -262,14 +326,14 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 
 
 		assertEquals("first stop should be set by expression", expectedTourStop, unique.getStops().get(0));
-    }
+	}
 
 	//this 4 flags should be in TestCase because if they were in ClassWithCombinedAccess then ObjectG
 	//would mess their values up
 	private static boolean ClassWithCombinedAccessFieldAndSetterPropertySetterCalled = false;
 	private static boolean ClassWithCombinedAccessSetterAndGetterPropertySetterCalled = false;
 
-	public static class ClassWithCombinedAccess{
+	public static class ClassWithCombinedAccess {
 		private String onlyFieldProperty;
 		private String fieldAndSetterProperty;
 		private String fieldAndGetterProperty;
@@ -294,7 +358,7 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 		}
 	}
 
-	public static class ClassWithHiddenField{
+	public static class ClassWithHiddenField {
 		public static final String HIDDEN = "HIDDEN";
 		private String hiddenField = HIDDEN;
 		private String openField;
@@ -308,39 +372,42 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 		}
 	}
 
-	public static class ClassA{
+	public static class ClassA {
 		private ClassB classB;
 	}
-	public static class ClassB{
+
+	public static class ClassB {
 		private ClassC classC;
 		private int intPrimitive;
 		private TourType enumPrimitive;
 		private byte[] arrayPrimitive;
 		private Long longRefPrimitive;
 	}
-	public static class ClassC{
+
+	public static class ClassC {
 		private ClassD classD;
 	}
-	public static class ClassD{
+
+	public static class ClassD {
 	}
 
-	public static class Book{
+	public static class Book {
 		BasePage page;
 	}
 
-	public abstract static class BasePage{
+	public abstract static class BasePage {
 		private Page2Paragraph page2Paragraph;
 	}
 
-	public static class PicturePage extends BasePage{
+	public static class PicturePage extends BasePage {
 
 	}
 
-	public static class TextPage extends BasePage{
+	public static class TextPage extends BasePage {
 
 	}
 
-	public static class Page2Paragraph{
+	public static class Page2Paragraph {
 		private BasePage page;
 		private String paragraph;
 
@@ -361,15 +428,67 @@ public class ConfigBuilderTest extends BaseObjectGTest {
 		}
 	}
 
-    public static class ClassWithMap{
-        private Map map;
+	public static class ClassWithMap {
+		private Map map;
 
-        public Map getMap() {
-            return map;
-        }
+		public Map getMap() {
+			return map;
+		}
 
-        public void setMap(Map map) {
-            this.map = map;
-        }
-    }
+		public void setMap(Map map) {
+			this.map = map;
+		}
+	}
+
+	public static class ClassWithBags {
+		private Map<Person, String> personMap;
+		private Person[] personArray;
+
+		private Map<Tour, String> tourMap;
+		private Tour[] tourArray;
+
+		public Map<Person, String> getPersonMap() {
+			return personMap;
+		}
+
+		public void setPersonMap(final Map<Person, String> personMap) {
+			this.personMap = personMap;
+		}
+
+		public Person[] getPersonArray() {
+			return personArray;
+		}
+
+		public void setPersonArray(final Person[] personArray) {
+			this.personArray = personArray;
+		}
+
+		public Map<Tour, String> getTourMap() {
+			return tourMap;
+		}
+
+		public void setTourMap(final Map<Tour, String> tourMap) {
+			this.tourMap = tourMap;
+		}
+
+		public Tour[] getTourArray() {
+			return tourArray;
+		}
+
+		public void setTourArray(final Tour[] tourArray) {
+			this.tourArray = tourArray;
+		}
+	}
+
+	public static class ClassWithDerivedBasePage {
+		private TextPage textPage;
+
+		public TextPage getTextPage() {
+			return textPage;
+		}
+
+		public void setTextPage(final TextPage textPage) {
+			this.textPage = textPage;
+		}
+	}
 }

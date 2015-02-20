@@ -14,13 +14,14 @@ class OverrideContextGenerationRule extends GenerationRule {
 	private GenerationContextTransformer transformer;
 	private boolean permanent;
 
-	public OverrideContextGenerationRule(GenerationContextTransformer transformer, final boolean permanent){
+	public OverrideContextGenerationRule(GenerationContextTransformer transformer, final boolean permanent) {
 		Assert.notNull(transformer, "transformer");
 		this.permanent = permanent;
 		this.transformer = transformer;
 	}
+
 	@Override
-	public Object getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
+	public Object getValueInner(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		transformer.transform(context);
 		if (!permanent) currentConfiguration.removeRule(this);
 		return GenerationSession.get().generate(currentConfiguration, context);

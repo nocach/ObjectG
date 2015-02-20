@@ -3,7 +3,6 @@ package org.objectg.gen;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.objectg.BaseObjectGTest;
@@ -18,420 +17,451 @@ import org.objectg.fixtures.domain.IPerson;
 public class NotNativeClassGeneratorTest extends BaseObjectGTest {
 
 
-    @Test
-    public void noArgConstructor(){
-        Object generated = ObjectG.unique(NoArgConstructor.class);
+	@Test
+	public void noArgConstructor() {
+		Object generated = ObjectG.unique(NoArgConstructor.class);
 
-        assertNotNull(generated);
-    }
-
-    @Test
-    public void oneArgConstructor(){
-        OneArgConstructor generated = ObjectG.unique(OneArgConstructor.class);
-
-        assertNotNull(generated);
-        assertNotNull(generated.arg);
-    }
-
-    @Test
-    public void betweenMultipleConstructorsWithMostArgsIsUsed(){
-        MultipleConstructors generated = ObjectG.unique(MultipleConstructors.class);
-
-        assertNotNull(generated);
-        assertNotNull(generated.field1);
-        assertNotNull(generated.field2);
-        assertNotNull(generated.field3);
-    }
-
-    @Test
-    public void fieldsInClassAreSetWithUniqueValues(){
-        ClassWithMultipleField generated =  ObjectG.unique(ClassWithMultipleField.class);
-
-        assertClassWithMultipleFieldsIsFilled(generated);
-    }
-
-    private void assertClassWithMultipleFieldsIsFilled(ClassWithMultipleField generated) {
-        assertNotNull(generated);
-        assertNotNull(generated.field1);
-        assertNotNull(generated.field2);
-        assertNotSame(generated.field1, generated.field2);
-        assertNotSame(generated.field3, generated.field4);
-    }
-
-    @Test
-    public void fieldsOfObjectAreGenerated(){
-        ClassReferencingOtherClass generated =  ObjectG.unique(ClassReferencingOtherClass.class);
-
-        assertNotNull(generated);
-        assertClassWithMultipleFieldsIsFilled(generated.classWithMultipleField1);
-        assertClassWithMultipleFieldsIsFilled(generated.classWithMultipleField2);
-        assertNotSame(generated.classWithMultipleField1.field1, generated.classWithMultipleField2.field1);
-    }
-
-    @Test
-    public void canConstructObjectWithCyclicDependency(){
-        ObjectG.unique(CyclicClassA.class);
-    }
-
-    @Test
-    public void cyclicConstructorTest(){
-        ObjectG.unique(CyclicConstructor.class);
-    }
-
-    @Test
-    public void willWorkWithInherritedFields(){
-        ExtendingBaseClass generated = ObjectG.unique(ExtendingBaseClass.class);
-
-        assertNotNull("propertyForOverride", generated.getPropertyForOverride());
-        assertNotNull("baseClassProperty", generated.getBaseClassProperty());
-        assertNotNull("extendingBaseClassProperty", generated.getExtendingBaseClassProperty());
-    }
-
-    @Test
-    public void canConstructInterfaces(){
-        IPerson generated1 = ObjectG.unique(IPerson.class);
-        IPerson generated2 = ObjectG.unique(IPerson.class);
-        assertNotSame("firstName", generated1.getFirstName(), generated2.getFirstName());
-        assertEquals("person.Employee2Address.size", 1, generated1.getEmployee2Addresses().size());
-    }
-
-    @Test
-    public void canInferCollectionObjectsTypeFromSetter(){
-        CollectionSetterType unique = ObjectG.unique(CollectionSetterType.class);
-
-        assertTrue(unique.getList().get(0) instanceof String);
-        assertNotNull(unique.getList().get(0));
-
-        assertTrue(unique.getMap().size() == 1);
-        assertNotNull(unique.getMap().keySet().iterator().next());
-    }
-
-    @Test
-    public void canInferCollectionObjectsTypeFromGetter(){
-        CollectionGetterType unique = ObjectG.unique(CollectionGetterType.class);
-
-        assertTrue(unique.getList().get(0) instanceof String);
-        assertNotNull(unique.getList().get(0));
-
-        assertTrue(unique.getMap().size() == 1);
-        assertNotNull(unique.getMap().keySet().iterator().next());
-    }
-
-    @Test
-    public void canInferCollectionObjectsTypeFromField(){
-        CollectionFieldType unique = ObjectG.unique(CollectionFieldType.class);
-
-        assertTrue(unique.getList().get(0) instanceof String);
-        assertNotNull(unique.getList().get(0));
-
-        assertTrue(unique.getMap().size() == 1);
-        assertNotNull(unique.getMap().keySet().iterator().next());
-    }
-
-    @Test
-    public void canInferCollectionObjectTypeFromInterfaceGetter(){
-        CollectionSetterTypeImpl unique = ObjectG.unique(CollectionSetterTypeImpl.class);
-
-        assertTrue(unique.getList().get(0) instanceof String);
-        assertNotNull(unique.getList().get(0));
-
-        assertTrue(unique.getMap().size() == 1);
-        assertNotNull(unique.getMap().keySet().iterator().next());
-    }
-
-    @Test
-    public void canInferCollectionObjectTypeFromInterfaceSetter(){
-        CollectionGetterTypeImpl unique = ObjectG.unique(CollectionGetterTypeImpl.class);
-
-        assertTrue(unique.getList().get(0) instanceof String);
-        assertNotNull(unique.getList().get(0));
-
-        assertTrue(unique.getMap().size() == 1);
-        assertNotNull(unique.getMap().keySet().iterator().next());
-    }
+		assertNotNull(generated);
+	}
 
 	@Test
-	public void willTryAnotherConstructorIfUsedThrewException(){
+	public void oneArgConstructor() {
+		OneArgConstructor generated = ObjectG.unique(OneArgConstructor.class);
+
+		assertNotNull(generated);
+		assertNotNull(generated.arg);
+	}
+
+	@Test
+	public void betweenMultipleConstructorsWithMostArgsIsUsed() {
+		MultipleConstructors generated = ObjectG.unique(MultipleConstructors.class);
+
+		assertNotNull(generated);
+		assertNotNull(generated.field1);
+		assertNotNull(generated.field2);
+		assertNotNull(generated.field3);
+	}
+
+	@Test
+	public void fieldsInClassAreSetWithUniqueValues() {
+		ClassWithMultipleField generated = ObjectG.unique(ClassWithMultipleField.class);
+
+		assertClassWithMultipleFieldsIsFilled(generated);
+	}
+
+	private void assertClassWithMultipleFieldsIsFilled(ClassWithMultipleField generated) {
+		assertNotNull(generated);
+		assertNotNull(generated.field1);
+		assertNotNull(generated.field2);
+		assertNotSame(generated.field1, generated.field2);
+		assertNotSame(generated.field3, generated.field4);
+	}
+
+	@Test
+	public void fieldsOfObjectAreGenerated() {
+		ClassReferencingOtherClass generated = ObjectG.unique(ClassReferencingOtherClass.class);
+
+		assertNotNull(generated);
+		assertClassWithMultipleFieldsIsFilled(generated.classWithMultipleField1);
+		assertClassWithMultipleFieldsIsFilled(generated.classWithMultipleField2);
+		assertNotSame(generated.classWithMultipleField1.field1, generated.classWithMultipleField2.field1);
+	}
+
+	@Test
+	public void canConstructObjectWithCyclicDependency() {
+		ObjectG.unique(CyclicClassA.class);
+	}
+
+	@Test
+	public void cyclicConstructorTest() {
+		ObjectG.unique(CyclicConstructor.class);
+	}
+
+	@Test
+	public void willWorkWithInherritedFields() {
+		ExtendingBaseClass generated = ObjectG.unique(ExtendingBaseClass.class);
+
+		assertNotNull("propertyForOverride", generated.getPropertyForOverride());
+		assertNotNull("baseClassProperty", generated.getBaseClassProperty());
+		assertNotNull("extendingBaseClassProperty", generated.getExtendingBaseClassProperty());
+	}
+
+	@Test
+	public void canConstructInterfaces() {
+		IPerson generated1 = ObjectG.unique(IPerson.class);
+		IPerson generated2 = ObjectG.unique(IPerson.class);
+		assertNotSame("firstName", generated1.getFirstName(), generated2.getFirstName());
+		assertEquals("person.Employee2Address.size", 1, generated1.getEmployee2Addresses().size());
+	}
+
+	@Test
+	public void canInferCollectionObjectsTypeFromSetter() {
+		CollectionSetterType unique = ObjectG.unique(CollectionSetterType.class);
+
+		assertTrue(unique.getList().get(0) instanceof String);
+		assertNotNull(unique.getList().get(0));
+
+		assertTrue(unique.getMap().size() == 1);
+		assertNotNull(unique.getMap().keySet().iterator().next());
+	}
+
+	@Test
+	public void canInferCollectionObjectsTypeFromGetter() {
+		CollectionGetterType unique = ObjectG.unique(CollectionGetterType.class);
+
+		assertTrue(unique.getList().get(0) instanceof String);
+		assertNotNull(unique.getList().get(0));
+
+		assertTrue(unique.getMap().size() == 1);
+		assertNotNull(unique.getMap().keySet().iterator().next());
+	}
+
+	@Test
+	public void canInferCollectionObjectsTypeFromField() {
+		CollectionFieldType unique = ObjectG.unique(CollectionFieldType.class);
+
+		assertTrue(unique.getList().get(0) instanceof String);
+		assertNotNull(unique.getList().get(0));
+
+		assertTrue(unique.getMap().size() == 1);
+		assertNotNull(unique.getMap().keySet().iterator().next());
+	}
+
+	@Test
+	public void canInferCollectionObjectTypeFromInterfaceGetter() {
+		CollectionSetterTypeImpl unique = ObjectG.unique(CollectionSetterTypeImpl.class);
+
+		assertTrue(unique.getList().get(0) instanceof String);
+		assertNotNull(unique.getList().get(0));
+
+		assertTrue(unique.getMap().size() == 1);
+		assertNotNull(unique.getMap().keySet().iterator().next());
+	}
+
+	@Test
+	public void canInferCollectionObjectTypeFromInterfaceSetter() {
+		CollectionGetterTypeImpl unique = ObjectG.unique(CollectionGetterTypeImpl.class);
+
+		assertTrue(unique.getList().get(0) instanceof String);
+		assertNotNull(unique.getList().get(0));
+
+		assertTrue(unique.getMap().size() == 1);
+		assertNotNull(unique.getMap().keySet().iterator().next());
+	}
+
+	@Test
+	public void willTryAnotherConstructorIfUsedThrewException() {
 		final OneFailingConstructorClass generated = ObjectG.unique(OneFailingConstructorClass.class);
 
 		assertNotNull(generated);
 	}
 
 	@Test(expected = GenerationException.class)
-	public void failIfNoWorkingConstructor(){
+	public void failIfNoWorkingConstructor() {
 		ObjectG.unique(AllFailingConstructorsClass.class);
 	}
 
 	@Test
-	public void willWorkWithNotPublicConstructor(){
+	public void willWorkWithNotPublicConstructor() {
 		final PrivateConstructorClass generated = ObjectG.unique(PrivateConstructorClass.class);
 		assertNotNull(generated);
 	}
 
-    @Test
-    @Ignore
+	@Test
+	public void canCreateObjectUsingConstructorWithGenericCollection() {
+		ObjectG.unique(ClassWithGenericListConstructor.class);
+	}
+
+	@Test
+	public void canCreateObjectUsingConstructorWithGenericMap() {
+		ObjectG.unique(ClassWithGenericMapConstructor.class);
+	}
+
+	@Test
+	@Ignore
 	@GoodToHave
-    public void canConstructAbstractClasses(){
-        fail("field AbstractPerson");
-    }
-
-	public static class PrivateConstructorClass{
-		private PrivateConstructorClass(){}
+	public void canConstructAbstractClasses() {
+		fail("field AbstractPerson");
 	}
 
-	public static class AllFailingConstructorsClass{
-		public AllFailingConstructorsClass(){
-			throw new RuntimeException();
-		}
-		public AllFailingConstructorsClass(String arg){
-			throw new RuntimeException();
+	public static class PrivateConstructorClass {
+		private PrivateConstructorClass() {
 		}
 	}
 
-	public static class OneFailingConstructorClass{
-		public OneFailingConstructorClass(){
+	public static class AllFailingConstructorsClass {
+		public AllFailingConstructorsClass() {
+			throw new RuntimeException();
+		}
+
+		public AllFailingConstructorsClass(String arg) {
+			throw new RuntimeException();
+		}
+	}
+
+	public static class OneFailingConstructorClass {
+		public OneFailingConstructorClass() {
 			//ok constructor
 		}
 
-		public OneFailingConstructorClass(String arg){
+		public OneFailingConstructorClass(String arg) {
 			//failing
 			throw new RuntimeException();
 		}
 	}
 
-    public static class CollectionSetterType{
-        private List list;
-        private Map map;
+	public static class CollectionSetterType {
+		private List list;
+		private Map map;
 
-        public List getList() {
-            return list;
-        }
+		public List getList() {
+			return list;
+		}
 
-        public void setList(List<String> list) {
-            this.list = list;
-        }
+		public void setList(List<String> list) {
+			this.list = list;
+		}
 
-        public Map getMap() {
-            return map;
-        }
+		public Map getMap() {
+			return map;
+		}
 
-        public void setMap(Map<String, String> map) {
-            this.map = map;
-        }
-    }
+		public void setMap(Map<String, String> map) {
+			this.map = map;
+		}
+	}
 
-    public static interface ICollectionSetterType{
-        public List getList();
-        public void setList(List<String> list);
-        public Map getMap();
-        public void setMap(Map<String, String> map);
-    }
+	public static interface ICollectionSetterType {
+		public List getList();
 
-    public static class CollectionSetterTypeImpl implements ICollectionSetterType{
-        private List list;
-        private Map map;
+		public void setList(List<String> list);
 
-        public List getList() {
-            return list;
-        }
+		public Map getMap();
 
-        public void setList(List list) {
-            this.list = list;
-        }
+		public void setMap(Map<String, String> map);
+	}
 
-        public Map getMap() {
-            return map;
-        }
+	public static class CollectionSetterTypeImpl implements ICollectionSetterType {
+		private List list;
+		private Map map;
 
-        public void setMap(Map map) {
-            this.map = map;
-        }
-    }
+		public List getList() {
+			return list;
+		}
 
-    public static interface ICollectionGetterType{
-        public List<String> getList();
-        public void setList(List list);
-        public Map<String, String> getMap();
-        public void setMap(Map map);
-    }
+		public void setList(List list) {
+			this.list = list;
+		}
 
-    public static class CollectionGetterTypeImpl implements ICollectionGetterType{
-        private List list;
-        private Map map;
+		public Map getMap() {
+			return map;
+		}
 
-        public List getList() {
-            return list;
-        }
+		public void setMap(Map map) {
+			this.map = map;
+		}
+	}
 
-        public void setList(List list) {
-            this.list = list;
-        }
+	public static interface ICollectionGetterType {
+		public List<String> getList();
 
-        public Map getMap() {
-            return map;
-        }
+		public void setList(List list);
 
-        public void setMap(Map map) {
-            this.map = map;
-        }
-    }
+		public Map<String, String> getMap();
 
-    public static class CollectionGetterType{
-        private List list;
-        private Map map;
+		public void setMap(Map map);
+	}
 
-        public List<String> getList() {
-            return list;
-        }
+	public static class CollectionGetterTypeImpl implements ICollectionGetterType {
+		private List list;
+		private Map map;
 
-        public void setList(List list) {
-            this.list = list;
-        }
+		public List getList() {
+			return list;
+		}
 
-        public Map<String, String> getMap() {
-            return map;
-        }
+		public void setList(List list) {
+			this.list = list;
+		}
 
-        public void setMap(Map map) {
-            this.map = map;
-        }
-    }
+		public Map getMap() {
+			return map;
+		}
 
-    public static class CollectionFieldType{
-        private List<String> list;
-        private Map<String, String> map;
+		public void setMap(Map map) {
+			this.map = map;
+		}
+	}
 
-        public List getList() {
-            return list;
-        }
+	public static class CollectionGetterType {
+		private List list;
+		private Map map;
 
-        public void setList(List list) {
-            this.list = list;
-        }
+		public List<String> getList() {
+			return list;
+		}
 
-        public Map getMap() {
-            return map;
-        }
+		public void setList(List list) {
+			this.list = list;
+		}
 
-        public void setMap(Map map) {
-            this.map = map;
-        }
-    }
+		public Map<String, String> getMap() {
+			return map;
+		}
 
-    public static class CyclicConstructor{
-        public CyclicConstructor(CyclicConstructor arg){
-        }
-    }
+		public void setMap(Map map) {
+			this.map = map;
+		}
+	}
 
-    public static class CyclicClassA{
-        private CyclicClassB classB;
+	public static class CollectionFieldType {
+		private List<String> list;
+		private Map<String, String> map;
 
-        public CyclicClassB getClassB() {
-            return classB;
-        }
+		public List getList() {
+			return list;
+		}
 
-        public void setClassB(CyclicClassB classB) {
-            this.classB = classB;
-        }
-    }
+		public void setList(List list) {
+			this.list = list;
+		}
 
-    public static class CyclicClassB{
-        private CyclicClassA classA;
+		public Map getMap() {
+			return map;
+		}
 
-        public CyclicClassA getClassA() {
-            return classA;
-        }
+		public void setMap(Map map) {
+			this.map = map;
+		}
+	}
 
-        public void setClassA(CyclicClassA classA) {
-            this.classA = classA;
-        }
-    }
+	public static class CyclicConstructor {
+		public CyclicConstructor(CyclicConstructor arg) {
+		}
+	}
 
-    public static class NoArgConstructor{}
+	public static class CyclicClassA {
+		private CyclicClassB classB;
 
-    public static class OneArgConstructor{
-        private String arg;
+		public CyclicClassB getClassB() {
+			return classB;
+		}
 
-        public OneArgConstructor(String arg){
-            this.arg = arg;
-        }
-    }
+		public void setClassB(CyclicClassB classB) {
+			this.classB = classB;
+		}
+	}
 
-    public static class MultipleConstructors{
-        private String field1;
-        private String field2;
-        private String field3;
+	public static class CyclicClassB {
+		private CyclicClassA classA;
 
-        public MultipleConstructors() {
-        }
+		public CyclicClassA getClassA() {
+			return classA;
+		}
 
-        public MultipleConstructors(String field1) {
-            this.field1 = field1;
-        }
+		public void setClassA(CyclicClassA classA) {
+			this.classA = classA;
+		}
+	}
 
-        public MultipleConstructors(String field1, String field2) {
-            this.field1 = field1;
-            this.field2 = field2;
-        }
+	public static class NoArgConstructor {
+	}
 
-        public MultipleConstructors(String field1, String field2, String field3) {
-            this.field1 = field1;
-            this.field2 = field2;
-            this.field3 = field3;
-        }
-    }
+	public static class OneArgConstructor {
+		private String arg;
 
-    public static class ClassWithMultipleField{
-        private String field1;
-        private String field2;
-        private int field3;
-        private int field4;
-    }
+		public OneArgConstructor(String arg) {
+			this.arg = arg;
+		}
+	}
 
-    public static class ClassReferencingOtherClass{
-        private ClassWithMultipleField classWithMultipleField1;
-        private ClassWithMultipleField classWithMultipleField2;
-    }
+	public static class MultipleConstructors {
+		private String field1;
+		private String field2;
+		private String field3;
 
-    public static class BaseClass{
-        private String baseClassProperty;
-        private String propertyForOverride;
+		public MultipleConstructors() {
+		}
 
-        public String getBaseClassProperty() {
-            return baseClassProperty;
-        }
+		public MultipleConstructors(String field1) {
+			this.field1 = field1;
+		}
 
-        public void setBaseClassProperty(String baseClassProperty) {
-            this.baseClassProperty = baseClassProperty;
-        }
+		public MultipleConstructors(String field1, String field2) {
+			this.field1 = field1;
+			this.field2 = field2;
+		}
 
-        public String getPropertyForOverride() {
-            return propertyForOverride;
-        }
+		public MultipleConstructors(String field1, String field2, String field3) {
+			this.field1 = field1;
+			this.field2 = field2;
+			this.field3 = field3;
+		}
+	}
 
-        public void setPropertyForOverride(String propertyForOverride) {
-            this.propertyForOverride = propertyForOverride;
-        }
-    }
+	public static class ClassWithMultipleField {
+		private String field1;
+		private String field2;
+		private int field3;
+		private int field4;
+	}
 
-    public static class ExtendingBaseClass extends BaseClass{
-        private String extendingBaseClassProperty;
-        private String propertyForOverride;
+	public static class ClassReferencingOtherClass {
+		private ClassWithMultipleField classWithMultipleField1;
+		private ClassWithMultipleField classWithMultipleField2;
+	}
 
-        public String getPropertyForOverride() {
-            return propertyForOverride;
-        }
+	public static class BaseClass {
+		private String baseClassProperty;
+		private String propertyForOverride;
 
-        public void setPropertyForOverride(String propertyForOverride) {
-            this.propertyForOverride = propertyForOverride;
-        }
+		public String getBaseClassProperty() {
+			return baseClassProperty;
+		}
 
-        public String getExtendingBaseClassProperty() {
-            return extendingBaseClassProperty;
-        }
+		public void setBaseClassProperty(String baseClassProperty) {
+			this.baseClassProperty = baseClassProperty;
+		}
 
-        public void setExtendingBaseClassProperty(String extendingBaseClassProperty) {
-            this.extendingBaseClassProperty = extendingBaseClassProperty;
-        }
-    }
+		public String getPropertyForOverride() {
+			return propertyForOverride;
+		}
+
+		public void setPropertyForOverride(String propertyForOverride) {
+			this.propertyForOverride = propertyForOverride;
+		}
+	}
+
+	public static class ExtendingBaseClass extends BaseClass {
+		private String extendingBaseClassProperty;
+		private String propertyForOverride;
+
+		public String getPropertyForOverride() {
+			return propertyForOverride;
+		}
+
+		public void setPropertyForOverride(String propertyForOverride) {
+			this.propertyForOverride = propertyForOverride;
+		}
+
+		public String getExtendingBaseClassProperty() {
+			return extendingBaseClassProperty;
+		}
+
+		public void setExtendingBaseClassProperty(String extendingBaseClassProperty) {
+			this.extendingBaseClassProperty = extendingBaseClassProperty;
+		}
+	}
+
+	public static class ClassWithGenericListConstructor {
+		public ClassWithGenericListConstructor(List<String> arg) {
+
+		}
+	}
+
+	public static class ClassWithGenericMapConstructor {
+		public ClassWithGenericMapConstructor(Map<String, String> arg) {
+
+		}
+	}
 }

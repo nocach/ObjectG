@@ -10,38 +10,39 @@ import org.objectg.gen.GenerationRule;
  * User: __nocach
  * Date: 17.11.12
  */
-public class CanEasilyDefineOwnGeneratorTest extends BaseObjectGTest{
+public class CanEasilyDefineOwnGeneratorTest extends BaseObjectGTest {
 
 	@Before
-	public void setup(){
+	public void setup() {
 		ObjectG.configLocal(ObjectG.config()
 				.when(SpecificClass.class)
 				.useRule(new SpecificClassGenerationRule()));
 	}
 
 	@Test
-	public void show(){
+	public void show() {
 		final SpecificClass unique = ObjectG.unique(SpecificClass.class);
 
 		assertNotNull(unique);
 	}
 
 
-	public static class SpecificClass{
+	public static class SpecificClass {
 		private int index;
 
-		private SpecificClass(int index){
+		private SpecificClass(int index) {
 			this.index = index;
 		}
-		public static SpecificClass create(int index){
+
+		public static SpecificClass create(int index) {
 			return new SpecificClass(index);
 		}
 	}
 
-	private static class SpecificClassGenerationRule extends GenerationRule<SpecificClass>{
+	private static class SpecificClassGenerationRule extends GenerationRule<SpecificClass> {
 
 		@Override
-		public SpecificClass getValue(final GenerationConfiguration currentConfiguration,
+		public SpecificClass getValueInner(final GenerationConfiguration currentConfiguration,
 				final GenerationContext context) {
 			return SpecificClass.create(ObjectG.unique(int.class));
 		}

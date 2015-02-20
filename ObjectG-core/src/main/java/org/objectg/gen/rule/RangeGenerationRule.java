@@ -10,7 +10,7 @@ import org.objectg.gen.session.SessionStateDescription;
 
 /**
  * <p>
- *     simple rule to generating range of numbers.
+ * simple rule to generating range of numbers.
  * </p>
  * <p>
  * User: __nocach
@@ -23,7 +23,7 @@ class RangeGenerationRule<T> extends GenerationRule<T> {
 	private Range<T> range;
 
 
-	public RangeGenerationRule(final Range<T> range){
+	public RangeGenerationRule(final Range<T> range) {
 		this.range = range;
 		currentValue = GenerationSession.createManagedState(this, new SessionStateDescription<T>() {
 			@Override
@@ -34,26 +34,24 @@ class RangeGenerationRule<T> extends GenerationRule<T> {
 	}
 
 	@Override
-	public T getValue(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
+	public T getValueInner(final GenerationConfiguration currentConfiguration, final GenerationContext context) {
 		T result = currentValue.get();
 		updateCurrentValue(result);
 		return result;
 	}
 
 	private void updateCurrentValue(final T currentValue) {
-		if (!range.isReversed()){
+		if (!range.isReversed()) {
 			updateWithNextValue(currentValue);
-		}
-		else{
+		} else {
 			updateWithPreviousValue(currentValue);
 		}
 	}
 
 	private void updateWithPreviousValue(final T currentValue) {
-		if (range.hasPrevious(currentValue)){
+		if (range.hasPrevious(currentValue)) {
 			this.currentValue.set(range.getPrevious(currentValue));
-		}
-		else{
+		} else {
 			this.currentValue.set(range.getEnd());
 		}
 	}
@@ -61,8 +59,7 @@ class RangeGenerationRule<T> extends GenerationRule<T> {
 	private void updateWithNextValue(final T currentValue) {
 		if (range.hasNext(currentValue)) {
 			this.currentValue.set(range.getNext(currentValue));
-		}
-		else{
+		} else {
 			this.currentValue.set(range.getStart());
 		}
 	}
